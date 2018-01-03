@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $("#add-memberbtn").click(function () {
+                var $clone = '<tr><td></td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td></tr>'
+                $('.table').append($clone);
+            });
+        });
+
+    </script>
+    <style>
+        th,
+        td {
+            border: 1px solid black;
+            margin: 2px;
+            height: 50px;
+        }
+    
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+       <div class="search">
+         <form> 
+            設備編號
+            <input type="text" name="設備編號"> 
+            設備機型
+            <input type="text" name="設備機型"> 
+        </form>
+            <br>
+            <button>查詢</button>
+       </div>
+       <div>
+            <br>
+            <button id="add-memberbtn" style="float:right;">新增設備</button>
+       </div>
+       <div class="display">      
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th></th>
+                        <th>設備編號</th>
+                        <th>設備機型</th>
+                        <th>分類</th>
+                    </tr>
+                </tbody>
+            </table>
+       </div>
+      
+</body>
+</html>
+      

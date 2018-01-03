@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+    
+    <!-- "position: fixed" fix for Android 2.2+ -->
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/header.js"></script>
+    <script type="text/javascript" src="js/redips-table-min.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    
+</head>
+
+<body>
+    <!-- container -->
+    <div id="myContainer">
+    
+        <!-- toolbox -->
+        <table id="toolbox">
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="button" value="合併儲存格" class="button" onclick="redips.merge()" title="Merge marked table cells horizontally and verically"
+                        />
+                    </td>
+                    <td>
+                        <input type="button" value="水平分割儲存格" class="button" onclick="redips.split('h')" title="Split marked table cell horizontally"
+                        />
+                        <input type="button" value="垂直分割儲存格" class="button" onclick="redips.split('v')" title="Split marked table cell vertically"
+                        />
+                        
+                    </td>
+                    <td>
+                        <input type="button" value="新增列" class="button" onclick="redips.row('insert')" title="Add table row" />
+                        <input type="button" value="刪除列" class="button" onclick="redips.row('delete')" title="Delete table row" />
+                    </td>
+                    <td>
+                        <input type="button" value="新增行" class="button" onclick="redips.column('insert')" title="Add table column" />
+                        <input type="button" value="刪除行" class="button" onclick="redips.column('delete')" title="Delete table column" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- main table -->
+        <table id="mainTable">
+            <tbody>
+                <tr>
+                    <td  contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                   
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

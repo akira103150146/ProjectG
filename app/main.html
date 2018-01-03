@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>CSS Website Layout</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/style2.css">
+<style>
+
+</style>
+</head>
+<body>
+    <div class="title">
+        <p>NTUST</p>
+    </div>
+<div class="header">
+    <a href="#" onclick="return loadpage(0)">告警通知</a>
+    <a href="#" onclick="return loadpage(1)">巡檢分配</a>
+    <a href="#" onclick="return loadpage(2)">查詢表單</a>
+    <a href="#" onclick="return loadpage(3)">設備設定</a>
+    <a href="#" onclick="return loadpage(4)">巡檢人員</a>
+    <a href="#" onclick="return loadpage(5)">帳戶設定</a>  
+</div>
+
+  <div class="column middle">
+      <iframe id="myframe" src="account.html" height="500px"; width="100%"; frameborder="0";>
+
+      </iframe>
+    
+  </div>
+ <script>
+    
+
+     var webpagearr=["info.html","bagi.html","form.html","setting.html","member.html","account.html"];
+     var loadpage = function(index){
+         var iframe = document.getElementById("myframe");
+         iframe.src = webpagearr[index];
+     }
+
+ </script>
+ 
+  
+</body>
+</html>
