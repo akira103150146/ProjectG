@@ -7,15 +7,15 @@ Mar, 2012.
 */
 
 body {
-	font-family: arial;
-	margin: 0px;
+	font-family: '微軟正黑體';
+	
 }
 
 /* container */
 #myContainer {
 	margin: 20px auto;
 	border: 2px dashed LightBlue;
-	font-size: 10pt;
+	font-size: 12pt;
 	display: table;
 }
 
@@ -28,7 +28,7 @@ div#myContainer table {
 
 /* toolbox table */
 #toolbox {
-	background-color: #ccc;
+	background-color: rgb(204, 204, 204);
 	margin: 7px 7px 15px 7px;
 }
 
@@ -41,20 +41,29 @@ div#myContainer table {
 
 /* table cells */
 div#myContainer td {
-	border: 1px solid navy;
-	height: 40px;
-	width: 70px;
+	border: 1px solid black;
+	height: 60px;
+	width: 105px;
 	text-align: center;
 	padding: 2px;
+	background-color: rgb(214,229,145);           
+    margin: 2px;
+    height: 50px;  
+}
+
+div#紀錄事項 p{
+	display: inline;
+	margin-right: 70px;
 }
 
 /* button styles */
 .button {
-	margin: 5px 10px;
-	background-color: #6A93D4;
-	color: white; 
-	border-width: 1px;
-	width: 50px;
-	padding: 0px;
-	font-size: 12px;
+ 	background-color: #4CAF50;
+    border: none;
+    color:white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;            
+    margin: 4px 2px;
+    border-radius: 8px;
 }

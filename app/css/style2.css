@@ -16,7 +16,7 @@ body {
 .header {
     width: 100%;
     height: 35px;
-    background-color: #666666;
+    background-color: rgb(33,135,0);
     padding: 20px;
     text-align: center;
 }
@@ -30,7 +30,6 @@ body {
 }
 
 .header a:hover{
-    background: -webkit-linear-gradient(white,gray);
     color: black;
 }
 

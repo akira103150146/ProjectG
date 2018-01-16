@@ -6,7 +6,9 @@
 
 // create redips container
 var redips = {};
-
+var imported = document.createElement('script');
+imported.src = 'js/htmltojson.js';
+document.head.appendChild(imported);
 
 // REDIPS.table initialization
 redips.init = function () {
@@ -17,9 +19,8 @@ redips.init = function () {
     // show cellIndex (it is nice for debugging)
     rt.cell_index(true);
     // define background color for marked cell
-    rt.color.cell = '#9BB3DA';
-
-    document.getElementById('test').innerHTML = 'init';
+    rt.color.cell = '#9BB3DA';    
+    console.log('init');  
 };
 
 
@@ -29,30 +30,33 @@ redips.merge = function () {
     REDIPS.table.merge('h', false);
     // and then merge cells vertically and clear cells (second parameter is true by default)
     REDIPS.table.merge('v');
-
-    document.getElementById('test').innerHTML = 'merge';
+    console.log('merge');
 };
 
 
 // function splits table cells if colspan/rowspan is greater then 1
 // mode is 'h' or 'v' (cells should be marked before)
 redips.split = function (mode) {
-    REDIPS.table.split(mode);
-    document.getElementById('test').innerHTML = 'split';
+    REDIPS.table.split(mode);   
+    console.log('split');
 };
 
 
 // insert/delete table row
 redips.row = function (type) {
-    REDIPS.table.row('mainTable', type);
-    document.getElementById('test').innerHTML = 'insert row';
+    REDIPS.table.row('mainTable', type);    
+    console.log('insert row');
+    var debugmsg = document.getElementById('mainTable')
+   
+    var rows =  debugmsg.rows;
+    ToJson(rows);    
+  
 };
 
 
 // insert/delete table column
 redips.column = function (type) {
-    REDIPS.table.column('mainTable', type);
-    document.getElementById('test').innerHTML = 'insert column';
+    REDIPS.table.column('mainTable', type);    
 };
 
 

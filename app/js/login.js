@@ -29,11 +29,6 @@ var get_info_options = {
       },
       json: true,   // <--Very important!!!
   };
-  
-
-
-
-
 
   function logout_callback(error, response, body) {
     console.log("");
@@ -85,10 +80,6 @@ var get_info_options = {
     console.log("http status code: " + response.statusCode);
     console.log(body);
     
-    document.getElementById("xyz").innerHTML =  JSON.stringify(body);
-    
-   
-
     if (!error && response.statusCode == 200) {
       // 獲取用戶id、token拼接後作為簽證(auth)備用
       id = body['content'].id;
@@ -114,8 +105,10 @@ var get_info_options = {
     };
 
     request(login_options, login_callback);
+   
 
   }
 
+  
 
   

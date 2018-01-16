@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
 <title>智能巡檢系統</title>
 <link rel="stylesheet" href="css/style1.css">
-
 </head>
-
 <body>
 <div class ="title">
-
 <h1>Login to your accout</h1>
-
 </div>
 <div class="form">
         <form>
           <input type="text" placeholder="Username" id="account"/>
           <input type="password" placeholder="Password" id="password"/>
           <input class="loginbutton" type="button" value="Login" onclick="login();">
-        </form>
-        <p id="xyz">hello</p>
-        <p id="zzz">eee</p>
+        </form>      
 </div>
 
 <script src="js/login.js"></script>
 <script>
-        var login = function(){
-        var account = document.getElementById("account").value;
-        var password = document.getElementById("password").value;       
-        login_(account,password);
-        
-        window.location = 'main.html';    
-        
-      }  
-
+      if (typeof (Storage) !== "undefined") {
+          // Store
+          localStorage.setItem("lastname", "Smith");
+          // Retrieve
+         console.log(localStorage.getItem("lastname"));         
+        } else {
+         alert("Sorry, your browser does not support Web Storage...");
+        }
+      var Mousetrap = require('mousetrap');       
+      var login = function () {
+          var account = document.getElementById("account").value;
+          var password = document.getElementById("password").value;
+          //login_(account,password);
+          window.location = 'main.html';
+      }      
+      Mousetrap.bind('enter',login);
 </script>
-
-
 </body>
 </html>

@@ -7,13 +7,9 @@ var test =' "employees": ['+
 
 function ShowTable (tablename){
 
-    var table = document.getElementById(tablename);
-   
-    
-    var obj = JSON.parse(test);
-    
+    var table = document.getElementById(tablename);    
+    var obj = JSON.parse(test);    
     var l = obj.length;
-
     var attr = ["MemberName", "MemberNum", "ID", "Date", "Permission"];
 
     for(var i=0;i<l;i++){
@@ -30,14 +26,8 @@ function ShowTable (tablename){
         td_arr[5].appendChild('<button>編輯</button><button>刪除</button>');
         for(var j=0;j<6;j++)
         tr.appendChild(td_arr[j]);
-        
-
         table.append(tr);
     }
-
-    
-
-
 }
 
 
