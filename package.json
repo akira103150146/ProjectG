@@ -1,0 +1,34 @@
+{
+  "name": "standard",
+  "version": "1.0.0",
+  "description": "myfirst",
+  "main": "main.js",
+  "dependencies": {
+    "electron-prebuilt": "^1.4.13",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "himalaya": "^1.0.0",
+    "jquery": "^3.2.1",
+    "jquery-contextmenu": "^3.0.0-beta.1",
+    "mousetrap": "^1.6.1"
+  },
+  "devDependencies": {
+    "eslint-config-google": "^0.9.1"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://b10315046@bitbucket.org/b10315046/project_g.git"
+  },
+  "keywords": [
+    "mph586uut"
+  ],
+  "author": "AKIRA",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/b10315046/project_g#readme"
+}

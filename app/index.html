@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>智能巡檢系統</title>
-<link rel="stylesheet" href="css/style1.css">
+<link rel="stylesheet" href="css/login.css">
 </head>
 <body>
 <div class ="title">
@@ -13,7 +13,7 @@
         <form>
           <input type="text" placeholder="Username" id="account"/>
           <input type="password" placeholder="Password" id="password"/>
-          <input class="loginbutton" type="button" value="Login" onclick="login();">
+          <input type="button" class="loginbutton" value="Login" onclick="login();">
         </form>      
 </div>
 
@@ -23,18 +23,21 @@
           // Store
           localStorage.setItem("lastname", "Smith");
           // Retrieve
-         console.log(localStorage.getItem("lastname"));         
+          console.log(localStorage.getItem("lastname")); 
+          localStorage.removeItem('lastname');
+          console.log(localStorage.getItem("lastname")); 
         } else {
          alert("Sorry, your browser does not support Web Storage...");
-        }
-      var Mousetrap = require('mousetrap');       
+        }                 
       var login = function () {
           var account = document.getElementById("account").value;
           var password = document.getElementById("password").value;
-          //login_(account,password);
-          window.location = 'main.html';
-      }      
-      Mousetrap.bind('enter',login);
+          bim.Login(account,password);  
+         // if(bim.checklogin())      
+         // window.location = 'main.html';       
+      }
+      var Mousetrap = require('mousetrap');       
+      Mousetrap.bind('enter',login);//綁定 enter鍵執行登入
 </script>
 </body>
 </html>

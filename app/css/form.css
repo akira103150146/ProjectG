@@ -1,0 +1,61 @@
+/*
+
+Darko Bunic
+http://www.redips.net/
+Mar, 2012.
+
+*/
+
+body {
+	font-family: '微軟正黑體';
+}
+/* container */
+#myContainer {
+	margin: 20px auto;
+	border: 2px dashed LightBlue;
+	font-size: 12pt;
+	display: table;
+}
+/* both tables */
+div#myContainer table {
+	/*border-collapse: collapse;*/
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+/* toolbox table */
+#toolbox {
+	background-color: rgb(204, 204, 204);
+	margin: 7px 7px 15px 7px;
+}
+/* main table */
+#mainTable {
+	color: #777;
+	background-color: #eee;
+	margin: 7px;	
+}
+/* table cells */
+div#myContainer td {
+	border: 1px solid black;
+	height: 60px;
+	width: 105px;
+	text-align: center;
+	padding: 2px;
+	background-color: rgb(214,229,145);           
+    margin: 2px;
+    height: 50px;  
+}
+div#紀錄事項 p{
+	display: inline;
+	margin-right: 70px;
+}
+/* button styles */
+.button {
+ 	background-color: #4CAF50;
+    border: none;
+    color:white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;            
+    margin: 4px 2px;
+    border-radius: 8px;
+}

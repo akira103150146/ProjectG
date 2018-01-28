@@ -2,29 +2,24 @@
 <html>
 <head>
     <meta charset="UTF-8">
-   
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="js/createtable.js"></script>
-    <script>
-       
-       
+    <script src="js/login.js"></script>    
+   
+    <script>      
         $(document).ready(function () {
                $("#add-memberbtn").click(function () {
                     var $clone = '<tr><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td><button>編輯</button><button>刪除</button></td></tr>'
-                    $('#target').append($clone);                                 
+                    $('#target').append($clone); 
+                                                  
                 });
-        });
-            
+        });            
     </script>
-
-    <script>
-        
+    <script>        
          var text = '{ "employees": [' +
                 '{ "MemberName":"John", "MemberNum":"abc123","ID":"abc","Date":"1987/07/09","Permission":"3" },' +
                 '{ "MemberName":"Steve", "MemberNum":"abc456","ID":"www","Date":"1987/07/19","Permission":"2" },' +
                 '{ "MemberName":"John", "MemberNum":"abc789","ID":"xyz","Date":"1987/08/09","Permission":"1" } ] }';
-
-
         var showtable = function(){
             var table = document.getElementById('target').innerHTML;
            // console.log(table);
@@ -72,31 +67,7 @@
         }
     </script>
     <style>
-        body{
-            font-size: 16px;
-            font-family: '微軟正黑體';
-        }
-        th,
-        td {            
-            background-color: rgb(214,229,145);           
-            margin: 2px;
-            height: 50px;            
-        }
-    
-        table {
-            width: 100%;
-        }
-        
-        button{
-            background-color: #4CAF50;
-            border: none;
-            color:white;
-            padding: 10px;
-            text-align: center;
-            text-decoration: none;            
-            margin: 4px 2px;
-            border-radius: 8px;
-        }
+      
     </style>
 </head>
 <body>
@@ -146,6 +117,7 @@
                 </tbody>
             </table>
        </div>
+        <script src="js/login.js"></script>
 
       
 </body>
