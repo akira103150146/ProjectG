@@ -1,43 +1,29 @@
-<!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>智能巡檢系統</title>
-<link rel="stylesheet" href="css/login.css">
-</head>
-<body>
-<div class ="title">
-<h1>Login to your accout</h1>
-</div>
-<div class="form">
+  <head>
+    <meta charset="UTF-8">
+    <title>智能巡檢系統</title>
+    <link rel="stylesheet" href="css/login.css">   
+  </head>
+
+  <body>
+    <div class ="title">
+    <h1>Login to your accout</h1>
+    </div>
+
+    <div class="form">
         <form>
           <input type="text" placeholder="Username" id="account"/>
           <input type="password" placeholder="Password" id="password"/>
-          <input type="button" class="loginbutton" value="Login" onclick="login();">
+          <input type="button" class="loginbutton" value="Login" onclick="login() ">
         </form>      
-</div>
-
-<script src="js/login.js"></script>
-<script>
-      if (typeof (Storage) !== "undefined") {
-          // Store
-          localStorage.setItem("lastname", "Smith");
-          // Retrieve
-          console.log(localStorage.getItem("lastname")); 
-          localStorage.removeItem('lastname');
-          console.log(localStorage.getItem("lastname")); 
-        } else {
-         alert("Sorry, your browser does not support Web Storage...");
-        }                 
+    </div>   
+    <script>     
+      var ipcrender = require('electron').ipcRenderer                 
       var login = function () {
-          var account = document.getElementById("account").value;
-          var password = document.getElementById("password").value;
-          bim.Login(account,password);  
-         // if(bim.checklogin())      
-         // window.location = 'main.html';       
-      }
-      var Mousetrap = require('mousetrap');       
-      Mousetrap.bind('enter',login);//綁定 enter鍵執行登入
-</script>
-</body>
+        var account = document.getElementById("account").value.toString()
+        var password = document.getElementById("password").value.toString()     
+        ipcrender.send('login',account,password)  
+      }     
+    </script>   
+  </body>
 </html>

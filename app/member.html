@@ -2,123 +2,72 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />   
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="js/login.js"></script>    
-   
-    <script>      
-        $(document).ready(function () {
-               $("#add-memberbtn").click(function () {
-                    var $clone = '<tr><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td contenteditable="true">undefined</td><td><button>編輯</button><button>刪除</button></td></tr>'
-                    $('#target').append($clone); 
-                                                  
-                });
-        });            
-    </script>
-    <script>        
-         var text = '{ "employees": [' +
-                '{ "MemberName":"John", "MemberNum":"abc123","ID":"abc","Date":"1987/07/09","Permission":"3" },' +
-                '{ "MemberName":"Steve", "MemberNum":"abc456","ID":"www","Date":"1987/07/19","Permission":"2" },' +
-                '{ "MemberName":"John", "MemberNum":"abc789","ID":"xyz","Date":"1987/08/09","Permission":"1" } ] }';
-        var showtable = function(){
-            var table = document.getElementById('target').innerHTML;
-           // console.log(table);
-          
-            /*var obj = JSON.parse(text);
-            
-            document.getElementById('test').innerHTML = obj.employees[1].MemberName + " " + obj.employees[1].MemberNum;
-            var table = document.getElementById('target');
-            var tr = document.createElement('tr');
-            for(var i =0;i<3;i++){
-                var tr = document.createElement('tr');
-                var td = [];
-                var txt = [];
-                txt.push(document.createTextNode(obj.employees[i].MemberName));
-                txt.push(document.createTextNode(obj.employees[i].MemberNum));
-                txt.push(document.createTextNode(obj.employees[i].ID));
-                txt.push(document.createTextNode(obj.employees[i].Date));
-                txt.push(document.createTextNode(obj.employees[i].Permission));
-                
-
-                for(var j=0;j<6;j++){
-                    td.push(document.createElement('td'));
-                   
-                    if(j!=5){                        
-                        td[j].appendChild(txt[j]);
-                        td[j].contentEditable = "true";
-                    }
-                    else{
-                        var btn = document.createElement('BUTTON');
-                        var t = document.createTextNode('編輯');
-                        btn.appendChild(t);
-                        var btn2 = document.createElement('BUTTON');
-                        var t2 = document.createTextNode('刪除');
-                        btn2.appendChild(t2);
-                        td[j].appendChild(btn);
-                        td[j].appendChild(btn2);
-                    }
-
-                    tr.appendChild(td[j]);         
-                }
-                table.appendChild(tr);
-            }*/
-           
-
-        }
-    </script>
     <style>
-      
+        .search input{
+            margin: 4px 
+        }
+        .search button{
+            margin: 10px 
+        }
+        form{
+            margin: 10px
+        }
     </style>
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />   
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        let $ = require('jquery')
+        let jQuery = require('jquery')
+    </script>
+    <script src="js/app/showtable.js"></script>    
+    <script>
+        var ipcrender = require('electron').ipcRenderer
+        ipcrender.on('reply-member',(event,arg)=>{
+            //console.log(arg)
+            showtable(arg,'member')
+        })              
+        $(document).ready(function (){ 
+            //ipcrender.send('ready-to-show','member')
+            add_cell('#target','#add-btn',6)
+            delete_cell('#target');
+            save('#target',6)
+            $('#search-btn').click(function(){              
+                console.log($('#search-btn'))                
+               // ipcrender.send('toggle-result')
+               ipcrender.send('logout') 
+               
+            })                       
+        })          
+    </script>   
 </head>
-<body>
-       <div class="search">
-          
-            <form>
-                人員姓名
-                <input type="text" name="人員姓名">
-                人員編號
-                <input type="text" name="人員編號">
-                人員身分
-                <input type="text" name="人員身分">
-            </form>
-                 
-                 <button>查詢</button>
+<body>           
+       <div class="search">       
+            人員姓名
+            <input type="text" name="人員姓名">
+            人員編號
+            <input type="text" name="人員編號">
+            人員身分
+            <input type="text" name="人員身分">         
+            <button id="search-btn">查詢</button>                 
        </div>
-
        <div>
-           <button id="add-memberbtn" style="float:right;">新增人員</button>
-           <button onClick="showtable()">test</button>
+           <button id="add-btn" style="float:right ">新增人員</button>
+           <button>儲存變更</button>
        </div>
-
-       <div style="height:500px;">           
+       <div style="height:500px ">           
             <table id="target">
                 <tbody>
                     <tr>
                         <th>人員姓名</th>
                         <th>人員編號</th>
                         <th>身分</th>
-                        <th>權限</th>
-                        <th>建立日期</th>
+                        <th>密碼</th>
+                        <th>電子郵件</th>
+                        <th>創建日期</th>
                         <th></th>
-                    </tr>
-                
-                    <tr>
-                        <td contenteditable="true">王小名</td>
-                        <td contenteditable="true">abc123</td>
-                        <td contenteditable="true">檢驗人員</td>
-                        <td contenteditable="true">檢驗人員</td>
-                        <td contenteditable="true">2017/7/31</td>
-                        <td>
-                        <button>編輯</button>
-                        <button>刪除</button>
-                        </td>
-
-                    </tr>            
+                    </tr>              
                 </tbody>
             </table>
-       </div>
-        <script src="js/login.js"></script>
-
-      
+       </div>      
 </body>
 </html>

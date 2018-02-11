@@ -18,18 +18,15 @@
     <a href="#" onclick="return loadpage(1)">巡檢分配</a>
     <a href="#" onclick="return loadpage(2)">查詢表單</a>
     <a href="#" onclick="return loadpage(3)">設備設定</a>
-    <a href="#" onclick="return loadpage(4)">巡檢人員</a>
-    <a href="#" onclick="return loadpage(5)">帳戶設定</a>  
+    <a href="#" onclick="return loadpage(4)">巡檢人員</a> 
+
 </div>
 
   <div class="column middle">
-      <iframe id="myframe" src="account.html" height="1000px"; width="100%"; frameborder="0";>
-
-      </iframe>
-    
+      <iframe id="myframe" src="form.html" height="1000px"; width="100%"; frameborder="0";></iframe>    
   </div>
  <script>   
-     var webpagearr=["info.html","bagi.html","form.html","setting.html","member.html","account.html"];
+     var webpagearr=["info.html","bagi.html","form.html","setting.html","member.html"];
      var loadpage = function(index){
          var iframe = document.getElementById("myframe");
          iframe.src = webpagearr[index];

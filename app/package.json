@@ -1,9 +1,8 @@
 {
-    
-     "name" : "bim_server",
-    
-     "version" : "0.1.0",
-    
-     "main" : "main.js"
-    
+ "name": "my_app_name",
+ "version": "0.1.0",
+ "main": "main.js",
+ "dependencies": {
+  "simpler-sidebar": "^2.2.4"
+ }
 }

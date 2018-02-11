@@ -1,58 +1,132 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
-
+const ipcMain = require('electron').ipcMain;
+const api = require('./js/lib/api.js');
+const rp = require('request-promise');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-var win;
+var win
+var result_win
+var bim = new api()
+var auth
 
-function createWindow () {
-  // Create the browser window.
-  win = new BrowserWindow({width: 800, height: 600})
-
-  // and load the index.html of the app.
-  win.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
-
-  // Open the DevTools To Debug Render Process
+app.on('ready', function(){  
+  win = new BrowserWindow({width: 1920, height: 1080})
+  result_win = new BrowserWindow({width: 800, height: 600 , parent: win, modal: true, show: false}) 
+  win.loadURL('file://' + __dirname + '/index.html')
+  result_win.loadURL('file://' + __dirname + '/result.html')
+ 
   win.webContents.openDevTools()
+  result_win.webContents.openDevTools();
+  
+  win.on('closed', () => { win = null})
+  result_win.on('closed', () => { result_win = null})
 
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    win = null
+  ipcMain.on('login', (event,arg,arg2)=>{    
+    console.log(arg)
+    console.log(arg2)
+   /* bim.Login(arg,arg2) 
+    rp(bim.GetOption()).then((parseBody)=>{
+      console.log(parseBody)
+      if(parseBody['code'] == 100){
+        var id = parseBody['content'].id
+        var token = parseBody['content'].token
+        auth = id + '_' + token     
+        bim.SetAuth(auth)
+        win.loadURL('file://' + __dirname + '/member.html')
+      }
+      else{
+        alert('帳號或密碼錯誤')
+      }
+      bim.Reset()
+    }).catch((err)=>{
+      console.log(err)
+    })   */
+    win.loadURL('file://' + __dirname + '/form.html')     
+  }) 
+  ipcMain.on('logout',()=>{
+    bim.Logout()
+    rp(bim.GetOption()).then((parseBody) => {
+      console.log(parseBody)
+      bim.Reset()
+      win.loadURL('file://' + __dirname + '/index.html')
+    }).catch((err) => {
+      console.log(err)
+    })   
   })
-}
+  ipcMain.on('toggle-result', ()=>{
+    console.log('call')
+    if(result_win.isVisible())
+      result_win.hide()
+    else
+      result_win.show()
+  })
+  ipcMain.on('add',(event,which,body)=>{
+    if(which === 'member'){
+      bim.AddUser(body)
+    }
+    else if(which === 'device'){
+      bim.AddDevice(body)
+    }
+    else{
+      alert('type error!')
+    }
+    console.log('add-member')
+   
+    rp(bim.GetOption()).then((parseBody)=>{
+      console.log(parseBody)      
+      bim.Reset()
+    }).catch((err)=>{
+      console.log(err)
+    })   
+  })
+  ipcMain.on('remove-member',(event,arg)=>{
+    console.log('remove')
+    bim.RemoveUser(arg)
+    rp(bim.GetOption()).then((parseBody) => {
+      console.log(parseBody)
+      bim.Reset()
+    }).catch((err) => {
+      console.log(err)
+    })  
+    
+  })
+  ipcMain.on('ready-to-show',(event,which)=>{
+    console.log('ready-to-show')
+    let back_path = ''
+    if(which === 'member'){
+      bim.GetStaffList()
+      back_path = 'reply-member'
+    }
+    else if(which === 'device'){
+      bim.GetDeviceList()
+      back_path = 'reply-device'
+    }
+    else{
+      alert('type error!')
+    }
+    rp(bim.GetOption()).then((parseBody)=>{
+      //console.log(parseBody)  
+      event.sender.send(back_path,parseBody['content'])     
+      bim.Reset()
+    }).catch((err)=>{
+      console.log(err)
+    }) 
+    
+  })
+})
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
+app.on('window-all-closed', () => {  
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
-app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
+app.on('activate', () => { 
   if (win === null) {
     createWindow()
   }
+  console.log('e')
 })
-
-
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
