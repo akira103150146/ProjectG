@@ -13,61 +13,114 @@
             margin: 10px
         }
     </style>
-    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />   
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script>
         let $ = require('jquery')
         let jQuery = require('jquery')
     </script>
-    <script src="js/app/showtable.js"></script>    
+    <script src="js/app/showtable.js"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
+        var tb_manager = new table_manager() 
+              
         ipcrender.on('reply-member',(event,arg)=>{
             //console.log(arg)
-            showtable(arg,'member')
+            tb_manager.showtable(arg,'member')
         })              
         $(document).ready(function (){ 
-            //ipcrender.send('ready-to-show','member')
-            add_cell('#target','#add-btn',6)
-            delete_cell('#target');
-            save('#target',6)
+            ipcrender.send('ready-to-show','member')
+            tb_manager.add_cell('#target','#add-btn',7)
+            tb_manager.delete_cell('#target','member');
+            tb_manager.save('#target',6)
+            $('#target td').on('contentchange',function(){
+                console.log('haschange')
+            })             
+            $('#bagi').on('click', () => {
+                ipcrender.send('switch_page', 0)
+            })
+            $('#setting').on('click', () => {
+                ipcrender.send('switch_page', 1)
+            })
+            $('#form').on('click', () => {
+                ipcrender.send('switch_page', 2)
+            })
+            $('#member').on('click', () => {
+                ipcrender.send('switch_page', 3)
+            })
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+            $('#close_btn').on('click', () => {
+                $('#sidebar').toggleClass('active');
+            })
             $('#search-btn').click(function(){              
                 console.log($('#search-btn'))                
-               // ipcrender.send('toggle-result')
-               ipcrender.send('logout') 
-               
+                ipcrender.send('toggle-result')               
+            })
+            $('#logout_btn').click(function(){
+                ipcrender.send('logout')
             })                       
         })          
     </script>   
 </head>
-<body>           
-       <div class="search">       
-            人員姓名
-            <input type="text" name="人員姓名">
-            人員編號
-            <input type="text" name="人員編號">
-            人員身分
-            <input type="text" name="人員身分">         
-            <button id="search-btn">查詢</button>                 
-       </div>
-       <div>
-           <button id="add-btn" style="float:right ">新增人員</button>
-           <button>儲存變更</button>
-       </div>
-       <div style="height:500px ">           
-            <table id="target">
-                <tbody>
-                    <tr>
-                        <th>人員姓名</th>
-                        <th>人員編號</th>
-                        <th>身分</th>
-                        <th>密碼</th>
-                        <th>電子郵件</th>
-                        <th>創建日期</th>
-                        <th></th>
-                    </tr>              
-                </tbody>
-            </table>
-       </div>      
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="close_btn">Close &times;</h3>
+                <h3 id="user-name">AKIRA</h3>
+                <button id="logout_btn">登出</button>
+            </div>
+            <ul>
+                <li>
+                    <a id="bagi">巡檢分配</a>
+                </li>
+                <li>
+                    <a id="setting">設備設定</a>
+                </li>
+                <li>
+                    <a id="form">表單編輯</a>
+                </li>
+                <li class="active">
+                    <a id="member">帳戶設定</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+                ☰
+            </button>
+            <div class="search">
+                人員姓名
+                <input type="text" name="人員姓名"> 人員編號
+                <input type="text" name="人員編號"> 人員身分
+                <input type="text" name="人員身分">
+                <button id="search-btn">查詢</button>
+            </div>
+            <div>
+                <button id="add-btn" style="float:right ">新增人員</button>
+            </div>
+            <div>
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>人員姓名</th>
+                            <th>人員編號</th>
+                            <th>身分</th>
+                            <th>密碼</th>
+                            <th>電子郵件</th>
+                            <th>創建日期</th>
+                            <th>id</th>>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>                 
 </body>
 </html>

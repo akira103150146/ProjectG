@@ -16,9 +16,9 @@
                 "type": "node",
                 "request": "launch",
                 "cwd": "${workspaceRoot}",
-                "runtimeExecutable": "${workspaceRoot}/app/node_modules/.bin/electron",
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
                 "windows": {
-                  "runtimeExecutable": "${workspaceRoot}/app/node_modules/.bin/electron.cmd"
+                  "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
                 },
                 "program": "${workspaceRoot}/app/main.js",
                 "protocol": "legacy"

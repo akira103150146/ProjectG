@@ -1,0 +1,3 @@
+function sidebar_setup(){
+   
+}

@@ -72,20 +72,24 @@ bim_app_window.prototype.Logout = function(){
   this.how = 'DELETE'  
   this.Send(null)
 }
+bim_app_window.prototype.Notify = function(info){
+  //送出設備資訊
+
+}
 bim_app_window.prototype.AddUser = function(value){
   let obj = {'name' : value.name,
              'password' : value.password,
              'number' : value.number,
              'identity' : value.id,
-             'emailAddress' : value.email}
+             'emailAddress': value.emailAddress}
   this.api = 'admin/staff/'
   this.op = 'add'
   this.how = 'POST' 
   this.Send(obj)
 }
-bim_app_window.prototype.Update = function(info){
+bim_app_window.prototype.UpdateUser = function(id,info){
   this.api = 'admin/staff/'
-  this.op = 'update'
+  this.op = 'update?id=' + id 
   this.how = 'POST'  
   this.Send(info)
 }
@@ -107,11 +111,11 @@ bim_app_window.prototype.GetFormInfo = function(id){
   this.how = 'GET'  
   this.Send(null)
 }
-bim_app_window.prototype.AddFormTemplate = function(data){
+bim_app_window.prototype.AddFormTemplate = function(info){
   this.api = 'form/template/'
   this.op = 'add'
   this.how = 'POST' 
-  this.Send(data)
+  this.Send(info)
 }
 bim_app_window.prototype.GetFormList = function(){
   this.api = 'form/template/'
@@ -125,11 +129,11 @@ bim_app_window.prototype.GetDeviceList = function(){
   this.how = 'GET'
   this.Send(null)
 }
-bim_app_window.prototype.AddDevice = function(value){
-  let obj = {'name':value.name,
-              'Description':value.description,
-              'position': value.position,
-              'tagName': value.tagname
+bim_app_window.prototype.AddDevice = function(info){
+  let obj = {'name':info.name,
+              'description': info.Description,
+              'position': info.position,
+              'tagName': info.tagName
   }
   this.api = 'admin/device/'
   this.op = 'add'
@@ -139,7 +143,13 @@ bim_app_window.prototype.AddDevice = function(value){
 bim_app_window.prototype.RemoveDevice = function(id){
   this.api = 'admin/device/'
   this.op = 'remove?id=' + id 
-  this.how = 'HOW'
+  this.how = 'DELETE'
   this.Send(null)
+}
+bim_app_window.prototype.UpdateDevice = function(id,info){
+  this.api = 'admin/device/'
+  this.op = 'update?id=' + id
+  this.how = 'POST'
+  this.Send(info)
 }
 module.exports = bim_app_window

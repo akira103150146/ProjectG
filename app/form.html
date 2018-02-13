@@ -2,8 +2,9 @@
 <head>    
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
     <link href="jQuery-contextMenu-master/dist/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script>
         let $ = require('jquery')
         let jQuery = require('jquery')      
@@ -11,8 +12,32 @@
     <script type="text/javascript" src="js/lib/header.js"></script>
     <script type="text/javascript" src="js/lib/redips-table-min.js"></script>
     <script type="text/javascript" src="js/lib/script.js"></script>      
-    <script src="jQuery-contextMenu-master/dist/jquery.contextMenu.js" type="text/javascript"></script>
-    <script>       
+    <script src="jQuery-contextMenu-master/dist/jquery.contextMenu.js" type="text/javascript"></script>   
+    <script>
+        $(document).ready(function () {            
+            var ipcrender = require('electron').ipcRenderer
+            $('#bagi').on('click', () => {
+                ipcrender.send('switch_page', 0)
+            })
+            $('#setting').on('click', () => {
+                ipcrender.send('switch_page', 1)
+            })
+            $('#form').on('click', () => {
+                ipcrender.send('switch_page', 2)
+            })
+            $('#member').on('click', () => {
+                ipcrender.send('switch_page', 3)
+            })
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+            $('#close_btn').on('click', () => {
+                $('#sidebar').toggleClass('active');
+            }) 
+            $('#logout_btn').click(function () {
+                ipcrender.send('logout')
+            })         
+        });       
         $(function () {
             $('#mainTable').contextMenu({
                 selector: 'td',
@@ -32,17 +57,16 @@
                         items: {
                             "checkbox": {
                                 name: "勾選格", callback: function () {
-                                    var i = document.createElement('INPUT');
+                                    let i = document.createElement('INPUT');
                                     i.setAttribute("type", "checkbox");
                                     $(this).append(i);
                                 }
                             },
                             "image": {
                                 name: "圖片上傳", callback: function () {
-                                    var i = document.createElement('INPUT');
+                                    let i = document.createElement('INPUT');
                                     i.setAttribute("type", "file");
                                     $(this).append(i);
-
                                 }
                             }
                         }
@@ -55,44 +79,73 @@
         });
     </script>  
 </head>
-<body>    
-    <div id="myContainer">       
-        <table id="toolbox">
-            <tbody>
-                <tr>
-                    <td>
-                        <input type="button" value="合併儲存格" class="button" onclick="redips.merge()" title="Merge marked table cells horizontally and verically"
-                        />
-                    </td>
-                    <td>
-                        <input type="button" value="水平分割儲存格" class="button" onclick="redips.split('h')" title="Split marked table cell horizontally"
-                        />
-                        <input type="button" value="垂直分割儲存格" class="button" onclick="redips.split('v')" title="Split marked table cell vertically"
-                        />                        
-                    </td>
-                    <td>
-                        <input type="button" value="新增列" class="button" onclick="redips.row('insert')" title="Add table row" />
-                        <input type="button" value="刪除列" class="button" onclick="redips.row('delete')" title="Delete table row" />
-                    </td>
-                    <td>
-                        <input type="button" value="新增行" class="button" onclick="redips.column('insert')" title="Add table column" />
-                        <input type="button" value="刪除行" class="button" onclick="redips.column('delete')" title="Delete table column" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table id="mainTable">            
-            <tbody>
-                <tr>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>                   
-                </tr>                
-            </tbody>
-        </table>
-    </div>
+<body>  
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="close_btn">Close &times;</h3>
+                <h3 id="user-name">AKIRA</h3>
+                <button id="logout_btn">登出</button>
+            </div>
+            <ul>
+                <li>
+                    <a id="bagi">巡檢分配</a>
+                </li>
+                <li>
+                    <a id="setting">設備設定</a>
+                </li>
+                <li class="active">
+                    <a id="form">表單編輯</a>
+                </li>
+                <li>
+                    <a id="member">帳戶設定</a>
+                </li>               
+            </ul>
+        </nav>
+        <div id="myContainer">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+                ☰
+            </button>
+            <table id="toolbox">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="button" value="合併儲存格" class="button" onclick="redips.merge()" title="Merge marked table cells horizontally and verically"
+                            />
+                        </td>
+                        <td>
+                            <input type="button" value="水平分割儲存格" class="button" onclick="redips.split('h')" title="Split marked table cell horizontally"
+                            />
+                            <input type="button" value="垂直分割儲存格" class="button" onclick="redips.split('v')" title="Split marked table cell vertically"
+                            />
+                        </td>
+                        <td>
+                            <input type="button" value="新增列" class="button" onclick="redips.row('insert')" title="Add table row" />
+                            <input type="button" value="刪除列" class="button" onclick="redips.row('delete')" title="Delete table row" />
+                        </td>
+                        <td>
+                            <input type="button" value="新增行" class="button" onclick="redips.column('insert')" title="Add table column" />
+                            <input type="button" value="刪除行" class="button" onclick="redips.column('delete')" title="Delete table column" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="mainTable">
+                <tbody>
+                    <tr>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>      
 </body>
 </html>

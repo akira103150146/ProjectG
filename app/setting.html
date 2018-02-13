@@ -3,7 +3,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
     <link href="jQuery-contextMenu-master/dist/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script>
         let $ = require('jquery')
         let jQuery = require('jquery')
@@ -12,16 +13,39 @@
     <script src="js/app/showtable.js"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
-            ipcrender.on('reply-device', (event, arg) => {
-                //console.log(arg)
-                showtable(arg,'device')
-            })              
+        var tb_manager = new table_manager() 
+        
+        ipcrender.on('reply-device', (event, arg) => {
+            console.log(arg)
+            tb_manager.showtable(arg,'device')
+        })              
         $(document).ready(function () {
             //向main process傳送訊息使其和伺服器溝通回傳資料
-            //ipcrender.send('ready-to-show', 'member')
-            add_cell('#target','#add-btn',4)            
-            delete_cell('#target')
-            save('#target',4)
+            ipcrender.send('ready-to-show', 'device')
+            tb_manager.add_cell('#target','#add-btn',5)            
+            tb_manager.delete_cell('#target','device')
+            tb_manager.save('#target',4)
+            $('#bagi').on('click', () => {
+                ipcrender.send('switch_page', 0)
+            })
+            $('#setting').on('click', () => {
+                ipcrender.send('switch_page', 1)
+            })
+            $('#form').on('click', () => {
+                ipcrender.send('switch_page', 2)
+            })
+            $('#member').on('click', () => {
+                ipcrender.send('switch_page', 3)
+            })
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+            $('#close_btn').on('click', () => {
+                $('#sidebar').toggleClass('active');
+            })
+            $('#logout_btn').click(function () {
+                ipcrender.send('logout')
+            })     
         });
     </script>
     <script>
@@ -43,30 +67,59 @@
     </script>   
 </head>
 <body>
-       <div class="search">          
-            設備編號
-            <input type="text" name="設備編號"> 
-            設備機型
-            <input type="text" name="設備機型">           
-            <button>查詢</button>
-       </div>
-       <div>
-            <br>
-            <button id="add-btn" style="float:right;">新增設備</button>
-       </div>
-       <div> 
-            <table id="target">
-                <tbody>
-                    <tr>                        
-                        <th>設備編號</th>
-                        <th>設備機型</th>
-                        <th>分類</th>
-                        <th>綁定表單</th>
-                        <th></th>
-                    </tr>
-                </tbody>
-            </table>
-       </div>       
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="close_btn">Close &times;</h3>
+                <h3 id="user-name">AKIRA</h3>
+                <button id="logout_btn">登出</button>
+            </div>
+            <ul>
+                <li >
+                    <a id="bagi">巡檢分配</a>
+                </li>
+                <li class="active">
+                    <a id="setting">設備設定</a>
+                </li>
+                <li>
+                    <a id="form">表單編輯</a>
+                </li>
+                <li>
+                    <a id="member">帳戶設定</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="content">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+                ☰
+            </button>
+            <div class="search">
+                設備編號
+                <input type="text" name="設備編號"> 設備機型
+                <input type="text" name="設備機型">
+                <button>查詢</button>
+            </div>
+            <div>
+                <br>
+                <button id="add-btn" style="float:right;">新增設備</button>
+            </div>
+            <div>
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>設備編號</th>
+                            <th>設備說明</th>
+                            <th>設備位置</th>
+                            <th>監控點</th>                    
+                            <th>id</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
       
