@@ -16,8 +16,11 @@
         var tb_manager = new table_manager() 
         
         ipcrender.on('reply-device', (event, arg) => {
-            console.log(arg)
+            //console.log(arg)
             tb_manager.showtable(arg,'device')
+        })  
+        ipcrender.on('updatecell-device', (event, content, tag) => {
+            tb_manager.update_cell('device',content, tag)
         })              
         $(document).ready(function () {
             //向main process傳送訊息使其和伺服器溝通回傳資料
@@ -36,6 +39,9 @@
             })
             $('#member').on('click', () => {
                 ipcrender.send('switch_page', 3)
+            })
+            $('#info').on('click', () => {
+                ipcrender.send('switch_page', 4)
             })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
@@ -86,6 +92,9 @@
                 </li>
                 <li>
                     <a id="member">帳戶設定</a>
+                </li>
+                <li>
+                    <a id="info">庫存查詢</a>
                 </li>
             </ul>
         </nav>

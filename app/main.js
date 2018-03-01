@@ -15,7 +15,7 @@ app.on('ready', function(){
   win = new BrowserWindow({width: 1920, height: 1080})
   result_win = new BrowserWindow({width: 800, height: 600 , parent: win, modal: true, show: false}) 
   win.loadURL('file://' + __dirname + '/index.html')
-  result_win.loadURL('file://' + __dirname + '/result.html')
+  result_win.loadURL('file://' + __dirname + '/pop_up.html')
  
   win.webContents.openDevTools()
   result_win.webContents.openDevTools();
@@ -23,7 +23,7 @@ app.on('ready', function(){
   win.on('closed', () => { win = null})
   result_win.on('closed', () => { result_win = null})
   ipcMain.on('switch_page',(event,index)=>{
-    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html']
+    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html']
     //console.log(index)
     //console.log(pagename[index])
     win.loadURL('file://' + __dirname + pagename[index])
@@ -46,7 +46,7 @@ app.on('ready', function(){
       }
       bim.Reset()
     }).catch((err)=>{
-      console.log(err)
+      //console.log(err)
     })   
     //win.loadURL('file://' + __dirname + '/member.html')     
   }) 
@@ -57,7 +57,7 @@ app.on('ready', function(){
       bim.Reset()
       win.loadURL('file://' + __dirname + '/index.html')
     }).catch((err) => {
-      console.log(err)
+      //console.log(err)
     })   
   })
   ipcMain.on('toggle-result', ()=>{
@@ -66,20 +66,53 @@ app.on('ready', function(){
       result_win.hide()
     else
       result_win.show()
+    })
+  ipcMain.on('update', (event, which, id, body, tag) => {
+    console.log('update')
+    console.log('tag :' + tag)
+    if (which === 'member') {
+      bim.UpdateUser(id, body)
+    }
+    else if (which === 'device') {
+      bim.UpdateDevice(id, body)
+    }
+    else if(which === 'form'){
+      bim.UpdateFormTemplate(id,body)
+    }
+    else {
+      console.log('which is not defined !')
+    }
+
+    rp(bim.GetOption()).then((parseBody) => {
+      console.log(parseBody)      
+      bim.Reset()
+    }).catch((err) => {
+      //console.log(err)
+    })   
   })
-  ipcMain.on('add',(event,which,body)=>{
+  ipcMain.on('add',(event, which, body, tag)=>{
     console.log('add')
+    console.log('tag :' + tag)
+    let path = ''
+
     if(which === 'member'){
       bim.AddUser(body)
+      path = 'updatecell-member'
     }
     else if(which === 'device'){
       bim.AddDevice(body)
+      path = 'updatecell-device'
+    }
+    else if(which === 'form'){
+      bim.AddFormTemplate(body)
+      path = 'updateform'
     }
     else{
       alert('type error!')
     }   
     rp(bim.GetOption()).then((parseBody)=>{
-      console.log(parseBody)      
+      console.log(parseBody)    
+      event.sender.send(path,parseBody.content,tag)
       bim.Reset()
     }).catch((err)=>{
       //console.log(err)
@@ -94,6 +127,9 @@ app.on('ready', function(){
     else if (which === 'device') {
       bim.RemoveDevice(body)
     }
+    else if(which === 'form'){
+      bim.RemoveFormTemplate(body)
+    }
     else {
       alert('type error!')
     }  
@@ -101,21 +137,9 @@ app.on('ready', function(){
       console.log(parseBody)
       bim.Reset()
     }).catch((err) => {
-      console.log(err)
+      //console.log(err)
     })  
     
-  })
-  ipcMain.on('update',(event,which,id,body)=>{
-    console.log('update')
-    if (which === 'member') {
-      bim.UpdateUser(id,body)
-    }
-    else if (which === 'device') {
-      bim.UpdateDevice(id,body)
-    }
-    else {
-      console.log('which is not defined !')
-    }  
   })
   ipcMain.on('ready-to-show',(event,which)=>{
     console.log('ready-to-show')
@@ -130,15 +154,19 @@ app.on('ready', function(){
       bim.GetDeviceList()
       back_path = 'reply-device'
     }
+    else if(which === 'form'){
+      bim.GetFormList()
+      back_path = 'reply-form'
+    }
     else{
       alert('type error!')
     }
     rp(bim.GetOption()).then((parseBody)=>{
-      //console.log(parseBody)  
+     // console.log(parseBody)  
       event.sender.send(back_path,parseBody['content'])     
       bim.Reset()
     }).catch((err)=>{
-      console.log(err)
+      //console.log(err)
     }) 
     
   })

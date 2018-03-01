@@ -28,6 +28,9 @@
         ipcrender.on('reply-member',(event,arg)=>{
             //console.log(arg)
             tb_manager.showtable(arg,'member')
+        })
+        ipcrender.on('updatecell-member',(event,content,tag)=>{
+            tb_manager.update_cell('member',content,tag) // tag 是給tr的編號 
         })              
         $(document).ready(function (){ 
             ipcrender.send('ready-to-show','member')
@@ -48,6 +51,9 @@
             })
             $('#member').on('click', () => {
                 ipcrender.send('switch_page', 3)
+            })
+             $('#info').on('click', () => {
+                ipcrender.send('switch_page', 4)
             })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
@@ -86,6 +92,9 @@
                 <li class="active">
                     <a id="member">帳戶設定</a>
                 </li>
+                <li>
+                    <a id="info">庫存查詢</a>
+                </li>
             </ul>
         </nav>
 
@@ -96,10 +105,14 @@
             </button>
             <div class="search">
                 人員姓名
-                <input type="text" name="人員姓名"> 人員編號
-                <input type="text" name="人員編號"> 人員身分
+                <input type="text" name="人員姓名"> 
+                人員編號
+                <input type="text" name="人員編號"> 
+                人員身分
                 <input type="text" name="人員身分">
-                <button id="search-btn">查詢</button>
+                <button id="search-btn">
+                    查詢 
+                </button>
             </div>
             <div>
                 <button id="add-btn" style="float:right ">新增人員</button>
@@ -114,7 +127,7 @@
                             <th>密碼</th>
                             <th>電子郵件</th>
                             <th>創建日期</th>
-                            <th>id</th>>
+                            <th class="server-id">id</th>
                             <th></th>
                         </tr>
                     </tbody>

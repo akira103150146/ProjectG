@@ -25,6 +25,9 @@
             $('#member').on('click', () => {
                 ipcrender.send('switch_page', 3)
             })
+             $('#info').on('click', () => {
+                ipcrender.send('switch_page', 4)
+            })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
@@ -61,17 +64,20 @@
                 <button id="logout_btn">登出</button>
             </div>
             <ul>
-                <li>
+                <li class="active">
                     <a id="bagi">巡檢分配</a>
                 </li>
                 <li>
                     <a id="setting">設備設定</a>
                 </li>
-                <li class="active">
+                <li>
                     <a id="form">表單編輯</a>
                 </li>
                 <li>
                     <a id="member">帳戶設定</a>
+                </li>
+                <li>
+                    <a id="info">庫存查詢</a>
                 </li>
             </ul>
         </nav>
@@ -81,28 +87,17 @@
                 ☰
             </button>
             <div>
-                <p>標題</p>
-                <p>日期</p>
             
                 <table id="target">
                     <tbody>
                         <tr>
                             <th>人員名稱</th>
                             <th>人員編號</th>
-                            <th></th>
                             <th>巡檢設備</th>
-                            <th>備註</th>
+                            <th>派遣表單</th> 
+                            <th>排程類別</th>
                             <th></th>
-                        </tr>
-                        <tr>
-                            <td>王小名</td>
-                            <td>abc123</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><button>送出通知</button></td>
-                        </tr>
-                        
+                        </tr>                   
                     </tbody>
                 </table>
             </div>

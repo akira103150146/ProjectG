@@ -14,7 +14,6 @@ function bim_userinfo(id,name,password,number,identity,emailAddress,createDate){
   this.emailAddress = emailAddress
   this.createDate = createDate
 }
-
 function bim_app_window(){    
   this.host = 'http://140.118.127.140:8080'
   this.permission = '/bim/api/'
@@ -107,7 +106,7 @@ bim_app_window.prototype.GetStaffList = function(){
 }
 bim_app_window.prototype.GetFormInfo = function(id){
   this.api = 'form/template/'
-  this.op = 'info?id=' + Number(id)
+  this.op = 'info?id=' + id
   this.how = 'GET'  
   this.Send(null)
 }
@@ -116,6 +115,18 @@ bim_app_window.prototype.AddFormTemplate = function(info){
   this.op = 'add'
   this.how = 'POST' 
   this.Send(info)
+}
+bim_app_window.prototype.UpdateFormTemplate = function(id,info){
+  this.api = 'form/template/'
+  this.op = 'update?id=' + id
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.RemoveFormTemplate = function(id){
+  this.api = 'form/template'
+  this.op = 'remove?id=' + id
+  this.how = 'DELETE'
+  this.Send(null)
 }
 bim_app_window.prototype.GetFormList = function(){
   this.api = 'form/template/'

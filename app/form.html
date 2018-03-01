@@ -1,5 +1,5 @@
 <html>
-<head>    
+<head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
@@ -11,11 +11,16 @@
     </script>
     <script type="text/javascript" src="js/lib/header.js"></script>
     <script type="text/javascript" src="js/lib/redips-table-min.js"></script>
-    <script type="text/javascript" src="js/lib/script.js"></script>      
-    <script src="jQuery-contextMenu-master/dist/jquery.contextMenu.js" type="text/javascript"></script>   
+    <script type="text/javascript" src="js/lib/script.js"></script>
+    <script src="jQuery-contextMenu-master/dist/jquery.contextMenu.js" type="text/javascript"></script>
     <script>
-        $(document).ready(function () {            
-            var ipcrender = require('electron').ipcRenderer
+        var ipcrender = require('electron').ipcRenderer
+        ipcrender.on('reply-form', (event, arg) => {
+            //console.log(arg)
+            redips.showlist(arg)
+        })
+        $(document).ready(function () {
+            ipcrender.send('ready-to-show', 'form')
             $('#bagi').on('click', () => {
                 ipcrender.send('switch_page', 0)
             })
@@ -28,16 +33,20 @@
             $('#member').on('click', () => {
                 ipcrender.send('switch_page', 3)
             })
+            $('#info').on('click', () => {
+                ipcrender.send('switch_page', 4)
+            })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
             $('#close_btn').on('click', () => {
                 $('#sidebar').toggleClass('active');
-            }) 
+            })
             $('#logout_btn').click(function () {
                 ipcrender.send('logout')
-            })         
-        });       
+            })
+        });
+        
         $(function () {
             $('#mainTable').contextMenu({
                 selector: 'td',
@@ -77,9 +86,10 @@
                 }
             });
         });
-    </script>  
+    </script>
 </head>
-<body>  
+
+<body>
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -99,7 +109,10 @@
                 </li>
                 <li>
                     <a id="member">帳戶設定</a>
-                </li>               
+                </li>
+                <li>
+                    <a id="info">庫存查詢</a>
+                </li>
             </ul>
         </nav>
         <div id="myContainer">
@@ -107,6 +120,13 @@
                 <i class="glyphicon glyphicon-align-left"></i>
                 ☰
             </button>
+
+            <div class="scroll-menu">
+                <ul id="form-list">
+
+                </ul>
+            </div>
+
             <table id="toolbox">
                 <tbody>
                     <tr>
@@ -128,9 +148,22 @@
                             <input type="button" value="新增行" class="button" onclick="redips.column('insert')" title="Add table column" />
                             <input type="button" value="刪除行" class="button" onclick="redips.column('delete')" title="Delete table column" />
                         </td>
+                        <td>
+                            <input type="button" value="新增表格" class="button" onclick="redips.addform()" title="Save change" />
+                            <input type="button" value="儲存表格" class="button" onclick="redips.save()" title="Save change" />
+                            <input type="button" value="刪除表格" class="button" onclick="redips.removeform()" title="Save change" />
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            <div class="form_attribute">
+                ID
+                <input type="text" id="ID" value="" disabled /> 
+                標題
+                <input type="text" id="title" value="" /> 
+                創建日期
+                <input type="text" id="date" value="" disabled />
+            </div>
             <table id="mainTable">
                 <tbody>
                     <tr>
@@ -144,8 +177,7 @@
                 </tbody>
             </table>
         </div>
-
-
-    </div>      
+    </div>
 </body>
+
 </html>

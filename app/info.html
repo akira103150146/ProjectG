@@ -1,7 +1,84 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        let $ = require('jquery')
+        let jQuery = require('jquery')      
+    </script>
+    <script>
+         var ipcrender = require('electron').ipcRenderer
+           
+            $(document).ready(function () {
+                ipcrender.send('ready-to-show', 'form')
+                $('#bagi').on('click', () => {
+                    ipcrender.send('switch_page', 0)
+                })
+                $('#setting').on('click', () => {
+                    ipcrender.send('switch_page', 1)
+                })
+                $('#form').on('click', () => {
+                    ipcrender.send('switch_page', 2)
+                })
+                $('#member').on('click', () => {
+                    ipcrender.send('switch_page', 3)
+                })
+                $('#info').on('click',()=>{
+                    ipcrender.send('switch_page', 4)
+                })
+                $('#sidebarCollapse').on('click', function(){
+                    $('#sidebar').toggleClass('active');
+                });
+                $('#close_btn').on('click', () => {
+                    $('#sidebar').toggleClass('active');
+                })
+                $('#logout_btn').click(function () {
+                    ipcrender.send('logout')
+                })
+            });
+    </script>
+</head>
 <body>
-       <p>3</p>
+       <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3 id="close_btn">Close &times;</h3>
+                    <h3 id="user-name">AKIRA</h3>
+                    <button id="logout_btn">登出</button>
+                </div>
+                <ul>
+                    <li>
+                        <a id="bagi">巡檢分配</a>
+                    </li>
+                    <li>
+                        <a id="setting">設備設定</a>
+                    </li>
+                    <li>
+                        <a id="form">表單編輯</a>
+                    </li>
+                    <li>
+                        <a id="member">帳戶設定</a>
+                    </li>
+                    <li class="active">
+                        <a id="info">庫存查詢</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="content">
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>零件名稱</th>
+                            <th>數量</th>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+
+       </div>
       
 </body>
 </html>
