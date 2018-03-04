@@ -19,6 +19,9 @@
             //console.log(arg)
             redips.showlist(arg)
         })
+        ipcrender.on('update-form',(event, content,tag)=>{
+            redips.updateform(content,tag)
+        })
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'form')
             $('#bagi').on('click', () => {
@@ -87,6 +90,7 @@
             });
         });
     </script>
+  
 </head>
 
 <body>
@@ -123,7 +127,6 @@
 
             <div class="scroll-menu">
                 <ul id="form-list">
-
                 </ul>
             </div>
 
@@ -149,9 +152,9 @@
                             <input type="button" value="刪除行" class="button" onclick="redips.column('delete')" title="Delete table column" />
                         </td>
                         <td>
-                            <input type="button" value="新增表格" class="button" onclick="redips.addform()" title="Save change" />
-                            <input type="button" value="儲存表格" class="button" onclick="redips.save()" title="Save change" />
-                            <input type="button" value="刪除表格" class="button" onclick="redips.removeform()" title="Save change" />
+                            <input type="button" value="新增表格" class="button" onclick="redips.addform()" title="Add Form" />
+                            <input type="button" value="儲存表格" class="button" onclick="redips.saveform()" title="Save change" />
+                            <input type="button" value="刪除表格" class="button" onclick="redips.removeform()" title="Remove Form" />
                         </td>
                     </tr>
                 </tbody>

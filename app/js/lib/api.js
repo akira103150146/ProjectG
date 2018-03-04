@@ -110,28 +110,28 @@ bim_app_window.prototype.GetFormInfo = function(id){
   this.how = 'GET'  
   this.Send(null)
 }
-bim_app_window.prototype.AddFormTemplate = function(info){
+bim_app_window.prototype.GetFormList = function () {
   this.api = 'form/template/'
+  this.op = 'list'
+  this.how = 'GET'
+  this.Send(null)
+}
+bim_app_window.prototype.AddFormTemplate = function(info){
+  this.api = 'admin/form/template/'
   this.op = 'add'
   this.how = 'POST' 
   this.Send(info)
 }
 bim_app_window.prototype.UpdateFormTemplate = function(id,info){
-  this.api = 'form/template/'
+  this.api = 'admin/form/template/'
   this.op = 'update?id=' + id
   this.how = 'POST'
   this.Send(info)
 }
 bim_app_window.prototype.RemoveFormTemplate = function(id){
-  this.api = 'form/template'
+  this.api = 'admin/form/template/'
   this.op = 'remove?id=' + id
   this.how = 'DELETE'
-  this.Send(null)
-}
-bim_app_window.prototype.GetFormList = function(){
-  this.api = 'form/template/'
-  this.op = 'list'
-  this.how = 'GET' 
   this.Send(null)
 }
 bim_app_window.prototype.GetDeviceList = function(){

@@ -42,7 +42,7 @@ app.on('ready', function(){
         win.loadURL('file://' + __dirname + '/member.html')
       }
       else{
-        alert('帳號或密碼錯誤')
+        console.log('帳號或密碼錯誤')
       }
       bim.Reset()
     }).catch((err)=>{
@@ -60,7 +60,7 @@ app.on('ready', function(){
       //console.log(err)
     })   
   })
-  ipcMain.on('toggle-result', ()=>{
+  ipcMain.on('toggle-result', (event,which)=>{
     console.log('call')
     if(result_win.isVisible())
       result_win.hide()
@@ -105,10 +105,11 @@ app.on('ready', function(){
     }
     else if(which === 'form'){
       bim.AddFormTemplate(body)
-      path = 'updateform'
+      path = 'update-form'
     }
     else{
-      alert('type error!')
+      console.log('which is not defined')
+      console.log(which)
     }   
     rp(bim.GetOption()).then((parseBody)=>{
       console.log(parseBody)    
@@ -120,7 +121,7 @@ app.on('ready', function(){
   })
   ipcMain.on('remove',(event,which,body)=>{
     console.log('remove')
-    //console.log(body)
+    console.log(which)
     if (which === 'member') {
       bim.RemoveUser(body)
     }
@@ -131,7 +132,8 @@ app.on('ready', function(){
       bim.RemoveFormTemplate(body)
     }
     else {
-      alert('type error!')
+      console.log('which is not defined')
+      console.log(which)
     }  
     rp(bim.GetOption()).then((parseBody) => {
       console.log(parseBody)
@@ -159,7 +161,8 @@ app.on('ready', function(){
       back_path = 'reply-form'
     }
     else{
-      alert('type error!')
+      console.log('which is not defined')
+      console.log(which)
     }
     rp(bim.GetOption()).then((parseBody)=>{
      // console.log(parseBody)  
