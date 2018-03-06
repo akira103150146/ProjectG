@@ -22,7 +22,9 @@
         ipcrender.on('updatecell-device', (event, content, tag) => {
             tb_manager.update_cell('device',content, tag)
         })              
-        $(document).ready(function () {
+        $(document).ready(function () {           
+            let obj = document.getElementById('qrcode')
+            console.log(obj)
             //向main process傳送訊息使其和伺服器溝通回傳資料
             ipcrender.send('ready-to-show', 'device')
             tb_manager.add_cell('#target','#add-btn',5)            
@@ -69,8 +71,24 @@
                     "quit": { name: "Quit", icon: function ($element, key, item) { return 'context-menu-icon context-menu-icon-quit'; } }
                 }
             });
-        });
-    </script>   
+        });       
+    </script>  
+    <script>
+        const QRCode = require('./qrcode/qrcode.min.js')
+        var qr = new QRCode('qrcode')
+        const url = 'http://140.118.127.140:8080/bim/api/device/info?id=' 
+        const qrcode_text = document.getElementById('qrcode-text')
+        var makeqrcode = function(){         
+            if(qrcode_text.value !=''){   
+                qr.makeCode(url+qrcode_text.value)
+                let link = document.createElement('a')
+                let img = $('canvas')[0].toDataURL()
+                a.href =  img
+                a.download = qrcode_text.value
+            }
+
+        }
+    </script> 
 </head>
 <body>
     <div class="wrapper">
@@ -112,7 +130,10 @@
             <div>
                 <br>
                 <button id="add-btn" style="float:right;">新增設備</button>
+                <input type="text" name="輸入設備ID" id="qrcode-text">
+                <button onclick="makeqrcode()">產生QRCODE</button>
             </div>
+            <div id="qrcode" style=""></div>
             <div>
                 <table id="target">
                     <tbody>

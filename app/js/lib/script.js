@@ -18,8 +18,7 @@ redips.init = function () {
     // show cellIndex (it is nice for debugging)
     rt.cell_index(true);
     // define background color for marked cell
-    rt.color.cell = '#9BB3DA';    
-    console.log('init');  
+    rt.color.cell = '#9BB3DA';   
 };
 
 // function merges table cells
@@ -28,20 +27,17 @@ redips.merge = function () {
     REDIPS.table.merge('h', false);
     // and then merge cells vertically and clear cells (second parameter is true by default)
     REDIPS.table.merge('v');
-    console.log('merge');
 };
 
 // function splits table cells if colspan/rowspan is greater then 1
 // mode is 'h' or 'v' (cells should be marked before)
 redips.split = function (mode) {
     REDIPS.table.split(mode);   
-    console.log('split');
 };
 
 // insert/delete table row
 redips.row = function (type) {
     REDIPS.table.row('mainTable', type);    
-    console.log('insert row');
     var debugmsg = document.getElementById('mainTable')   
     var rows =  debugmsg.rows;
 };
@@ -156,19 +152,20 @@ redips.saveform = function () {
     }
     else { // do update
         ipcrender_form.send('update', 'form', ID.value, content, ID.value)
-    }
-  
+    }  
 }
 
 redips.get_loc_formdata = function(){
     const table = document.getElementById('mainTable')
     const title = document.getElementById('title')
     const ID = document.getElementById('ID')
+    const date = document.getElementById('date')
     let content = {
         'id': ID.value,
         'title': title.value,
         'content': table.innerHTML,
-        'deviceIds': []
+        'deviceIds': [],
+        'createTime': date.value
     }
 
     return content

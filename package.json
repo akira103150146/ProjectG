@@ -1,8 +1,15 @@
 {
- "name": "my_app_name",
- "version": "0.1.0",
- "main": "main.js",
- "dependencies": {
-  "simpler-sidebar": "^2.2.4"
- }
+    "name": "my_app_name",
+    "version": "0.1.0",
+    "main": "main.js",
+    "dependencies": {
+        "jquery-qrcode": "^1.0.0",
+        "mocha": "^5.0.1",
+        "request": "^2.83.0",
+        "request-promise": "^4.2.2",
+        "simpler-sidebar": "^2.2.4"
+    },
+    "devDependencies": {
+        "electron": "1.8.2"
+    }
 }
