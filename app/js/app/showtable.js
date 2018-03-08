@@ -10,11 +10,21 @@ table_manager.prototype.showtable = function(data,which){
         let content
         if(which === 'member'){
             content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toDateString(), data[i].id]
+            this.append_cell(content, i,'member')
         }
         else if(which === 'device'){
             content = [data[i].name, data[i].description, data[i].position, data[i].tagName, data[i].id]
+            this.append_cell(content, i ,'device')
         }
-        this.append_cell(content,i)
+        else if(which ==='post'){
+            content = [data[i].publisherId,data[i].content , new Date(data[i].createDate).toDateString()]
+            this.append_cell(content, i, 'post')
+        }
+        else if(which === 'bind_device'){
+            content = [data[i].name, data[i].description, data[i].position, data[i].tagName, data[i].id]
+            this.append_cell(content, i, 'bind_device')
+        }
+        
     }
 }
 table_manager.prototype.append_cell = function(content,tr_index,add_type){
@@ -56,16 +66,32 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type){
     tr.lastChild.setAttribute('contentEditable', false)
     tr.setAttribute('id', tr_index + 1)//add id
 
+    
     /**add delete and save button**/
     let td_2 = document.createElement('TD')
     let btn = document.createElement('BUTTON')
     let btn2 = document.createElement('BUTTON')
+    let btn3 = document.createElement('BUTTON')
+    let btn4 = document.createElement('BUTTON')
     btn.textContent = '刪除'
     btn.id = 'delete'
     btn2.textContent = '儲存'
     btn2.id = 'save'
-    td_2.appendChild(btn)
-    td_2.appendChild(btn2)
+    btn3.textContent = '產生QRCODE'
+    btn3.id = 'get_qrcode'
+    btn4.textContent = '將此設備綁定表單'
+    btn4.id = 'bind'
+   
+    if(add_type === 'device' || add_type === 'member' ||add_type === 'post'){
+        td_2.appendChild(btn)
+        td_2.appendChild(btn2)
+        if (add_type === 'device') {
+            td_2.appendChild(btn3)
+        }       
+    }
+    else if(add_type === 'bind_device'){
+        td_2.appendChild(btn4)
+    }
     tr.appendChild(td_2)
     $('#target')[0].appendChild(tr) 
 }

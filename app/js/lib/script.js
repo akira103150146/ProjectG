@@ -225,3 +225,8 @@ redips.removeform = function(){
         date.value = ''
     }
 }
+
+redips.bind_device = function(){
+    console.log('open sub window')
+    ipcrender_form.send('toggle-result')
+}

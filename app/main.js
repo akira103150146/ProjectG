@@ -15,7 +15,7 @@ app.on('ready', function(){
   win = new BrowserWindow({width: 1920, height: 1080})
   result_win = new BrowserWindow({width: 800, height: 600 , parent: win, modal: true, show: false}) 
   win.loadURL('file://' + __dirname + '/index.html')
-  result_win.loadURL('file://' + __dirname + '/pop_up.html')
+  result_win.loadURL('file://' + __dirname + '/bind_device.html')
  
   win.webContents.openDevTools()
   result_win.webContents.openDevTools();
@@ -23,7 +23,7 @@ app.on('ready', function(){
   win.on('closed', () => { win = null})
   result_win.on('closed', () => { result_win = null})
   ipcMain.on('switch_page',(event,index)=>{
-    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html']
+    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html']
     //console.log(index)
     //console.log(pagename[index])
     win.loadURL('file://' + __dirname + pagename[index])
@@ -39,7 +39,7 @@ app.on('ready', function(){
         var token = parseBody['content'].token
         auth = id + '_' + token     
         bim.SetAuth(auth)
-        win.loadURL('file://' + __dirname + '/member.html')
+        win.loadURL('file://' + __dirname + '/form.html')
       }
       else{
         console.log('帳號或密碼錯誤')
@@ -60,13 +60,18 @@ app.on('ready', function(){
       //console.log(err)
     })   
   })
-  ipcMain.on('toggle-result', (event,which)=>{
+  ipcMain.on('toggle-result', (event,which,data)=>{
     console.log('call')
-    if(result_win.isVisible())
+    if(result_win.isVisible()){
       result_win.hide()
-    else
+      event.sender.send('bind_devices', data)
+    }
+    else{
       result_win.show()
-    })
+      //result_win.reload()
+    }
+   
+  })
   ipcMain.on('update', (event, which, id, body, tag) => {
     console.log('update')
     console.log('tag :' + tag)
@@ -159,6 +164,10 @@ app.on('ready', function(){
     else if(which === 'form'){
       bim.GetFormList()
       back_path = 'reply-form'
+    }
+    else if(which ==='post'){
+      bim.GetPostList()
+      back_path = 'reply-post'
     }
     else{
       console.log('which is not defined')

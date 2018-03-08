@@ -22,6 +22,10 @@
         ipcrender.on('update-form',(event, content,tag)=>{
             redips.updateform(content,tag)
         })
+        ipcrender.on('bind_devices',(event,ids)=>{
+            console('wdwdw')
+            console.log(ids)
+        })
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'form')
             $('#bagi').on('click', () => {
@@ -38,6 +42,9 @@
             })
             $('#info').on('click', () => {
                 ipcrender.send('switch_page', 4)
+            })
+             $('#post').on('click', () => {
+                ipcrender.send('switch_page', 5)
             })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
@@ -102,21 +109,30 @@
                 <button id="logout_btn">登出</button>
             </div>
             <ul>
-                <li>
-                    <a id="bagi">巡檢分配</a>
-                </li>
-                <li>
-                    <a id="setting">設備設定</a>
-                </li>
-                <li class="active">
-                    <a id="form">表單編輯</a>
-                </li>
-                <li>
-                    <a id="member">帳戶設定</a>
-                </li>
-                <li>
-                    <a id="info">庫存查詢</a>
-                </li>
+            <li>
+                <a id="post">公佈欄</a>
+            </li>
+            <li class="active">
+                <a id="form">巡檢表單編輯</a>
+            </li>
+            <li>
+                <a id="setting">巡檢設備設定</a>
+            </li>
+            <li>
+                <a id="bagi">巡檢任務派遣</a>
+            </li>
+            <li>
+                <a id="assign">巡檢排程設定</a>
+            </li>
+            <li>
+                <a id="info">維修主配件庫存查詢</a>
+            </li>
+            <li>
+                <a id="history">運維歷史表單查詢</a>
+            </li>
+            <li>
+                <a id="member">巡檢人員帳戶設定</a>
+            </li>
             </ul>
         </nav>
         <div id="myContainer">
@@ -155,6 +171,9 @@
                             <input type="button" value="新增表格" class="button" onclick="redips.addform()" title="Add Form" />
                             <input type="button" value="儲存表格" class="button" onclick="redips.saveform()" title="Save change" />
                             <input type="button" value="刪除表格" class="button" onclick="redips.removeform()" title="Remove Form" />
+                        </td>
+                        <td>
+                            <input type="button" value="綁定表單" class="button" onclick="redips.bind_device()" title="Remove Form" />
                         </td>
                     </tr>
                 </tbody>

@@ -78,7 +78,8 @@ REDIPS.table = (function () {
 
     merge = function (mode, clear, table) {
         var tbl, tr, c, rc1, rc2, marked, span, id, cl, t, i, j, first = { index: -1, span: -1 }; 
-        remove_selection(); tbl = (table === undefined) ? tables : get_table(table); 
+        remove_selection(); 
+        tbl = (table === undefined) ? tables : get_table(table); 
 
         for (t = 0; t < tbl.length; t++) {
             cl = cell_list(tbl[t]); 
@@ -123,11 +124,14 @@ REDIPS.table = (function () {
     merge_cells = function (cl, idx, pos1, pos2, mode, clear) {
         var span = 0, id, fc, c, i; 
         fc = (mode === 'v') ? cl[pos1 + '-' + idx] : cl[idx + '-' + pos1]; 
+        
         for (i = pos1 + 1; i < pos2; i++) { id = (mode === 'v') ? (i + '-' + idx) : (idx + '-' + i); if (cl[id]) { c = cl[id]; span += (mode === 'v') ? c.rowSpan : c.colSpan; relocate(c, fc); c.parentNode.deleteCell(c.cellIndex); } }
         if (fc !== undefined) {
             if (mode === 'v') { fc.rowSpan += span; }
             else { fc.colSpan += span; }
             if (clear === true || clear === undefined) { mark(false, fc); }
+            fc.style.width = fc.colSpan * 105;
+            fc.style.height =  fc.rowSpan * 60;           
         }
     }; max_cols = function (table) {
         var tr = table.rows, span, max = 0, i, j; if (typeof (table) === 'string') { table = document.getElementById(table); }
@@ -177,7 +181,7 @@ REDIPS.table = (function () {
                 nc.contentEditable = "true";
                 
             }
-            cell_index();
+            //cell_index();
         }
         else {
             if (table.rows.length === 1) { return; }
@@ -201,7 +205,7 @@ REDIPS.table = (function () {
                 nc.contentEditable = "true";
 
              }
-            cell_index();
+            //cell_index();
         }
         else {
             c = table.rows[0].cells; if (c.length === 1 && (c[0].colSpan === 1 || c[0].colSpan === undefined)) { return; }

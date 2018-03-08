@@ -1,0 +1,58 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        let $ = require('jquery')
+        let jQuery = require('jquery')
+    </script>
+    <script src="js/app/showtable.js"></script>
+    <script>
+        var ipcrender = require('electron').ipcRenderer
+        var tb_manager = new table_manager()
+        var bind_list = []
+        ipcrender.on('reply-device', (event, arg) => {
+            console.log(arg)
+            tb_manager.showtable(arg, 'bind_device')
+        })
+        $(document).ready(function () {
+            ipcrender.send('ready-to-show', 'device')
+             $('#target').on('click', 'button#bind', function () {
+                let id = $(this)[0].parentNode.previousSibling.textContent
+                bind_list.push(id)
+            })
+        });
+    </script>  
+    <script>
+        var CloseSubWindow
+        var ipcrender = require('electron').ipcRenderer
+        CloseSubWindow = function(){
+            console.log(bind_list)
+            ipcrender.send('toggle-result','bind',bind_list)
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">      
+        <div class="content">    
+            <input type="button" value="確認綁定" class="button" onclick=" CloseSubWindow()"  />
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>設備編號</th>
+                            <th>設備說明</th>
+                            <th>設備位置</th>
+                            <th>監控點說明</th>
+                            <th>id</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

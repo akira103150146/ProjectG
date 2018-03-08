@@ -71,10 +71,6 @@ bim_app_window.prototype.Logout = function(){
   this.how = 'DELETE'  
   this.Send(null)
 }
-bim_app_window.prototype.Notify = function(info){
-  //送出設備資訊
-
-}
 bim_app_window.prototype.AddUser = function(value){
   let obj = {'name' : value.name,
              'password' : value.password,
@@ -162,5 +158,29 @@ bim_app_window.prototype.UpdateDevice = function(id,info){
   this.op = 'update?id=' + id
   this.how = 'POST'
   this.Send(info)
+}
+bim_app_window.prototype.GetPostList = function(){
+  this.api = 'post/'
+  this.op = 'list'
+  this.how = 'GET'
+  this.Send(null)
+}
+bim_app_window.prototype.AddPost = function(info){
+  this.api = 'admin/post/'
+  this.op = 'add'
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.UpdatePost = function(id,info){
+  this.api = 'admin/post/'
+  this.op = 'update?id=' + id
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.RemovePost = function(id){
+  this.api = 'admin/post/'
+  this.op = 'removeid?=' + id
+  this.how = 'DELETE'
+  this.Send(null)
 }
 module.exports = bim_app_window
