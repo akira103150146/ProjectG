@@ -17,7 +17,7 @@ table_manager.prototype.showtable = function(data,which){
             this.append_cell(content, i ,'device')
         }
         else if(which ==='post'){
-            content = [data[i].publisherId,data[i].content , new Date(data[i].createDate).toDateString()]
+            content = [data[i].publisherId,data[i].content , data[i].id]
             this.append_cell(content, i, 'post')
         }
         else if(which === 'bind_device'){
@@ -28,6 +28,7 @@ table_manager.prototype.showtable = function(data,which){
     }
 }
 table_manager.prototype.append_cell = function(content,tr_index,add_type){
+    console.log('append cell')
     let l = content.length
     let tr = document.createElement('tr')
     if(content.length<=0)alert('table content null')
@@ -144,32 +145,30 @@ table_manager.prototype.save = function(table_name,max){
         if(max === 6){
             where = 'member'
             obj = {
-                'name': '',
-                'password': '',
-                'number': '',
-                'identity': '',
-                'emailAddress': ''
-            }
-            obj.emailAddress = arr[1]
-            obj.password = arr[2]
-            obj.identity = arr[3]
-            obj.number = arr[4]
-            obj.name = arr[5]
+                'name': arr[5],
+                'password': arr[2],
+                'number': arr[4],
+                'identity': arr[3],
+                'emailAddress': arr[1]
+            }           
         }
         else if(max === 4){
             where = 'device'
             obj = {
-                'name': '',
-                'Description': '',
-                'position': '',
-                'tagName': ''
+                'name': arr[3],
+                'Description': arr[2],
+                'position': arr[1],
+                'tagName': arr[0]
+            }            
+        }
+        else if(max === 3){
+            where = 'post'
+            obj = {
+                'publisherId': 8,
+                'content': arr[1]
             }
-            obj.name = arr[3]
-            obj.Description = arr[2]
-            obj.position = arr[1]
-            obj.tagName = arr[0]
         }  
-        
+       
         let id = $(this)[0].parentNode.previousSibling.textContent // get previous td 
         const flag = ((id === '內容空白') ? true : false)
         const tag = $(this)[0].parentNode.parentNode.id

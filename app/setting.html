@@ -13,8 +13,7 @@
     <script src="js/app/showtable.js"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
-        var tb_manager = new table_manager() 
-        
+        var tb_manager = new table_manager()         
         ipcrender.on('reply-device', (event, arg) => {
             //console.log(arg)
             tb_manager.showtable(arg,'device')
@@ -22,18 +21,19 @@
         ipcrender.on('updatecell-device', (event, content, tag) => {
             tb_manager.update_cell('device',content, tag)
         })              
-        $(document).ready(function () {           
-            let obj = document.getElementById('qrcode')
-            const QRCode = require('./qrcode/qrcode.min.js')
-            var qr = new QRCode('qrcode')
-            const url = 'http://140.118.127.140:8080/bim/api/device/info?id='
-            qr.makeCode(url)
-            console.log(obj)
+        $(document).ready(function () {  
+            const QRCode = require('./qrcode/qrcode.min.js') 
+            var qr = new QRCode('qrcode')  
+            qr.makeCode('10')                 
             //向main process傳送訊息使其和伺服器溝通回傳資料
             ipcrender.send('ready-to-show', 'device')
             tb_manager.add_cell('#target','#add-btn',5)            
             tb_manager.delete_cell('#target','device')
             tb_manager.save('#target',4)
+            $('#target').on('click', 'button#get_qrcode',  function() {
+                let id = $(this)[0].parentNode.previousSibling.textContent                
+                qr.makeCode(id)               
+            })
             $('#bagi').on('click', () => {
                 ipcrender.send('switch_page', 0)
             })
@@ -61,6 +61,7 @@
             $('#logout_btn').click(function () {
                 ipcrender.send('logout')
             })     
+          
         });
     </script>
     <script>

@@ -16,7 +16,7 @@ redips.init = function () {
     // activate onmousedown event listener on cells within table with id="mainTable"
     rt.onmousedown('mainTable', true);
     // show cellIndex (it is nice for debugging)
-    rt.cell_index(true);
+    //rt.cell_index(true);
     // define background color for marked cell
     rt.color.cell = '#9BB3DA';   
 };
@@ -146,7 +146,7 @@ redips.addform = function(){
 redips.saveform = function () {
     let content = redips.get_loc_formdata()
     let ID = document.getElementById('ID')
-
+    console.log(content)
     if (ID.value.substr(0,3) === 'loc') { // do add
         ipcrender_form.send('add','form',content,ID.value)
     }

@@ -84,6 +84,9 @@ app.on('ready', function(){
     else if(which === 'form'){
       bim.UpdateFormTemplate(id,body)
     }
+    else if(which === 'post'){
+      bim.UpdatePost(id,body)
+    }
     else {
       console.log('which is not defined !')
     }
@@ -112,6 +115,10 @@ app.on('ready', function(){
       bim.AddFormTemplate(body)
       path = 'update-form'
     }
+    else if(which === 'post'){
+      bim.AddPost(body)
+      path = 'update-post'
+    }
     else{
       console.log('which is not defined')
       console.log(which)
@@ -135,6 +142,9 @@ app.on('ready', function(){
     }
     else if(which === 'form'){
       bim.RemoveFormTemplate(body)
+    }
+    else if(which === 'post'){
+      bim.RemovePost(body)
     }
     else {
       console.log('which is not defined')

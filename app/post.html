@@ -15,8 +15,14 @@
               ipcrender.on('reply-post', (event, arg) => {
                     tb_manager.showtable(arg,'post')
               })
+              ipcrender.on('update-post',(event)=>{
+                  console.log('reply')
+              })
               $(document).ready(function () {   
-                   ipcrender.send('ready-to-show', 'post')                
+                   ipcrender.send('ready-to-show', 'post')
+                    tb_manager.add_cell('#target', '#add-btn', 3)
+                    tb_manager.delete_cell('#target', 'post')
+                    tb_manager.save('#target', 3)                
                     $('#bagi').on('click', () => {
                         ipcrender.send('switch_page', 0)
                     })
@@ -90,6 +96,7 @@
                     <i class="glyphicon glyphicon-align-left"></i>
                     ☰
                 </button>
+                <button style="float:right;" id="add_btn">新增貼文</button>
                 <table  id="target">
                     <tbody>
                         <tr>

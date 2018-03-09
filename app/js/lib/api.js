@@ -179,8 +179,11 @@ bim_app_window.prototype.UpdatePost = function(id,info){
 }
 bim_app_window.prototype.RemovePost = function(id){
   this.api = 'admin/post/'
-  this.op = 'removeid?=' + id
+  this.op = 'remove?id=' + id
   this.how = 'DELETE'
   this.Send(null)
+}
+bim_app_window.prototype.Assign_Form = function(){
+  
 }
 module.exports = bim_app_window
