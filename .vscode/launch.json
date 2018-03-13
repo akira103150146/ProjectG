@@ -15,13 +15,12 @@
                 "type": "node",
                 "request": "launch",
                 "cwd": "${workspaceRoot}",
-                "runtimeExecutable": "node.js",
+                "runtimeExecutable": "Node.js",
                 "windows": {
                   "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
                 },
                 "program": "${workspaceRoot}/app/main.js",
-                "protocol": "inspector",
-                "console": "integratedTerminal"
+                "protocol": "inspector"             
         } 
     
     ]

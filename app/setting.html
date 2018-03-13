@@ -24,14 +24,21 @@
         $(document).ready(function () {  
             const QRCode = require('./qrcode/qrcode.min.js') 
             var qr = new QRCode('qrcode')  
-            qr.makeCode('10')                 
+            var link = document.createElement('a')
+            qr.makeCode('10')          
             //向main process傳送訊息使其和伺服器溝通回傳資料
             ipcrender.send('ready-to-show', 'device')
-            tb_manager.add_cell('#target','#add-btn',5)            
+            tb_manager.add_cell('#add-btn',5,'device')            
             tb_manager.delete_cell('#target','device')
             tb_manager.save('#target',4)
             $('#target').on('click', 'button#get_qrcode',  function() {
                 let id = $(this)[0].parentNode.previousSibling.textContent                
+                var a = $("<a>")
+                    .attr("href", $("img")[0].src)
+                    .attr("download", id + "_qr.png")
+                    .appendTo("body")
+                a[0].click()
+                a.remove()
                 qr.makeCode(id)               
             })
             $('#bagi').on('click', () => {
@@ -51,6 +58,12 @@
             })
             $('#post').on('click', () => {
                 ipcrender.send('switch_page', 5)
+            })
+            $('#histroy').on('click', () => {
+                ipcrender.send('switch_page', 6)
+            })
+            $('#assign').on('click', () => {
+                ipcrender.send('switch_page', 7)
             })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
@@ -131,9 +144,7 @@
             </div>
             <div>
                 <br>
-                <button id="add-btn" style="float:right;">新增設備</button>
-                <input type="text" name="輸入設備ID" id="qrcode-text">
-                <button onclick="makeqrcode()">產生QRCODE</button>
+                <button id="add-btn" style="float:right;">新增設備</button>     
             </div>
             <div id="qrcode"></div>
             <div>

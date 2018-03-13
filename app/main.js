@@ -23,7 +23,7 @@ app.on('ready', function(){
   win.on('closed', () => { win = null})
   result_win.on('closed', () => { result_win = null})
   ipcMain.on('switch_page',(event,index)=>{
-    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html']
+    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html','/assign.html']
     //console.log(index)
     //console.log(pagename[index])
     win.loadURL('file://' + __dirname + pagename[index])
@@ -39,7 +39,7 @@ app.on('ready', function(){
         var token = parseBody['content'].token
         auth = id + '_' + token     
         bim.SetAuth(auth)
-        win.loadURL('file://' + __dirname + '/form.html')
+        win.loadURL('file://' + __dirname + '/post.html')
       }
       else{
         console.log('帳號或密碼錯誤')
@@ -118,6 +118,9 @@ app.on('ready', function(){
     else if(which === 'post'){
       bim.AddPost(body)
       path = 'update-post'
+    }
+    else if(which === 'assign'){
+      bim.Assign_Form(body)
     }
     else{
       console.log('which is not defined')

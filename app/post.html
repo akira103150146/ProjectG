@@ -15,12 +15,12 @@
               ipcrender.on('reply-post', (event, arg) => {
                     tb_manager.showtable(arg,'post')
               })
-              ipcrender.on('update-post',(event)=>{
-                  console.log('reply')
+              ipcrender.on('update-post',(event,content,tag)=>{
+                   tb_manager.update_cell('post', content, tag) // tag 是給tr的編號 
               })
               $(document).ready(function () {   
-                   ipcrender.send('ready-to-show', 'post')
-                    tb_manager.add_cell('#target', '#add-btn', 3)
+                    ipcrender.send('ready-to-show', 'post')
+                    tb_manager.add_cell('#add-btn', 3,'post')
                     tb_manager.delete_cell('#target', 'post')
                     tb_manager.save('#target', 3)                
                     $('#bagi').on('click', () => {
@@ -40,6 +40,12 @@
                     })
                      $('#post').on('click', () => {
                       ipcrender.send('switch_page', 5)
+                    })
+                    $('#histroy').on('click', () => {
+                      ipcrender.send('switch_page', 6)
+                    })
+                    $('#assign').on('click', () => {
+                      ipcrender.send('switch_page', 7)
                     })
                     $('#sidebarCollapse').on('click', function () {
                         $('#sidebar').toggleClass('active');
@@ -96,7 +102,8 @@
                     <i class="glyphicon glyphicon-align-left"></i>
                     ☰
                 </button>
-                <button style="float:right;" id="add_btn">新增貼文</button>
+                <button style="float:right;" id="add-btn">新增貼文</button>
+             
                 <table  id="target">
                     <tbody>
                         <tr>

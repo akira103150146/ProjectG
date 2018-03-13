@@ -183,7 +183,10 @@ bim_app_window.prototype.RemovePost = function(id){
   this.how = 'DELETE'
   this.Send(null)
 }
-bim_app_window.prototype.Assign_Form = function(){
-  
+bim_app_window.prototype.Assign_Form = function(info){
+  this.api = 'admin/form/'
+  this.op = 'assign'
+  this.how = 'POST'
+  this.Send(info)
 }
 module.exports = bim_app_window

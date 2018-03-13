@@ -28,6 +28,15 @@
              $('#info').on('click', () => {
                 ipcrender.send('switch_page', 4)
             })
+            $('#post').on('click', () => {
+                ipcrender.send('switch_page', 5)
+            })
+            $('#history').on('click', () => {
+                ipcrender.send('switch_page', 6)
+            })
+            $('#assign').on('click', () => {
+                ipcrender.send('switch_page', 7)
+            })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
@@ -56,6 +65,21 @@
     </script>
 </head>
 <body>
+    <script>
+        var ipcrender = require('electron').ipcRenderer 
+        var assign = function(){
+            
+            let form_id = document.getElementById('assign-form')
+            let assign_member_id = document.getElementById('member-number')
+            let obj = {
+                'formTemplateId': form_id.textContent,
+                'publisherId': assign_member_id.textContent
+            }
+            console.log(obj)
+            ipcrender.send('add','assign',obj)
+            alert('派遣任務成功')
+        }
+    </script>
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -77,13 +101,13 @@
                 <a id="bagi">巡檢任務派遣</a>
             </li>
             <li>
-                <a>巡檢排程設定</a>
+                <a id='assign'>巡檢排程設定</a>
             </li>
             <li>
                 <a id="info">維修主配件庫存查詢</a>
             </li>
             <li>
-                <a>運維歷史表單查詢</a>
+                <a id='histroy'>運維歷史表單查詢</a>
             </li>
             <li>
                 <a id="member">巡檢人員帳戶設定</a>
@@ -96,17 +120,22 @@
                 ☰
             </button>
             <div>
-            
                 <table id="target">
                     <tbody>
                         <tr>
-                            <th>人員名稱</th>
                             <th>人員編號</th>
-                            <th>巡檢設備</th>
                             <th>派遣表單</th> 
-                            <th>排程類別</th>
                             <th></th>
-                        </tr>                   
+                        </tr>        
+                        <tr>
+                            <td contenteditable="true" id="member-number"></td>
+                            <td contenteditable="true" id="assign-form"></td>
+                            <td>
+                                <button onclick="assign()">
+                                    派遣任務
+                                </button>
+                            </td>
+                        </tr>           
                     </tbody>
                 </table>
             </div>

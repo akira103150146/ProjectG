@@ -32,6 +32,12 @@
                  $('#post').on('click', () => {
                     ipcrender.send('switch_page', 5)
                 })
+                 $('#histroy').on('click', () => {
+                    ipcrender.send('switch_page', 6)
+                })
+                $('#assign').on('click', () => {
+                    ipcrender.send('switch_page', 7)
+                })
                 $('#sidebarCollapse').on('click', function(){
                     $('#sidebar').toggleClass('active');
                 });
@@ -80,12 +86,37 @@
                 </ul>
             </nav>
             <div class="content">
+                <select>
+                    <option>電子元件庫存</option>
+                    <option>機械元件庫存</option>
+                    <option>水利庫存</option>
+                </select>
                 <table id="target">
                     <tbody>
                         <tr>
                             <th>零件名稱</th>
                             <th>數量</th>
-                        </tr>                        
+                        </tr> 
+                        <tr>
+                            <td>LED燈</td>
+                            <td>99</td>
+                        </tr>
+                        <tr>
+                            <td>可變電阻</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>S8051</td>
+                            <td>1025</td>
+                        </tr>
+                        <tr>
+                            <td>電解電容1F</td>
+                            <td>99</td>
+                        </tr>
+                        <tr>
+                            <td>保險絲</td>
+                            <td>50</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

@@ -10,24 +10,24 @@ table_manager.prototype.showtable = function(data,which){
         let content
         if(which === 'member'){
             content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toDateString(), data[i].id]
-            this.append_cell(content, i,'member')
+            this.append_cell(content, i,'member',false)
         }
         else if(which === 'device'){
             content = [data[i].name, data[i].description, data[i].position, data[i].tagName, data[i].id]
-            this.append_cell(content, i ,'device')
+            this.append_cell(content, i ,'device',false)
         }
         else if(which ==='post'){
             content = [data[i].publisherId,data[i].content , data[i].id]
-            this.append_cell(content, i, 'post')
+            this.append_cell(content, i, 'post',false)
         }
         else if(which === 'bind_device'){
             content = [data[i].name, data[i].description, data[i].position, data[i].tagName, data[i].id]
-            this.append_cell(content, i, 'bind_device')
+            this.append_cell(content, i, 'bind_device',false)
         }
         
     }
 }
-table_manager.prototype.append_cell = function(content,tr_index,add_type){
+table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
     console.log('append cell')
     let l = content.length
     let tr = document.createElement('tr')
@@ -35,12 +35,12 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type){
    
     for(let i=0;i<l;i++){
         let td = document.createElement('TD')
-        if(content[i] === '內容空白'&& add_type === 'addnew')//if add new add tag to td
+        if(content[i] === '內容空白'&& isnew)//if add new add tag to td
             td.setAttribute('id', 'new') 
 
         if(l === 7 && i === 2){//member.html need set id to options
             let slc = document.createElement('select')
-            let texts = ['管理員', '員工', '檢修人員']
+            let texts = ['管理員', '工程師', '檢修人員']
             let dfselected
             if(content[2] === '內容空白')
                 dfselected = 0
@@ -90,13 +90,16 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type){
             td_2.appendChild(btn3)
         }       
     }
+    else if(add_type === 'member'){
+
+    }
     else if(add_type === 'bind_device'){
         td_2.appendChild(btn4)
     }
     tr.appendChild(td_2)
     $('#target')[0].appendChild(tr) 
 }
-table_manager.prototype.add_cell = function(table_name,btn_name,max){
+table_manager.prototype.add_cell = function(btn_name,max,type){
     const tempthis = this
     $(btn_name).click(function () {       
         tempthis.current_index++ // add id and set it
@@ -104,7 +107,7 @@ table_manager.prototype.add_cell = function(table_name,btn_name,max){
         for(let i =0;i<max;i++)
             content.push('內容空白')
         
-        tempthis.append_cell(content,tempthis.current_index,'addnew')       
+        tempthis.append_cell(content,tempthis.current_index,type,true)       
     });
 }
 table_manager.prototype.delete_cell = function(table_name,which){
@@ -205,6 +208,11 @@ table_manager.prototype.update_cell = function(which,content,tag){
         arr.push(content.tagName)
         arr.push(content.id)
         
+    }
+    else if (which === 'post'){
+        arr.push(content.publisherId)
+        arr.push(content.content)
+        arr.push(content.id)
     }
    
     let count = 0
