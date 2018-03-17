@@ -13,6 +13,7 @@
     <script>
         $(document).ready(()=>{
             var ipcrender = require('electron').ipcRenderer
+            $('#sidebar').toggleClass('active');
             $('#bagi').on('click', () => {
                 ipcrender.send('switch_page', 0)
             })
@@ -68,7 +69,6 @@
     <script>
         var ipcrender = require('electron').ipcRenderer 
         var assign = function(){
-            
             let form_id = document.getElementById('assign-form')
             let assign_member_id = document.getElementById('member-number')
             let obj = {
@@ -89,7 +89,7 @@
             </div>
             <ul>
             <li>
-                <a>公佈欄</a>
+                <a id="post">公佈欄</a>
             </li>
             <li>
                 <a id="form">巡檢表單編輯</a>
@@ -119,23 +119,71 @@
                 <i class="glyphicon glyphicon-align-left"></i>
                 ☰
             </button>
+            <div class="member-list">
+                <ul id="">
+                    <li>Ama</li>
+                    <li>Adam</li>
+                    <li>Apple</li>
+                    <li>Orange</li>
+                </ul>
+            </div>
             <div>
                 <table id="target">
                     <tbody>
                         <tr>
-                            <th>人員編號</th>
-                            <th>派遣表單</th> 
-                            <th></th>
+                            <th>一</th>
+                            <th>二</th> 
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                            <th>六</th>
+                            <th>日</th>
                         </tr>        
                         <tr>
-                            <td contenteditable="true" id="member-number"></td>
-                            <td contenteditable="true" id="assign-form"></td>
-                            <td>
-                                <button onclick="assign()">
-                                    派遣任務
-                                </button>
-                            </td>
-                        </tr>           
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                           <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

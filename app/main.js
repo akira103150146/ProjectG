@@ -166,6 +166,7 @@ app.on('ready', function(){
     let back_path = ''
     if(which === 'member'){
       console.log('ready-member')
+     
       bim.GetStaffList()
       back_path = 'reply-member'
     }
@@ -175,8 +176,12 @@ app.on('ready', function(){
       back_path = 'reply-device'
     }
     else if(which === 'form'){
-      bim.GetFormList()
+      bim.GetFormTemplateList()
       back_path = 'reply-form'
+    }
+    else if(which === 'history'){
+      bim.GetFormList()
+      back_path = 'reply-history'
     }
     else if(which ==='post'){
       bim.GetPostList()
@@ -187,7 +192,7 @@ app.on('ready', function(){
       console.log(which)
     }
     rp(bim.GetOption()).then((parseBody)=>{
-     // console.log(parseBody)  
+      console.log(parseBody)  
       event.sender.send(back_path,parseBody['content'])     
       bim.Reset()
     }).catch((err)=>{

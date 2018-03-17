@@ -3,18 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script>
         let $ = require('jquery')
         let jQuery = require('jquery')      
     </script>
+    <script type="text/javascript" src="js/lib/header.js"></script>
+    <script type="text/javascript" src="js/lib/redips-table-min.js"></script>
+    <script type="text/javascript" src="js/lib/script.js"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
-
+        ipcrender.on('reply-history', (event, arg) => {
+                //redips.showlist(arg)
+                //console.log('reply')
+                //console.log(arg)
+                redips.showlist(arg)
+        })
         $(document).ready(function () {
-            ipcrender.send('ready-to-show', 'form')
+            console.log('start')
+            ipcrender.send('ready-to-show', 'history')
             $('#bagi').on('click', () => {
                 ipcrender.send('switch_page', 0)
             })
@@ -87,27 +96,22 @@
                 </li>
             </ul>
         </nav>
-        <div class="content">
-            <table id="target">
+        <div class="scroll-menu">
+            <ul id="form-list">
+            </ul>
+        </div>
+        <div class="form_attribute">
+            ID
+            <input type="text" id="ID" value="" disabled /> 標題
+            <input type="text" id="title" value="" /> 創建日期
+            <input type="text" id="date" value="" disabled />
+        </div>
+        <div class="myContainer">
+            <table id="mainTable">
                 <tbody>
-                    <tr>
-                        <th>時間</th>
-                        <th>表單名稱</th>
-                        <th>表單內容</th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>1999/09/03</td>
-                        <td>發電機檢修</td>
-                        <td>發生了殭屍病毒擴散導致無法進入工廠內維修....被圍困在工廠內10天後被軍隊救出</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>1999/10/23</td>
-                        <td>工廠周圍巡檢</td>
-                        <td>殭屍病毒仍然沒有減緩的趨勢，身邊的同事幾乎都開始咳嗽了起來，看著灰濛濛的天...我...想回家。</td>
-                        <td></td>
-                    </tr>
+                   <tr>
+
+                   </tr>
                 </tbody>
             </table>
         </div>

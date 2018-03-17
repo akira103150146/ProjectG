@@ -35,27 +35,12 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
    
     for(let i=0;i<l;i++){
         let td = document.createElement('TD')
-        if(content[i] === '內容空白'&& isnew)//if add new add tag to td
+        if(content[i] === '內容空白' && isnew)//if add new add tag to td
             td.setAttribute('id', 'new') 
 
-        if(l === 7 && i === 2){//member.html need set id to options
-            let slc = document.createElement('select')
+        if(add_type === 'member' && i === 2){//member.html need set id to options
             let texts = ['管理員', '工程師', '檢修人員']
-            let dfselected
-            if(content[2] === '內容空白')
-                dfselected = 0
-            else 
-                dfselected =new Number(content[2])           
-            
-            for (let j = 0; j < texts.length; j++) {
-                let op = document.createElement('option')
-                op.value = j
-                op.textContent = texts[j]
-                if(j == dfselected)
-                    op.setAttribute('selected','selected')
-                slc.appendChild(op)
-            }
-            td.appendChild(slc)
+            td.appendChild(this.add_slc(texts,content[2]))
             td.setAttribute('className','staffID')
         }
         else{
@@ -90,14 +75,30 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
             td_2.appendChild(btn3)
         }       
     }
-    else if(add_type === 'member'){
-
-    }
     else if(add_type === 'bind_device'){
         td_2.appendChild(btn4)
     }
     tr.appendChild(td_2)
     $('#target')[0].appendChild(tr) 
+}
+table_manager.prototype.add_slc = function(texts,value){
+    let slc = document.createElement('select')
+    let dfselected
+
+    if (value === '內容空白')
+        dfselected = 0
+    else
+        dfselected = new Number(value)
+
+    for (let j = 0; j < texts.length; j++) {
+        let op = document.createElement('option')
+        op.value = j
+        op.textContent = texts[j]
+        if (j == dfselected)
+            op.setAttribute('selected', 'selected')
+        slc.appendChild(op)
+    }
+    return slc
 }
 table_manager.prototype.add_cell = function(btn_name,max,type){
     const tempthis = this
