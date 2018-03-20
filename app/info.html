@@ -9,11 +9,15 @@
         let $ = require('jquery')
         let jQuery = require('jquery')      
     </script>
+    <script src="js/app/showtable.js"></script>
     <script>
          var ipcrender = require('electron').ipcRenderer
-           
+        var tb_manager = new table_manager() 
             $(document).ready(function () {
-                ipcrender.send('ready-to-show', 'form')
+               // ipcrender.send('ready-to-show', 'form')
+                tb_manager.add_cell('#add-btn', 2, 'info')
+                tb_manager.delete_cell('#target', 'info');
+                tb_manager.save('#target', 2)
                 $('#bagi').on('click', () => {
                     ipcrender.send('switch_page', 0)
                 })
@@ -46,6 +50,15 @@
                 })
                 $('#logout_btn').click(function () {
                     ipcrender.send('logout')
+                })
+                $('#add-classfication').click(function(){
+                    if($('#class-input')[0].value != ''){
+                        var op = document.createElement('option')
+                        op.textContent = $('#class-input')[0].value;
+                        $('#selection')[0].appendChild(op)
+                    }
+                    else
+                        alert('輸入為空')
                 })
             });
     </script>
@@ -86,36 +99,62 @@
                 </ul>
             </nav>
             <div class="content">
-                <select>
+                <input id="class-input" type="text">
+                <button id="add-classfication">新增類別</button>
+                <select id="selection">
                     <option>電子元件庫存</option>
                     <option>機械元件庫存</option>
                     <option>水利庫存</option>
                 </select>
+                <div>
+                    <button id="add-btn" style="float:right;">新增庫存</button>
+                </div>
                 <table id="target">
                     <tbody>
                         <tr>
                             <th>零件名稱</th>
                             <th>數量</th>
+                            <th></th>
                         </tr> 
                         <tr>
                             <td>LED燈</td>
                             <td>99</td>
+                            <td>
+                                <button id="save">儲存</button>
+                                <button id="delete">刪除</button>
+                            </td>
                         </tr>
                         <tr>
                             <td>可變電阻</td>
                             <td>15</td>
+                            <td>
+                                <button id="save">儲存</button>
+                                <button id="delete">刪除</button>
+                            </td>
                         </tr>
                         <tr>
                             <td>S8051</td>
                             <td>1025</td>
+                            <td>
+                                <button id="save">儲存</button>
+                                <button id="delete">刪除</button>
+                            </td>
                         </tr>
                         <tr>
                             <td>電解電容1F</td>
                             <td>99</td>
+                            <td>
+                                <button id="save">儲存</button>
+                                <button id="delete">刪除</button>
+                            </td>
                         </tr>
                         <tr>
                             <td>保險絲</td>
                             <td>50</td>
+                            <td>
+                                <button id="save">儲存</button>
+                                <button id="delete">刪除</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -103,8 +103,10 @@ redips.fillform = function(item){
     ID.value = item.id
     table.innerHTML = item.content
     title.value = item.title
-    date.value = new Date(item.createTime).toDateString()
-    
+    if(item.createTime)
+        date.value = new Date(item.createTime).toDateString()
+    else
+        date.value = new Date(item.submitTime).toDateString()
     redips.init()
 }
 

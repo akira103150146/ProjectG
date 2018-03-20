@@ -49,6 +49,7 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
         }     
         tr.appendChild(td)
     }
+    if(add_type !='info')
     tr.lastChild.setAttribute('contentEditable', false)
     tr.setAttribute('id', tr_index + 1)//add id
 
@@ -68,7 +69,7 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
     btn4.textContent = '將此設備綁定表單'
     btn4.id = 'bind'
    
-    if(add_type === 'device' || add_type === 'member' ||add_type === 'post'){
+    if(add_type === 'device' || add_type === 'member' ||add_type === 'post'||add_type === 'info'){
         td_2.appendChild(btn)
         td_2.appendChild(btn2)
         if (add_type === 'device') {
