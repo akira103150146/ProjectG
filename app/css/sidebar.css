@@ -31,14 +31,14 @@ a, a:hover, a:focus {
     min-width: 250px;
 	max-width: 250px;
 	min-height: 100vh;
-    background: #7386D5;
+    background: rgb(2, 9, 37);
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #6d7fcc;
+    background: rgb(2, 9, 37);
 }
 
 #sidebar ul.components {
@@ -58,12 +58,12 @@ a, a:hover, a:focus {
 }
 #sidebar ul li a:hover {
     color: #7386D5;
-    background: #fff;
+    background: #122161;
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
-    background: #6d7fcc;
+    background: #122161;
 }
 ul ul a {
     font-size: 0.9em !important;
