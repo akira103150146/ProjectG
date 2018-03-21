@@ -28,12 +28,9 @@ app.on('ready', function(){
     //console.log(pagename[index])
     win.loadURL('file://' + __dirname + pagename[index])
   })
-  ipcMain.on('login', (event,arg,arg2)=>{    
-    console.log(arg)
-    console.log(arg2)
+  ipcMain.on('login', (event,arg,arg2)=>{   
     bim.Login(arg,arg2) 
-    rp(bim.GetOption()).then((parseBody)=>{
-      console.log(parseBody)
+    rp(bim.GetOption()).then((parseBody)=>{      
       if(parseBody['code'] == 100){
         var id = parseBody['content'].id
         var token = parseBody['content'].token
@@ -60,15 +57,15 @@ app.on('ready', function(){
       //console.log(err)
     })   
   })
-  ipcMain.on('toggle-result', (event,which,data)=>{
+  ipcMain.on('toggle-result', function(event,which,data){
     console.log('call')
-    if(result_win.isVisible()){
-      result_win.hide()
-      event.sender.send('bind_devices', data)
+    if(result_win.isVisible()){    
+      win.webContents.send('bind_devices', data)//送綁定資料到main window
+      result_win.hide()     
     }
     else{
       result_win.show()
-      //result_win.reload()
+      result_win.reload()
     }
    
   })
@@ -212,6 +209,5 @@ app.on('window-all-closed', () => {
 app.on('activate', () => { 
   if (win === null) {
     createWindow()
-  }
-  console.log('e')
+  } 
 })

@@ -15,7 +15,8 @@
         ipcrender.on('reply-device', (event, arg) => {
             console.log(arg)
             tb_manager.showtable(arg, 'bind_device')
-        })
+        })    
+        
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'device')
              $('#target').on('click', 'button#bind', function () {
@@ -23,15 +24,12 @@
                 bind_list.push(id)
             })
         });
+        var CloseSubWindow = function () {
+                console.log(bind_list)
+                ipcrender.send('toggle-result', 'bind', bind_list)
+                bind_list = []
+         }
     </script>  
-    <script>
-        var CloseSubWindow
-        var ipcrender = require('electron').ipcRenderer
-        CloseSubWindow = function(){
-            console.log(bind_list)
-            ipcrender.send('toggle-result','bind',bind_list)
-        }
-    </script>
 </head>
 
 <body>

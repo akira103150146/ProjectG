@@ -15,15 +15,15 @@
     <script src="jQuery-contextMenu-master/dist/jquery.contextMenu.js" type="text/javascript"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
-        ipcrender.on('reply-form', (event, arg) => {
-            //console.log(arg)
+        ipcrender.on('reply-form',function (event, arg){      
             redips.showlist(arg)
         })
-        ipcrender.on('update-form',(event, content,tag)=>{
+        ipcrender.on('update-form',function(event, content,tag){
             redips.updateform(content,tag)
         })
-        ipcrender.on('bind_devices',(event,ids)=>{
-            console.log(ids)
+        ipcrender.on('bind_devices', function (event, arg) {
+                console.log(arg.toString())
+
         })
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'form')
