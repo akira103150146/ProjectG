@@ -23,7 +23,7 @@ app.on('ready', function(){
   win.on('closed', () => { win = null})
   result_win.on('closed', () => { result_win = null})
   ipcMain.on('switch_page',(event,index)=>{
-    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html','/assign.html']
+    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html']
     //console.log(index)
     //console.log(pagename[index])
     win.loadURL('file://' + __dirname + pagename[index])

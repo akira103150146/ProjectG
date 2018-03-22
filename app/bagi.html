@@ -35,9 +35,6 @@
             $('#history').on('click', () => {
                 ipcrender.send('switch_page', 6)
             })
-            $('#assign').on('click', () => {
-                ipcrender.send('switch_page', 7)
-            })
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
@@ -94,14 +91,11 @@
             <li>
                 <a id="form">巡檢表單編輯</a>
             </li>
-            <li class="active">
+            <li>
                 <a id="setting">巡檢設備設定</a>
             </li>
-            <li>
+            <li class="active">
                 <a id="bagi">巡檢任務派遣</a>
-            </li>
-            <li>
-                <a id='assign'>巡檢排程設定</a>
             </li>
             <li>
                 <a id="info">維修主配件庫存查詢</a>
