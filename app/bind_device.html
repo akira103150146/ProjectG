@@ -12,10 +12,16 @@
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager()
         var bind_list = []
-        ipcrender.on('reply-device', (event, arg) => {
-            console.log(arg)
+        ipcrender.on('reply-device', (event, arg) => {            
             tb_manager.showtable(arg, 'bind_device')
+            // console.log(document.getElementById('target'))
+              console.log($('tr:nth-child(5)')) 
         })    
+        ipcrender.on('update-bind-list',(arg)=>{
+            bind_list = arg
+           
+                     
+        })
         
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'device')

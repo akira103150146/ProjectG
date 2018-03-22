@@ -58,13 +58,16 @@ else if (window.attachEvent) {
 redips.showlist = function(info){
     let init_to_show
     let jstring = JSON.stringify(info)
-    localStorage.setItem('list_content',jstring)
+    localStorage.setItem('list_content',jstring)//將表單資料全部丟進去 local
 
     const l = info.length
-    for(let i=0;i<l;i++){       
+    for(let i=0;i<l;i++){//將表單資料撈出來 新增list項目       
         const index = info[i].id
         const title = info[i].title
-        if(i === 0)init_to_show = index
+        if(i === 0){
+            init_to_show = index
+            current_select_form_index = index
+        }
         redips.insert_li(index, title)        
     }
     this.showform(init_to_show)
@@ -79,7 +82,7 @@ redips.insert_li = function(id,title){
     li.textContent = title
     li.addEventListener('click', () => {
         const index = li.getAttribute('id')     
-        redips.update_to_json(current_select_form_index,redips.get_loc_formdata())//save loc edition 
+        redips.update_to_json(current_select_form_index,redips.get_loc_formdata())//將local編輯的結果儲存下來 
         redips.showform(index)
         current_select_form_index = index
     })
@@ -99,10 +102,16 @@ redips.fillform = function(item){
     let ID = document.getElementById('ID')
     let title = document.getElementById('title')
     let date = document.getElementById('date') 
-
+    let bind_list = document.getElementById('bind-list')
     ID.value = item.id
     table.innerHTML = item.content
     title.value = item.title
+    bind_list.innerHTML = ''
+    item.deviceIds.forEach((e)=>{
+        let temp = document.createElement('li')
+        temp.textContent = e
+        bind_list.appendChild(temp)
+    })
     if(item.createTime)
         date.value = new Date(item.createTime).toDateString()
     else
@@ -113,7 +122,7 @@ redips.fillform = function(item){
 redips.findform = function(index){
     let obj = JSON.parse(localStorage.list_content)
     const l = obj.length
-    
+    console.log(obj)
     for(let i =0;i<l;i++){
         if(obj[i].id == index){
             return obj[i]
@@ -137,18 +146,19 @@ redips.addform = function(){
         'id': 'loc_' + loc_id.toString(),
         'content' : tb.innerHTML,
         'title': 'I am A Title',
-        'createTime': ''
-    }
-    redips.fillform(item)
+        'createTime': '',
+        'deviceIds': []
+    }    
     redips.insert_li(item.id, item.title)//add list
     redips.add_to_json(item)//add to json
+    document.getElementById(item.id).click()
     loc_id++    
 }
 
 redips.saveform = function () {
     let content = redips.get_loc_formdata()
     let ID = document.getElementById('ID')
-    console.log(content)
+
     if (ID.value.substr(0,3) === 'loc') { // do add
         ipcrender_form.send('add','form',content,ID.value)
     }
@@ -166,13 +176,22 @@ redips.get_loc_formdata = function(){
         'id': ID.value,
         'title': title.value,
         'content': table.innerHTML,
-        'deviceIds': [],
+        'deviceIds': this.get_bind_arr(),
         'createTime': date.value
     }
 
     return content
 }
-
+redips.get_bind_arr = function(){
+    let arr = []
+    
+    $('#bind-list li').each(
+        function(e){
+           arr.push(this.textContent)
+        }
+    )
+    return arr
+}
 redips.updateform = function(content,tag){  
    let li = document.getElementById(tag) //update li id
    li.setAttribute('id',content.id)
@@ -218,17 +237,22 @@ redips.removeform = function(){
     if(ID.value != null){      
         let id = ID.value
         let item = document.getElementById(id)
-
         ipcrender_form.send('remove','form',id)         
         item.parentNode.removeChild(item)
         redips.remove_from_json(id)        
         table.innerHTML = ''
         ID.value = ''
         date.value = ''
+        $('#bind-list li').each(
+            function (e) {
+               this.parentNode.removeChild(this)
+            }
+        )
+       
     }
 }
 
 redips.bind_device = function(){
-    console.log('open sub window')
-    ipcrender_form.send('toggle-result')
+    console.log('open sub window')    
+    ipcrender_form.send('toggle-result', 'form', this.get_bind_arr())
 }

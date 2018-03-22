@@ -59,11 +59,19 @@ app.on('ready', function(){
   })
   ipcMain.on('toggle-result', function(event,which,data){
     console.log('call')
-    if(result_win.isVisible()){    
-      win.webContents.send('bind_devices', data)//送綁定資料到main window
+    if(!result_win){
+      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: false }) 
+      result_win.loadURL('file://' + __dirname + '/bind_device.html')
+      result_win.webContents.openDevTools()
+      result_win.on('closed', () => { result_win = null })
+    }
+    if(result_win.isVisible()){
+      if(which === 'bind')
+        win.webContents.send('bind_devices', data)//送綁定資料到main window
       result_win.hide()     
     }
     else{
+      result_win.webContents.send('update-bind-list',data)//送綁定資料到sub window
       result_win.show()
       result_win.reload()
     }

@@ -22,7 +22,22 @@
             redips.updateform(content,tag)
         })
         ipcrender.on('bind_devices', function (event, arg) {
-                console.log(arg.toString())
+               //console.log(arg.toString())
+                var includes = function (e) {//用來判斷是否有重複存在的ID
+                    let arr =  $('#bind-list li')
+                    for(let i = 0;i<arr.length;i++){
+                        if(arr[i].textContent == e)return true
+                    }  
+                    return false                     
+                }
+                for(var i =0;i<arg.length;i++){                   
+                    if(!includes(arg[i])){//如果綁定的ID不存在的話就加入li
+                        //console.log('e')
+                      let temp = document.createElement('li')
+                      temp.textContent = arg[i]
+                      $('#bind-list').append(temp)
+                    }
+                }             
 
         })
         $(document).ready(function () {
@@ -190,6 +205,8 @@
                 <input type="text" id="title" value="" /> 
                 創建日期
                 <input type="text" id="date" value="" disabled />
+                <ul id="bind-list">
+                </ul>
             </div>
             <table id="mainTable">
                 <tbody>
