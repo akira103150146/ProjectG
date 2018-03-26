@@ -21,6 +21,7 @@
         let jQuery = require('jquery')
     </script>
     <script src="js/app/showtable.js"></script>
+    <script src="js/app/sidebar.js"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager() 
@@ -34,50 +35,14 @@
         })              
         $(document).ready(function (){ 
             ipcrender.send('ready-to-show','member')
-            tb_manager.add_cell('#add-btn',7,'member')
+            tb_manager.add_cell('#add-btn','member')
             tb_manager.delete_cell('#target','member');
-            tb_manager.save('#target',6)
-            $('#target td').on('contentchange',function(){
-                console.log('haschange')
-            })             
-            $('#bagi').on('click', () => {
-                ipcrender.send('switch_page', 0)
-            })
-            $('#setting').on('click', () => {
-                ipcrender.send('switch_page', 1)
-            })
-            $('#form').on('click', () => {
-                ipcrender.send('switch_page', 2)
-            })
-            $('#member').on('click', () => {
-                ipcrender.send('switch_page', 3)
-            })
-             $('#info').on('click', () => {
-                ipcrender.send('switch_page', 4)
-            })
-             $('#post').on('click', () => {
-                 console.log('gg')
-                ipcrender.send('switch_page', 5)
-            })
-            $('#histroy').on('click', () => {
-                ipcrender.send('switch_page', 6)
-            })
-            $('#assign').on('click', () => {
-                ipcrender.send('switch_page', 7)
-            })
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
-            $('#close_btn').on('click', () => {
-                $('#sidebar').toggleClass('active');
-            })
+            tb_manager.save('#target',6,'member')
+            sidebar_setup('member')
             $('#search-btn').click(function(){              
-                console.log($('#search-btn'))                
-                ipcrender.send('toggle-result')               
+                            
             })
-            $('#logout_btn').click(function(){
-                ipcrender.send('logout')
-            })                       
+                            
         })          
     </script>   
 </head>
@@ -89,31 +54,7 @@
                 <h3 id="user-name">AKIRA</h3>
                 <button id="logout_btn">登出</button>
             </div>
-            <ul>
-                <li>
-                    <a id='post'>公佈欄</a>
-                </li>
-                <li>
-                    <a id="form">巡檢表單編輯</a>
-                </li>
-                <li>
-                    <a id="setting">巡檢設備設定</a>
-                </li>
-                <li>
-                    <a id="bagi">巡檢任務派遣</a>
-                </li>
-                <li>
-                    <a id='assign'>巡檢排程設定</a>
-                </li>
-                <li>
-                    <a id="info">維修主配件庫存查詢</a>
-                </li>
-                <li>
-                    <a id='histroy'>運維歷史表單查詢</a>
-                </li>
-                <li class="active">
-                    <a id="member">巡檢人員帳戶設定</a>
-                </li>
+            <ul id="sidebar-option">
             </ul>
         </nav>
 
@@ -146,7 +87,6 @@
                             <th>密碼</th>
                             <th>電子郵件</th>
                             <th>創建日期</th>
-                            <th class="server-id">id</th>
                             <th></th>
                         </tr>
                     </tbody>

@@ -56,7 +56,7 @@ bim_app_window.prototype.Login = function(account,password){
   let obj = {'number':account,'password':password}
   this.api = 'staff/'  
   this.op = 'login'
-  this.how = 'POST'    
+  this.how = 'POST'   
   this.Send(obj) 
 }
 bim_app_window.prototype.GetInfo = function(){
@@ -192,6 +192,66 @@ bim_app_window.prototype.RemovePost = function(id){
 bim_app_window.prototype.Assign_Form = function(info){
   this.api = 'admin/form/'
   this.op = 'assign'
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.GetCpnList = function(){
+ this.api = 'component/'
+ this.op = 'list'
+ this.how = 'GET'
+ this.Send(null)
+}
+bim_app_window.prototype.AddCpn = function(info){
+  this.api = 'component/'
+  this.op = 'add'
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.RemoveCpn = function(id){
+  this.api = 'component/'
+  this.op = 'remove?id=' + id
+  this.how = 'DELETE'
+  this.Send(null)
+}
+bim_app_window.prototype.UpdateCpn = function(id,info){
+  this.api = 'component/'
+  this.op = 'update?id=' + id
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.GetCpnTypeList = function(){
+  this.api = 'component_type/'
+  this.op = 'list'
+  this.how = 'GET'
+  this.Send(null)
+}
+bim_app_window.prototype.AddCpnType = function(info){
+  this.api = 'admin/component_type/'
+  this.op = 'add'
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.GetSdlList = function(){
+  this.api = 'schedual/'
+  this.op = 'list'
+  this.how = 'GET'
+  this.Send(null)
+}
+bim_app_window.prototype.AddSdl = function(info){
+  this.api = 'schedual/'
+  this.op = 'add'
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.RemoveSdl = function(id){
+  this.api = 'schedual/'
+  this.op = 'remove?id=' + id
+  this.how = 'DELETE'
+  this.Send(null)
+}
+bim_app_window.prototype.UpdateSdl = function(id,info){
+  this.api = 'schedual/'
+  this.op = 'update?id=' + id 
   this.how = 'POST'
   this.Send(info)
 }

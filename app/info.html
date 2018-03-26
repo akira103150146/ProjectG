@@ -10,52 +10,36 @@
         let jQuery = require('jquery')      
     </script>
     <script src="js/app/showtable.js"></script>
+    <script src="js/app/sidebar.js"></script>
     <script>
-         var ipcrender = require('electron').ipcRenderer
+        var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager() 
+            ipcrender.on('reply-Cpn',(event,info)=>{
+                localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+                console.log(localStorage.list_info)
+                tb_manager.showtable(info,'Cpn')
+            })
+            ipcrender.on('reply-Cpn-type',(event,info)=>{ //將資料庫的類別都加入option               
+                info.forEach((e)=>{
+                    var op = document.createElement('option')
+                    op.textContent = e.name
+                    $('#selection')[0].appendChild(op)
+                })                
+            })
             $(document).ready(function () {
-               // ipcrender.send('ready-to-show', 'form')
-                tb_manager.add_cell('#add-btn', 2, 'info')
+                ipcrender.send('ready-to-show', 'Cpn_type')
+                ipcrender.send('ready-to-show', 'Cpn')
+                tb_manager.add_cell('#add-btn', 'info')
                 tb_manager.delete_cell('#target', 'info');
-                tb_manager.save('#target', 2)
-                $('#bagi').on('click', () => {
-                    ipcrender.send('switch_page', 0)
-                })
-                $('#setting').on('click', () => {
-                    ipcrender.send('switch_page', 1)
-                })
-                $('#form').on('click', () => {
-                    ipcrender.send('switch_page', 2)
-                })
-                $('#member').on('click', () => {
-                    ipcrender.send('switch_page', 3)
-                })
-                $('#info').on('click',()=>{
-                    ipcrender.send('switch_page', 4)
-                })
-                 $('#post').on('click', () => {
-                    ipcrender.send('switch_page', 5)
-                })
-                 $('#histroy').on('click', () => {
-                    ipcrender.send('switch_page', 6)
-                })
-                $('#assign').on('click', () => {
-                    ipcrender.send('switch_page', 7)
-                })
-                $('#sidebarCollapse').on('click', function(){
-                    $('#sidebar').toggleClass('active');
-                });
-                $('#close_btn').on('click', () => {
-                    $('#sidebar').toggleClass('active');
-                })
-                $('#logout_btn').click(function () {
-                    ipcrender.send('logout')
-                })
+                tb_manager.save('#target', 'info')
+                sidebar_setup('info')
                 $('#add-classfication').click(function(){
                     if($('#class-input')[0].value != ''){
                         var op = document.createElement('option')
                         op.textContent = $('#class-input')[0].value;
                         $('#selection')[0].appendChild(op)
+                        let obj = {'name': op.textContent}
+                        ipcrender.send('add','Cpn-type',obj,0)
                     }
                     else
                         alert('輸入為空')
@@ -71,40 +55,13 @@
                     <h3 id="user-name">AKIRA</h3>
                     <button id="logout_btn">登出</button>
                 </div>
-                <ul>
-                <li>
-                    <a id="post">公佈欄</a>
-                </li>
-                <li>
-                    <a id="form">巡檢表單編輯</a>
-                </li>
-                <li>
-                    <a id="setting">巡檢設備設定</a>
-                </li>
-                <li>
-                    <a id="bagi">巡檢任務派遣</a>
-                </li>
-                <li>
-                    <a id="assign">巡檢排程設定</a>
-                </li>
-                <li class="active">
-                    <a id="info">維修主配件庫存查詢</a>
-                </li>
-                <li>
-                    <a id="histroy">運維歷史表單查詢</a>
-                </li>
-                <li>
-                    <a id="member">巡檢人員帳戶設定</a>
-                </li>
+                <ul id = "sidebar-option">                
                 </ul>
             </nav>
             <div class="content">
                 <input id="class-input" type="text">
                 <button id="add-classfication">新增類別</button>
-                <select id="selection">
-                    <option>電子元件庫存</option>
-                    <option>機械元件庫存</option>
-                    <option>水利庫存</option>
+                <select id="selection">                    
                 </select>
                 <div>
                     <button id="add-btn" style="float:right;">新增庫存</button>
@@ -113,49 +70,10 @@
                     <tbody>
                         <tr>
                             <th>零件名稱</th>
-                            <th>數量</th>
+                            <th>零件料號</th>
+                            <th>數量</th>                                                       
                             <th></th>
-                        </tr> 
-                        <tr>
-                            <td>LED燈</td>
-                            <td>99</td>
-                            <td>
-                                <button id="save">儲存</button>
-                                <button id="delete">刪除</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>可變電阻</td>
-                            <td>15</td>
-                            <td>
-                                <button id="save">儲存</button>
-                                <button id="delete">刪除</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>S8051</td>
-                            <td>1025</td>
-                            <td>
-                                <button id="save">儲存</button>
-                                <button id="delete">刪除</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>電解電容1F</td>
-                            <td>99</td>
-                            <td>
-                                <button id="save">儲存</button>
-                                <button id="delete">刪除</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>保險絲</td>
-                            <td>50</td>
-                            <td>
-                                <button id="save">儲存</button>
-                                <button id="delete">刪除</button>
-                            </td>
-                        </tr>
+                        </tr>                        
                     </tbody>
                 </table>
             </div>

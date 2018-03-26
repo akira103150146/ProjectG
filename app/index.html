@@ -18,7 +18,13 @@
         </form>      
     </div>   
     <script>     
-      var ipcrender = require('electron').ipcRenderer                 
+      var ipcrender = require('electron').ipcRenderer 
+      ipcrender.on('reply-login',(event,id,user_name)=>{
+        console.log(id)
+        console.log(user_name)
+        localStorage.setItem('user-id',id)
+        localStorage.setItem('user-name',user_name)
+      })                
       var login = function () {
         var account = document.getElementById("account").value.toString()
         var password = document.getElementById("password").value.toString()     

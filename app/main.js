@@ -30,13 +30,17 @@ app.on('ready', function(){
   })
   ipcMain.on('login', (event,arg,arg2)=>{   
     bim.Login(arg,arg2) 
-    rp(bim.GetOption()).then((parseBody)=>{      
+    
+    rp(bim.GetOption()).then((parseBody)=>{  
+      console.log(parseBody)    
       if(parseBody['code'] == 100){
         var id = parseBody['content'].id
         var token = parseBody['content'].token
         auth = id + '_' + token     
-        bim.SetAuth(auth)
+        bim.SetAuth(auth)  
+        win.webContents.send('reply-login',id,arg)//初始化使用者資料
         win.loadURL('file://' + __dirname + '/post.html')
+        
       }
       else{
         console.log('帳號或密碼錯誤')
@@ -127,6 +131,12 @@ app.on('ready', function(){
     else if(which === 'assign'){
       bim.Assign_Form(body)
     }
+    else if(which === 'Cpn'){
+      bim.AddCpn(body)
+    }
+    else if(which === 'Cpn-type'){
+      bim.AddCpnType(body)
+    }
     else{
       console.log('which is not defined')
       console.log(which)
@@ -191,6 +201,14 @@ app.on('ready', function(){
     else if(which ==='post'){
       bim.GetPostList()
       back_path = 'reply-post'
+    }
+    else if(which === 'Cpn_type'){
+      bim.GetCpnTypeList()
+      back_path = 'reply-Cpn-type'
+    }
+    else if(which === 'Cpn'){
+      bim.GetCpnList()
+      back_path = 'reply-Cpn'
     }
     else{
       console.log('which is not defined')

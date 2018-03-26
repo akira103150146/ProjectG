@@ -106,12 +106,14 @@ redips.fillform = function(item){
     ID.value = item.id
     table.innerHTML = item.content
     title.value = item.title
-    bind_list.innerHTML = ''
-    item.deviceIds.forEach((e)=>{
-        let temp = document.createElement('li')
-        temp.textContent = e
-        bind_list.appendChild(temp)
-    })
+    if(bind_list){
+        bind_list.innerHTML = ''
+        item.deviceIds.forEach((e)=>{
+            let temp = document.createElement('li')
+            temp.textContent = e
+            bind_list.appendChild(temp)
+        })
+    }
     if(item.createTime)
         date.value = new Date(item.createTime).toDateString()
     else
@@ -122,7 +124,7 @@ redips.fillform = function(item){
 redips.findform = function(index){
     let obj = JSON.parse(localStorage.list_content)
     const l = obj.length
-    console.log(obj)
+    //console.log(obj)
     for(let i =0;i<l;i++){
         if(obj[i].id == index){
             return obj[i]

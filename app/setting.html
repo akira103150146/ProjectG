@@ -11,6 +11,7 @@
     </script>    
     <script src="jQuery-contextMenu-master/dist/jquery.contextMenu.js" type="text/javascript"></script>
     <script src="js/app/showtable.js"></script>
+    <script src="js/app/sidebar.js"></script>
     <script>
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager()         
@@ -28,11 +29,12 @@
             qr.makeCode('10')          
             //向main process傳送訊息使其和伺服器溝通回傳資料
             ipcrender.send('ready-to-show', 'device')
-            tb_manager.add_cell('#add-btn',5,'device')            
+            tb_manager.add_cell('#add-btn', 'device')            
             tb_manager.delete_cell('#target','device')
-            tb_manager.save('#target',4)
+            tb_manager.save('#target', 'device')
+            sidebar_setup('device')
             $('#target').on('click', 'button#get_qrcode',  function() {
-                let id = $(this)[0].parentNode.previousSibling.textContent                
+                let id = $(this)[0].parentNode.parentNode.id                
                 var a = $("<a>")
                     .attr("href", $("img")[0].src)
                     .attr("download", id + "_qr.png")
@@ -40,38 +42,7 @@
                 a[0].click()
                 a.remove()
                 qr.makeCode(id)               
-            })
-            $('#bagi').on('click', () => {
-                ipcrender.send('switch_page', 0)
-            })
-            $('#setting').on('click', () => {
-                ipcrender.send('switch_page', 1)
-            })
-            $('#form').on('click', () => {
-                ipcrender.send('switch_page', 2)
-            })
-            $('#member').on('click', () => {
-                ipcrender.send('switch_page', 3)
-            })
-            $('#info').on('click', () => {
-                ipcrender.send('switch_page', 4)
-            })
-            $('#post').on('click', () => {
-                ipcrender.send('switch_page', 5)
-            })
-            $('#history').on('click', () => {
-                ipcrender.send('switch_page', 6)
-            })
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
-            $('#close_btn').on('click', () => {
-                $('#sidebar').toggleClass('active');
-            })
-            $('#logout_btn').click(function () {
-                ipcrender.send('logout')
-            })     
-          
+            })         
         });
     </script>
     <script>
@@ -81,7 +52,6 @@
                 items: {
                     "add": {
                         name: "新增表單", icon: "paste", callback: function () {
-
                         }
                     },
                     "delete": { name: "Delete", icon: "delete" },
@@ -91,38 +61,16 @@
             });
         });       
     </script> 
-  
 </head>
 <body>
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
                 <h3 id="close_btn">Close &times;</h3>
-                <h3 id="user-name">AKIRA</h3>
+                <h3 id="user-name"></h3>
                 <button id="logout_btn">登出</button>
             </div>
-            <ul>
-                <li>
-                    <a id="post">公佈欄</a>
-                </li>
-                <li>
-                    <a id="form">巡檢表單編輯</a>
-                </li>
-                <li class="active">
-                    <a id="setting">巡檢設備設定</a>
-                </li>
-                <li>
-                    <a id="bagi">巡檢任務派遣</a>
-                </li>
-                <li>
-                    <a id="info">維修主配件庫存查詢</a>
-                </li>                        
-                <li>
-                    <a id="history">運維歷史表單查詢</a>
-                </li>
-                <li>
-                    <a id="member">巡檢人員帳戶設定</a>
-                </li>
+            <ul id="sidebar-option">
             </ul>
         </nav>
         <div class="content">
@@ -148,8 +96,7 @@
                             <th>設備編號</th>
                             <th>設備說明</th>
                             <th>設備位置</th>
-                            <th>監控點說明</th>                    
-                            <th>id</th>
+                            <th>監控點說明</th>                   
                             <th></th>
                         </tr>
                     </tbody>

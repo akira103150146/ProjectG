@@ -1,6 +1,12 @@
 function table_manager(){
     this.ipcrender = require('electron').ipcRenderer
     this.current_index = 0
+    this.dict = {
+        "post": 3,
+        "member": 6,
+        "device": 4,
+        "info": 3
+    }
 }
 table_manager.prototype.showtable = function(data,which){
     let l = data.length
@@ -9,35 +15,40 @@ table_manager.prototype.showtable = function(data,which){
     for(let i =0;i<l;i++){
         let content
         if(which === 'member'){
-            content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toDateString(), data[i].id]
-            this.append_cell(content, i,'member',false)
+            content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toDateString()]
+            this.append_cell(content, data[i].id, 'member', false)
         }
         else if(which === 'device'){
-            content = [data[i].name, data[i].description, data[i].position, data[i].tagName, data[i].id]
-            this.append_cell(content, i ,'device',false)
+            content = [data[i].name, data[i].description, data[i].position, data[i].tagName]
+            this.append_cell(content, data[i].id, 'device', false)
         }
         else if(which ==='post'){
-            content = [data[i].publisherId,data[i].content , data[i].id]
-            this.append_cell(content, i, 'post',false)
+            content = [data[i].publisherId, data[i].content, new Date(data[i].createTime).toDateString()]
+            this.append_cell(content, data[i].id, 'post', false)
         }
         else if(which === 'bind_device'){
-            content = [data[i].name, data[i].description, data[i].position, data[i].tagName, data[i].id]
-            this.append_cell(content, i, 'bind_device',false)
+            content = [data[i].name, data[i].description, data[i].position, data[i].tagName]
+            this.append_cell(content, data[i].id, 'bind_device', false)
+        }
+        else if(which === 'Cpn'){
+            content = [data[i].name, data[i].number, data[i].quantity]
+            this.append_cell(content, data[i].id, 'Cpn', false)
         }
         
     }
 }
 table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
-    console.log('append cell')
+
     let l = content.length
     let tr = document.createElement('tr')
     if(content.length<=0)alert('table content null')
    
     for(let i=0;i<l;i++){
         let td = document.createElement('TD')
-        if(content[i] === '內容空白' && isnew)//if add new add tag to td
+        if(isnew)//if add new add tag to td
             td.setAttribute('id', 'new') 
-
+        if(add_type === 'post' && i == 0)
+            td.contentEditable = false
         if(add_type === 'member' && i === 2){//member.html need set id to options
             let texts = ['管理員', '工程師', '檢修人員']
             td.appendChild(this.add_slc(texts,content[2]))
@@ -50,8 +61,8 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
         tr.appendChild(td)
     }
     if(add_type !='info')
-    tr.lastChild.setAttribute('contentEditable', false)
-    tr.setAttribute('id', tr_index + 1)//add id
+        tr.lastChild.setAttribute('contentEditable', false)
+        tr.setAttribute('id', tr_index + 1)//add id
 
     
     /**add delete and save button**/
@@ -69,7 +80,7 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
     btn4.textContent = '將此設備綁定表單'
     btn4.id = 'bind'
    
-    if(add_type === 'device' || add_type === 'member' ||add_type === 'post'||add_type === 'info'){
+    if(add_type === 'device' || add_type === 'member' ||add_type === 'post'||add_type === 'info' ||add_type ==='Cpn'){
         td_2.appendChild(btn)
         td_2.appendChild(btn2)
         if (add_type === 'device') {
@@ -101,13 +112,17 @@ table_manager.prototype.add_slc = function(texts,value){
     }
     return slc
 }
-table_manager.prototype.add_cell = function(btn_name,max,type){
+table_manager.prototype.add_cell = function(btn_name,type){
     const tempthis = this
     $(btn_name).click(function () {       
         tempthis.current_index++ // add id and set it
         let content = []
-        for(let i =0;i<max;i++)
-            content.push('內容空白')
+        for(let i =0;i<tempthis.dict[type];i++){
+            if(i == 0 && type === 'post')
+                content.push(localStorage.getItem('user-id'))
+            else 
+                content.push('內容空白')
+        }
         
         tempthis.append_cell(content,tempthis.current_index,type,true)       
     });
@@ -123,9 +138,10 @@ table_manager.prototype.delete_cell = function(table_name,which){
             tempipc.send('remove', which,id)
     })
 }
-table_manager.prototype.save = function(table_name,max){
-    const tempipc = this.ipcrender
+table_manager.prototype.save = function(table_name,type){
+    const tempthis = this
     $(table_name).on('click', 'button#save', function () {
+        let max = tempthis.dict[type]
         let count = max
         let obj 
         let where
@@ -133,7 +149,7 @@ table_manager.prototype.save = function(table_name,max){
        
         $(this)[0].parentNode.parentNode.childNodes.forEach((item) => {
             if (count-- > 0) {  
-                if(max === 6 &&  count === 3 ){
+                if(type === 'member' && count === 3 ){//如果是member 要從selec 取出值
                     item.childNodes.forEach((e)=>{
                         if(e.nodeName === 'SELECT'){
                             arr[count] = e.options[e.selectedIndex].value                           
@@ -146,9 +162,8 @@ table_manager.prototype.save = function(table_name,max){
             //remove new tag
             item.setAttribute('id', '')
         })
-        //console.log(arr)
-        if(max === 6){
-            where = 'member'
+       
+        if(type === 'member'){           
             obj = {
                 'name': arr[5],
                 'password': arr[2],
@@ -157,8 +172,7 @@ table_manager.prototype.save = function(table_name,max){
                 'emailAddress': arr[1]
             }           
         }
-        else if(max === 4){
-            where = 'device'
+        else if(type === 'device'){           
             obj = {
                 'name': arr[3],
                 'Description': arr[2],
@@ -166,55 +180,53 @@ table_manager.prototype.save = function(table_name,max){
                 'tagName': arr[0]
             }            
         }
-        else if(max === 3){
-            where = 'post'
+        else if(type === 'post'){           
             obj = {
-                'publisherId': 8,
+                'publisherId': localStorage.getItem('user-id'),
                 'content': arr[1]
+            }
+        }
+        else if(type === 'info'){
+            obj = {
+               
             }
         }  
        
-        let id = $(this)[0].parentNode.previousSibling.textContent // get previous td 
-        const flag = ((id === '內容空白') ? true : false)
+        let id = $(this)[0].parentNode.id// get previous td 
         const tag = $(this)[0].parentNode.parentNode.id
-        //console.log('tag is ')
-        //console.log(tag)
+      
         //true =>add false=>update
-        if(flag)    
-            tempipc.send('add', where, obj,tag)
+        if(id == 'new')    
+            tempthis.ipcrender.send('add', type, obj, tag)
         else
-            tempipc.send('update', where,id,obj,tag)       
+            tempthis.ipcrender.send('update', type, tag, obj, tag)       
     })  
 } 
 table_manager.prototype.update_cell = function(which,content,tag){
     let tr = document.getElementById(tag)
-    if(tr == null)alert('tr is null!')
-    //console.log('update -- ')
-    //console.log(tag)
-   
+    if(tr == null)
+        alert('tr is null!')
+    
     let arr = []
-
+    console.log(content)
     if(which === 'member'){
         arr.push(content.name)
         arr.push(content.number)
         arr.push(content.identity)
         arr.push(content.password)   
         arr.push(content.emailAddress)
-        arr.push(new Date(content.createDate).toDateString())
-        arr.push(content.id)
+        arr.push(new Date(content.createDate).toDateString())        
     }
     else if(which === 'device'){
         arr.push(content.name)
         arr.push(content.description)
         arr.push(content.position)
-        arr.push(content.tagName)
-        arr.push(content.id)
-        
+        arr.push(content.tagName)      
     }
     else if (which === 'post'){
         arr.push(content.publisherId)
         arr.push(content.content)
-        arr.push(content.id)
+        arr.push(content.createTime)      
     }
    
     let count = 0
