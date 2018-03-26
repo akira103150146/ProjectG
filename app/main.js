@@ -23,7 +23,7 @@ app.on('ready', function(){
   win.on('closed', () => { win = null})
   result_win.on('closed', () => { result_win = null})
   ipcMain.on('switch_page',(event,index)=>{
-    let pagename = ['/bagi.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html']
+    let pagename = ['/fullcalendar-3.9.0/demos/agenda-views.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html']
     //console.log(index)
     //console.log(pagename[index])
     win.loadURL('file://' + __dirname + pagename[index])

@@ -132,9 +132,9 @@ table_manager.prototype.delete_cell = function(table_name,which){
     $(table_name).on('click', 'button#delete', function () {
         let temp = $(this)[0].parentNode.parentNode // tr
         temp.parentNode.removeChild(temp)       // table 
-        let id = $(this)[0].parentNode.previousSibling.textContent
-        const flag = ((id === '內容空白') ? true : false)
-        if (!flag)//flag = true do request 
+        let id = $(this)[0].parentNode.previousSibling.id
+       
+        if (id!= 'new')//flag = true do request 
             tempipc.send('remove', which,id)
     })
 }
@@ -146,7 +146,10 @@ table_manager.prototype.save = function(table_name,type){
         let obj 
         let where
         let arr = new Array(max)
-       
+        let id = $(this)[0].parentNode.previousSibling.id// get previous td 
+        console.log(id)
+        const tag = $(this)[0].parentNode.parentNode.id
+
         $(this)[0].parentNode.parentNode.childNodes.forEach((item) => {
             if (count-- > 0) {  
                 if(type === 'member' && count === 3 ){//如果是member 要從selec 取出值
@@ -190,20 +193,21 @@ table_manager.prototype.save = function(table_name,type){
             obj = {
                
             }
-        }  
-       
-        let id = $(this)[0].parentNode.id// get previous td 
-        const tag = $(this)[0].parentNode.parentNode.id
+        }       
       
         //true =>add false=>update
-        if(id == 'new')    
+        if(id == 'new'){    
+            console.log('add')
             tempthis.ipcrender.send('add', type, obj, tag)
-        else
-            tempthis.ipcrender.send('update', type, tag, obj, tag)       
+        }else{
+            console.log('update')
+            tempthis.ipcrender.send('update', type, tag, obj, tag)
+        }       
     })  
 } 
 table_manager.prototype.update_cell = function(which,content,tag){
     let tr = document.getElementById(tag)
+    console.log(tr)
     if(tr == null)
         alert('tr is null!')
     

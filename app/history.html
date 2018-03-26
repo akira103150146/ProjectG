@@ -19,15 +19,9 @@
             localStorage.list_history = JSON.stringify(info)//將傳入list存入local
             redips.showlist(info)
         })
-        ipcrender.on('update-form', (event, content, tag) => {
-            redips.updateform(content, tag)
-        })
-        ipcrender.on('bind_devices', (event, ids) => {
-            console.log(ids)
-        })
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'history')
-             sidebar_setup('history')
+            sidebar_setup('history')
         });      
     </script>
 </head>
@@ -76,5 +70,4 @@
         </div>
     </div>
 </body>
-
 </html>
