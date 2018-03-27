@@ -8,6 +8,7 @@ function table_manager(){
         "info": 3
     }
 }
+///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
 table_manager.prototype.showtable = function(data,which){
     let l = data.length
     this.current_index = l
@@ -37,6 +38,7 @@ table_manager.prototype.showtable = function(data,which){
         
     }
 }
+///////////////////////////////////////////////////////新增表格/////////////////////////////////////////////////
 table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
 
     let l = content.length
@@ -45,24 +47,29 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
    
     for(let i=0;i<l;i++){
         let td = document.createElement('TD')
-        if(isnew)//if add new add tag to td
+        //if add new add tag to td
+        if(isnew)
             td.setAttribute('id', 'new') 
-        if(add_type === 'post' && i == 0)
-            td.contentEditable = false
-        if(add_type === 'member' && i === 2){//member.html need set id to options
+
+        //member.html need set id to options
+        if(add_type === 'member' && i === 2){
             let texts = ['管理員', '工程師', '檢修人員']
             td.appendChild(this.add_slc(texts,content[2]))
             td.setAttribute('className','staffID')
         }
         else{
-            td.setAttribute('contentEditable', true)
+            if (add_type === 'post' && (i == 0 || i == l-1))
+                td.contentEditable = false
+            else if(add_type === 'member' && i == l-1)
+                td.contentEditable = false
+            else
+                td.setAttribute('contentEditable', true)
             td.textContent = content[i]
         }     
         tr.appendChild(td)
     }
-    if(add_type !='info')
-        tr.lastChild.setAttribute('contentEditable', false)
-        tr.setAttribute('id', tr_index + 1)//add id
+        //將物件id綁在tr上
+        tr.setAttribute('id', tr_index)
 
     
     /**add delete and save button**/
@@ -93,6 +100,7 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
     tr.appendChild(td_2)
     $('#target')[0].appendChild(tr) 
 }
+///////////////////////////////////////////////////////顯示選項/////////////////////////////////////////////////
 table_manager.prototype.add_slc = function(texts,value){
     let slc = document.createElement('select')
     let dfselected
@@ -112,6 +120,7 @@ table_manager.prototype.add_slc = function(texts,value){
     }
     return slc
 }
+///////////////////////////////////////////////////////新增CEll/////////////////////////////////////////////////
 table_manager.prototype.add_cell = function(btn_name,type){
     const tempthis = this
     $(btn_name).click(function () {       
@@ -127,17 +136,20 @@ table_manager.prototype.add_cell = function(btn_name,type){
         tempthis.append_cell(content,tempthis.current_index,type,true)       
     });
 }
+///////////////////////////////////////////////////////刪除Cell/////////////////////////////////////////////////
 table_manager.prototype.delete_cell = function(table_name,which){
     const tempipc = this.ipcrender
     $(table_name).on('click', 'button#delete', function () {
         let temp = $(this)[0].parentNode.parentNode // tr
         temp.parentNode.removeChild(temp)       // table 
-        let id = $(this)[0].parentNode.previousSibling.id
-       
-        if (id!= 'new')//flag = true do request 
+        let isnew = $(this)[0].parentNode.previousSibling.id
+        let id = $(this)[0].parentNode.parentNode.id
+        console.log(id)
+        if (isnew!= 'new')//flag = true do request 
             tempipc.send('remove', which,id)
     })
 }
+///////////////////////////////////////////////////////儲存表格/////////////////////////////////////////////////
 table_manager.prototype.save = function(table_name,type){
     const tempthis = this
     $(table_name).on('click', 'button#save', function () {
@@ -147,9 +159,8 @@ table_manager.prototype.save = function(table_name,type){
         let where
         let arr = new Array(max)
         let id = $(this)[0].parentNode.previousSibling.id// get previous td 
-        console.log(id)
         const tag = $(this)[0].parentNode.parentNode.id
-
+        console.log(tag)
         $(this)[0].parentNode.parentNode.childNodes.forEach((item) => {
             if (count-- > 0) {  
                 if(type === 'member' && count === 3 ){//如果是member 要從selec 取出值
@@ -191,10 +202,14 @@ table_manager.prototype.save = function(table_name,type){
         }
         else if(type === 'info'){
             obj = {
-               
+               'name': arr[2],
+               'number' : arr[1],
+               'quantity' : arr[0],
+               'componentTypeId': 2,
+               'bindedDeviceId' : 8
             }
         }       
-      
+        console.log(obj)
         //true =>add false=>update
         if(id == 'new'){    
             console.log('add')
@@ -205,6 +220,7 @@ table_manager.prototype.save = function(table_name,type){
         }       
     })  
 } 
+///////////////////////////////////////////////////////更新CEll/////////////////////////////////////////////////
 table_manager.prototype.update_cell = function(which,content,tag){
     let tr = document.getElementById(tag)
     console.log(tr)
@@ -230,7 +246,7 @@ table_manager.prototype.update_cell = function(which,content,tag){
     else if (which === 'post'){
         arr.push(content.publisherId)
         arr.push(content.content)
-        arr.push(content.createTime)      
+        arr.push(new Date(content.createTime).toDateString())      
     }
    
     let count = 0

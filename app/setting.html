@@ -15,9 +15,10 @@
     <script>
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager()         
-        ipcrender.on('reply-device', (event, arg) => {
-            //console.log(arg)
-            tb_manager.showtable(arg,'device')
+        ipcrender.on('reply-device', (event, info) => {
+            localStorage.list_device = JSON.stringify(info)
+            console.log(info)
+            tb_manager.showtable(info,'device')
         })  
         ipcrender.on('updatecell-device', (event, content, tag) => {
             tb_manager.update_cell('device',content, tag)

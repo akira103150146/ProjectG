@@ -18,9 +18,7 @@
               console.log($('tr:nth-child(5)')) 
         })    
         ipcrender.on('update-bind-list',(arg)=>{
-            bind_list = arg
-           
-                     
+            bind_list = arg         
         })
         
         $(document).ready(function () {
@@ -49,7 +47,6 @@
                             <th>設備說明</th>
                             <th>設備位置</th>
                             <th>監控點說明</th>
-                            <th>id</th>
                             <th></th>
                         </tr>
                     </tbody>

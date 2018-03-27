@@ -10,24 +10,30 @@ var win
 var result_win
 var auth
 const bim = new api()
+var lastpages = []
+const pagename = ['/bagi.html', '/setting.html', '/form.html', '/member.html', '/info.html', '/post.html', '/history.html']
 
 app.on('ready', function(){  
   win = new BrowserWindow({width: 1920, height: 1080})
   result_win = new BrowserWindow({width: 800, height: 600 , parent: win, modal: true, show: false}) 
   win.loadURL('file://' + __dirname + '/index.html')
-  result_win.loadURL('file://' + __dirname + '/bind_device.html')
  
   win.webContents.openDevTools()
-  result_win.webContents.openDevTools();
+  //result_win.webContents.openDevTools();
   
   win.on('closed', () => { win = null})
   result_win.on('closed', () => { result_win = null})
+
+///////////////////////////////////////////////////////切換網頁//////////////////////////////////////////////////////
   ipcMain.on('switch_page',(event,index)=>{
-    let pagename = ['/fullcalendar-3.9.0/demos/agenda-views.html','/setting.html','/form.html','/member.html','/info.html','/post.html','/history.html']
-    //console.log(index)
-    //console.log(pagename[index])
+    lastpages.push(index)
     win.loadURL('file://' + __dirname + pagename[index])
   })
+  ipcMain.on('last_page',(event)=>{
+    win.loadURL('file://' + __dirname + pagename[5])
+  })
+
+///////////////////////////////////////////////////////登入//////////////////////////////////////////////////////
   ipcMain.on('login', (event,arg,arg2)=>{   
     bim.Login(arg,arg2) 
     
@@ -40,17 +46,18 @@ app.on('ready', function(){
         bim.SetAuth(auth)  
         win.webContents.send('reply-login',id,arg)//初始化使用者資料
         win.loadURL('file://' + __dirname + '/post.html')
-        
+        result_win.loadURL('file://' + __dirname + '/bind_device.html')
       }
       else{
         console.log('帳號或密碼錯誤')
       }
       bim.Reset()
     }).catch((err)=>{
-      //console.log(err)
-    })   
-    //win.loadURL('file://' + __dirname + '/member.html')     
+      console.log(err)
+    })    
   }) 
+
+///////////////////////////////////////////////////////登出//////////////////////////////////////////////////////
   ipcMain.on('logout',()=>{
     bim.Logout()
     rp(bim.GetOption()).then((parseBody) => {
@@ -61,6 +68,8 @@ app.on('ready', function(){
       //console.log(err)
     })   
   })
+
+///////////////////////////////////////////////////////開啟小視窗//////////////////////////////////////////////////////
   ipcMain.on('toggle-result', function(event,which,data){
     console.log('call')
     if(!result_win){
@@ -81,6 +90,8 @@ app.on('ready', function(){
     }
    
   })
+
+///////////////////////////////////////////////////////更新//////////////////////////////////////////////////////
   ipcMain.on('update', (event, which, id, body, tag) => {
     console.log('update')
     console.log('tag :' + tag)
@@ -96,6 +107,12 @@ app.on('ready', function(){
     else if(which === 'post'){
       bim.UpdatePost(id,body)
     }
+    else if(which === 'info'){
+      bim.UpdateCpn(id,body)
+    }
+    else if(which === 'Sdl'){
+      bim.UpdateSdl(id,body)
+    }
     else {
       console.log('which is not defined !')
     }
@@ -107,6 +124,8 @@ app.on('ready', function(){
       //console.log(err)
     })   
   })
+
+///////////////////////////////////////////////////////新增//////////////////////////////////////////////////////
   ipcMain.on('add',(event, which, body, tag)=>{
     console.log('add')
     console.log('tag :' + tag)
@@ -131,11 +150,16 @@ app.on('ready', function(){
     else if(which === 'assign'){
       bim.Assign_Form(body)
     }
-    else if(which === 'Cpn'){
+    else if(which === 'info'){
       bim.AddCpn(body)
     }
     else if(which === 'Cpn-type'){
       bim.AddCpnType(body)
+      path = 'update-Cpn-type'
+    }
+    else if(which === 'Sdl'){
+      bim.AddSdl(body)
+      path = 'update-Sdl'
     }
     else{
       console.log('which is not defined')
@@ -149,6 +173,8 @@ app.on('ready', function(){
       //console.log(err)
     })   
   })
+
+///////////////////////////////////////////////////////刪除//////////////////////////////////////////////////////
   ipcMain.on('remove',(event,which,body)=>{
     console.log('remove')
     console.log(which)
@@ -164,6 +190,9 @@ app.on('ready', function(){
     else if(which === 'post'){
       bim.RemovePost(body)
     }
+    else if(which === 'info'){
+      bim.RemoveCpn(body)
+    }
     else {
       console.log('which is not defined')
       console.log(which)
@@ -176,6 +205,8 @@ app.on('ready', function(){
     })  
     
   })
+
+///////////////////////////////////////////////////////顯示網頁//////////////////////////////////////////////////////
   ipcMain.on('ready-to-show',(event,which)=>{
     console.log('ready-to-show')
     let back_path = ''
@@ -202,7 +233,7 @@ app.on('ready', function(){
       bim.GetPostList()
       back_path = 'reply-post'
     }
-    else if(which === 'Cpn_type'){
+    else if(which === 'Cpn-type'){
       bim.GetCpnTypeList()
       back_path = 'reply-Cpn-type'
     }
@@ -210,16 +241,18 @@ app.on('ready', function(){
       bim.GetCpnList()
       back_path = 'reply-Cpn'
     }
+    else if(which === 'Sdl'){
+      bim.GetSdlList()
+      back_path = 'reply-Sdl'
+    }
     else{
-      console.log('which is not defined')
-      console.log(which)
     }
     rp(bim.GetOption()).then((parseBody)=>{
       console.log(parseBody)  
       event.sender.send(back_path,parseBody['content'])     
       bim.Reset()
     }).catch((err)=>{
-      //console.log(err)
+      console.log(err)
     }) 
     
   })

@@ -12,34 +12,55 @@
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script>
+        var type_count = 0
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager() 
             ipcrender.on('reply-Cpn',(event,info)=>{
+                console.log('reply')
                 localStorage.list_info = JSON.stringify(info)//將傳入list存入local
                 console.log(localStorage.list_info)
                 tb_manager.showtable(info,'Cpn')
             })
-            ipcrender.on('reply-Cpn-type',(event,info)=>{ //將資料庫的類別都加入option               
+            ipcrender.on('reply-Cpn-type',(event,info)=>{ //將資料庫的類別都加入option              
                 info.forEach((e)=>{
                     var op = document.createElement('option')
                     op.textContent = e.name
+                    op.id = e.id
                     $('#selection')[0].appendChild(op)
                 })                
             })
+            ipcrender.on('update-Cpn-type',(event,info,tag)=>{
+                console.log(info)
+                console.log(tag)
+                let op = document.getElementById(tag)
+                console.log(op)
+                if(op)
+                    op.id = info.id//update option id
+            })
             $(document).ready(function () {
-                ipcrender.send('ready-to-show', 'Cpn_type')
+            /////////////////////////////////新增類別/////////////////////////////////// 
+
                 ipcrender.send('ready-to-show', 'Cpn')
+                ipcrender.send('ready-to-show', 'Cpn-type')
+
+            /////////////////////////////////初始化Table///////////////////////////////////
+               
                 tb_manager.add_cell('#add-btn', 'info')
                 tb_manager.delete_cell('#target', 'info');
                 tb_manager.save('#target', 'info')
                 sidebar_setup('info')
+
+            /////////////////////////////////新增類別///////////////////////////////////
                 $('#add-classfication').click(function(){
                     if($('#class-input')[0].value != ''){
                         var op = document.createElement('option')
                         op.textContent = $('#class-input')[0].value;
+                        op.id = 'Cpnloc_' + type_count.toString()
+                        console.log(op)
                         $('#selection')[0].appendChild(op)
                         let obj = {'name': op.textContent}
-                        ipcrender.send('add','Cpn-type',obj,0)
+                        ipcrender.send('add','Cpn-type',obj,'Cpnloc_'+type_count.toString())
+                        type_count++
                     }
                     else
                         alert('輸入為空')

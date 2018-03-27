@@ -1,9 +1,9 @@
-function bim_serveroption(url,method,headers,json,body){
-    this.url = url
-    this.method = method
-    this.headers = headers
-    this.json = json    
-    this.body = body  
+function bim_serveroption(url, method, headers, json, body) {
+  this.url = url
+  this.method = method
+  this.headers = headers
+  this.json = json
+  this.body = body
 }
 function bim_userinfo(id,name,password,number,identity,emailAddress,createDate){
   this.id = id
@@ -37,7 +37,7 @@ bim_app_window.prototype.Send = function(obj){
     this.option =new bim_serveroption(this.host + this.permission + this.api + this.op, this.how, this.headers, true,null)  
   if(!this.api||!this.op||!this.how||!this.headers)alert('send package error!')   
 }
-
+//////////////////////////////////////主要操作///////////////////////////////////////////
 bim_app_window.prototype.Reset = function(){
   this.api = null
   this.op = null
@@ -52,6 +52,7 @@ bim_app_window.prototype.GetOption = function(){
 bim_app_window.prototype.SetAuth = function(value){
   this.auth = value
 }
+//////////////////////////////////////登入///////////////////////////////////////////
 bim_app_window.prototype.Login = function(account,password){
   let obj = {'number':account,'password':password}
   this.api = 'staff/'  
@@ -59,18 +60,13 @@ bim_app_window.prototype.Login = function(account,password){
   this.how = 'POST'   
   this.Send(obj) 
 }
-bim_app_window.prototype.GetInfo = function(){
-  this.api = 'staff/'
-  this.op = 'info'
-  this.how = 'GET'  
-  this.Send(null)
-}
 bim_app_window.prototype.Logout = function(){
   this.api = 'staff/'
   this.op = 'logout'
   this.how = 'DELETE'  
   this.Send(null)
 }
+//////////////////////////////////////工作人員操作///////////////////////////////////////////
 bim_app_window.prototype.AddUser = function(value){
   let obj = {'name' : value.name,
              'password' : value.password,
@@ -100,12 +96,7 @@ bim_app_window.prototype.GetStaffList = function(){
   this.how = 'GET'
   this.Send(null) 
 }
-bim_app_window.prototype.GetFormInfo = function(id){
-  this.api = 'form/template/'
-  this.op = 'info?id=' + id
-  this.how = 'GET'  
-  this.Send(null)
-}
+//////////////////////////////////////表單操作///////////////////////////////////////////
 bim_app_window.prototype.GetFormTemplateList = function () {
   this.api = 'form/template/'
   this.op = 'list'
@@ -136,6 +127,7 @@ bim_app_window.prototype.GetFormList = function(){
   this.how = 'GET'
   this.Send(null)
 }
+//////////////////////////////////////設備操作///////////////////////////////////////////
 bim_app_window.prototype.GetDeviceList = function(){
   this.api = 'device/'
   this.op = 'list'
@@ -165,6 +157,7 @@ bim_app_window.prototype.UpdateDevice = function(id,info){
   this.how = 'POST'
   this.Send(info)
 }
+//////////////////////////////////////公佈欄操作///////////////////////////////////////////
 bim_app_window.prototype.GetPostList = function(){
   this.api = 'post/'
   this.op = 'list'
@@ -189,12 +182,7 @@ bim_app_window.prototype.RemovePost = function(id){
   this.how = 'DELETE'
   this.Send(null)
 }
-bim_app_window.prototype.Assign_Form = function(info){
-  this.api = 'admin/form/'
-  this.op = 'assign'
-  this.how = 'POST'
-  this.Send(info)
-}
+//////////////////////////////////////零件操作///////////////////////////////////////////
 bim_app_window.prototype.GetCpnList = function(){
  this.api = 'component/'
  this.op = 'list'
@@ -202,19 +190,19 @@ bim_app_window.prototype.GetCpnList = function(){
  this.Send(null)
 }
 bim_app_window.prototype.AddCpn = function(info){
-  this.api = 'component/'
+  this.api = 'admin/component/'
   this.op = 'add'
   this.how = 'POST'
   this.Send(info)
 }
 bim_app_window.prototype.RemoveCpn = function(id){
-  this.api = 'component/'
+  this.api = 'admin/component/'
   this.op = 'remove?id=' + id
   this.how = 'DELETE'
   this.Send(null)
 }
 bim_app_window.prototype.UpdateCpn = function(id,info){
-  this.api = 'component/'
+  this.api = 'admin/component/'
   this.op = 'update?id=' + id
   this.how = 'POST'
   this.Send(info)
@@ -231,26 +219,27 @@ bim_app_window.prototype.AddCpnType = function(info){
   this.how = 'POST'
   this.Send(info)
 }
+
 bim_app_window.prototype.GetSdlList = function(){
-  this.api = 'schedual/'
+  this.api = 'schedule/'
   this.op = 'list'
   this.how = 'GET'
   this.Send(null)
 }
 bim_app_window.prototype.AddSdl = function(info){
-  this.api = 'schedual/'
+  this.api = 'admin/schedule/'
   this.op = 'add'
   this.how = 'POST'
   this.Send(info)
 }
 bim_app_window.prototype.RemoveSdl = function(id){
-  this.api = 'schedual/'
+  this.api = 'admin/schedule/'
   this.op = 'remove?id=' + id
   this.how = 'DELETE'
   this.Send(null)
 }
 bim_app_window.prototype.UpdateSdl = function(id,info){
-  this.api = 'schedual/'
+  this.api = 'admin/schedule/'
   this.op = 'update?id=' + id 
   this.how = 'POST'
   this.Send(info)
