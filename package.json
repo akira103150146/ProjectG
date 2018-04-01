@@ -12,6 +12,7 @@
   "devDependencies": {
     "babel-core": "^6.3.26",
     "babel-loader": "^6.2.0",
+    "components-jqueryui": "github:components/jqueryui",
     "electron-prebuilt": "^0.36.2",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^2.1.1",
