@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />   
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="js/lib/jqueryImporter.js"></script>
+    <script type="text/javascript" src="js/lib/header.js"></script>
+    <script type="text/javascript" src="js/lib/redips-table-min.js"></script>
+    <script type="text/javascript" src="js/lib/script.js"></script>
+    <script src="js/app/sidebar.js"></script>
+    <script>
+        "use strict";
+        var ipcrender = require('electron').ipcRenderer
+        ipcrender.on('reply-history', (event, info ) => {
+            localStorage.list_history = JSON.stringify(info)//將傳入list存入local
+            redips.showlist(info)
+        })
+        $(document).ready(function () {
+            ipcrender.send('ready-to-show', 'history')
+            sidebar_setup('history')
+        });      
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="close_btn">Close &times;</h3>
+                <h3 id="user-name"></h3>
+                <button id="logout_btn">登出</button>
+            </div>
+            <ul id="sidebar-option">
+            </ul>
+        </nav>
+        <div id="myContainer">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+                ☰
+            </button>
+
+            <div class="scroll-menu">
+                <ul id="form-list">
+                </ul>
+            </div>
+           
+            <div class="form_attribute">
+                ID
+                <input type="text" id="ID" value="" disabled /> 標題
+                <input type="text" id="title" value="" /> 創建日期
+                <input type="text" id="date" value="" disabled />              
+                </ul>
+            </div>
+            <table id="mainTable">
+                <tbody>
+                    <tr>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

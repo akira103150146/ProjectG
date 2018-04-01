@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="js/lib/jqueryImporter.js"></script>
+    <script src="js/app/showtable.js"></script>
+    <script src="js/app/sidebar.js"></script>
+    <script>
+        "use strict";
+        var type_count = 0
+        var ipcrender = require('electron').ipcRenderer
+        var tb_manager = new table_manager() 
+            ipcrender.on('reply-Cpn',(event,info)=>{
+                console.log('reply')
+                localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+                console.log(localStorage.list_info)
+                tb_manager.showtable(info,'Cpn')
+            })
+            ipcrender.on('reply-Cpn-type',(event,info)=>{ //將資料庫的類別都加入option              
+                info.forEach((e)=>{
+                    var op = document.createElement('option')
+                    op.textContent = e.name
+                    op.id = e.id
+                    $('#selection')[0].appendChild(op)
+                })                
+            })
+            ipcrender.on('update-Cpn-type',(event,info,tag)=>{
+                console.log(info)
+                console.log(tag)
+                let op = document.getElementById(tag)
+                console.log(op)
+                if(op)
+                    op.id = info.id//update option id
+            })
+            $(document).ready(function () {
+            /////////////////////////////////新增類別/////////////////////////////////// 
+
+                ipcrender.send('ready-to-show', 'Cpn')
+                ipcrender.send('ready-to-show', 'Cpn-type')
+
+            /////////////////////////////////初始化Table///////////////////////////////////
+               
+                tb_manager.add_cell('#add-btn', 'info')
+                tb_manager.delete_cell('#target', 'info');
+                tb_manager.save('#target', 'info')
+                sidebar_setup('info')
+
+            /////////////////////////////////新增類別///////////////////////////////////
+                $('#add-classfication').click(function(){
+                    if($('#class-input')[0].value != ''){
+                        var op = document.createElement('option')
+                        op.textContent = $('#class-input')[0].value;
+                        op.id = 'Cpnloc_' + type_count.toString()
+                        console.log(op)
+                        $('#selection')[0].appendChild(op)
+                        let obj = {'name': op.textContent}
+                        ipcrender.send('add','Cpn-type',obj,'Cpnloc_'+type_count.toString())
+                        type_count++
+                    }
+                    else
+                        alert('輸入為空')
+                })
+            });
+    </script>
+</head>
+<body>
+       <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3 id="close_btn">Close &times;</h3>
+                    <h3 id="user-name">AKIRA</h3>
+                    <button id="logout_btn">登出</button>
+                </div>
+                <ul id = "sidebar-option">                
+                </ul>
+            </nav>
+            <div class="content">
+                <input id="class-input" type="text">
+                <button id="add-classfication">新增類別</button>
+                <select id="selection">                    
+                </select>
+                <div>
+                    <button id="add-btn" style="float:right;">新增庫存</button>
+                </div>
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>零件名稱</th>
+                            <th>零件料號</th>
+                            <th>數量</th>                                                       
+                            <th></th>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+
+       </div>
+      
+</body>
+</html>
+      

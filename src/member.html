@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .search input{
+            margin: 4px 
+        }
+        .search button{
+            margin: 10px 
+        }
+        form{
+            margin: 10px
+        }
+    </style>
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="js/lib/jqueryImporter.js"></script>
+    <script src="js/app/showtable.js"></script>
+    <script src="js/app/sidebar.js"></script>
+    <script>
+        "use strict";
+        var ipcrender = require('electron').ipcRenderer
+        var tb_manager = new table_manager() 
+              
+        ipcrender.on('reply-member',(event,arg)=>{
+            //console.log(arg)
+            tb_manager.showtable(arg,'member')
+        })
+        ipcrender.on('updatecell-member',(event,content,tag)=>{
+            tb_manager.update_cell('member',content,tag) // tag 是給tr的編號 
+        })              
+        $(document).ready(function (){ 
+            ipcrender.send('ready-to-show','member')
+            tb_manager.add_cell('#add-btn','member')
+            tb_manager.delete_cell('#target','member');
+            tb_manager.save('#target',6,'member')
+            sidebar_setup('member')
+            $('#search-btn').click(function(){              
+                            
+            })
+                            
+        })          
+    </script>   
+</head>
+<body>
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="close_btn">Close &times;</h3>
+                <h3 id="user-name">AKIRA</h3>
+                <button id="logout_btn">登出</button>
+            </div>
+            <ul id="sidebar-option">
+            </ul>
+        </nav>
+
+        <div class="content">
+            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                <i class="glyphicon glyphicon-align-left"></i>
+                ☰
+            </button>
+            <div class="search">
+                人員姓名
+                <input type="text" name="人員姓名"> 
+                人員編號
+                <input type="text" name="人員編號"> 
+                人員身分
+                <input type="text" name="人員身分">
+                <button id="search-btn">
+                    查詢 
+                </button>
+            </div>
+            <div>
+                <button id="add-btn" style="float:right;">新增人員</button>
+            </div>
+            <div>
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>人員姓名</th>
+                            <th>人員編號</th>
+                            <th>身分</th>
+                            <th>密碼</th>
+                            <th>電子郵件</th>
+                            <th>創建日期</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>                 
+</body>
+</html>
