@@ -82,7 +82,7 @@ app.on('ready', () => {
     rp(bim.GetOption()).then((parseBody) => {
       console.log(parseBody)
       bim.Reset()
-      win.loadURL('file://' + __dirname + '/index.html')
+      win.loadURL(`file://${__dirname}/src/login.html`)
     }).catch((err) => {
       //console.log(err)
     })

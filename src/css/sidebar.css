@@ -1,6 +1,6 @@
 .wrapper{
 	display: flex;
-	align-items: stretch;
+	align-items: stretch; 
 }
 #sidebar.active {
     margin-left: -250px;
