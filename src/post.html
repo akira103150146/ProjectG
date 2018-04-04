@@ -3,7 +3,7 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
-        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
         <script>
             var $ = require('jquery')
             var jQuery = require('jquery')      
@@ -19,7 +19,9 @@
                     console.log(localStorage.list_post)
               })
               ipcrender.on('update-post',(event,content,tag)=>{
-                   tb_manager.update_cell('post', content, tag) // tag 是給tr的編號 
+                console.log('refresh')   
+                ipcrender.send('ready-to-show', 'post')
+
               })
               $(document).ready(function () {  
                     ipcrender.send('ready-to-show', 'post')

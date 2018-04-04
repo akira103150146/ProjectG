@@ -5,6 +5,7 @@
   <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
   <link href='js/lib/full_calendar_lib/fullcalendar.css' rel='stylesheet' />
   <link href='js/lib/full_calendar_lib/fullcalendar.print.css' rel='stylesheet' media='print' />
+  <link href='css/assign.css' rel='stylesheet' />
   <script src='../../node_modules/moment/moment.js'></script>
   <script src='../../node_modules/jquery/dist/jquery.js'></script>
   <!-- Insert this line after script imports -->
@@ -12,21 +13,41 @@
   <script src='../../node_modules/components-jqueryui/jquery-ui.js'></script>
   <script src='js/lib/full_calendar_lib/fullcalendar.js'></script>
   <script src="js/app/sidebar.js"></script>
+  <script src="js/app/assign.js"></script>
   <script>
     "use strict";
     var ipcrender = require('electron').ipcRenderer
+    var sdlmanager = new SdlManager()
+    var current_index = 0
+    /////////////////////////////////伺服器回應/////////////////////////////////// 
+    ipcrender.on('reply-Sdl',(event,info)=>{
+      console.log(info)
+      localStorage.setItem('Sdl-list',JSON.stringify(info))
+      sdlmanager.ShowSdl()
+    })
+    ipcrender.on('reply-member', (event, info) => {
+        console.log(info)
+        localStorage.setItem('staff-assign',JSON.stringify(info))
+        sdlmanager.AddStaff()
+        //sdlmanager.ShowSdl(0, info)
+    })
+    ipcrender.on('update-Sdl', (event, content, tag)=>{
+       console.log('refresh')
+       ipcrender.send('ready-to-show', 'Sdl')
+    })
     $(document).ready(function () {
-         sidebar_setup('bagi')
-
-      /* initialize the external events
-      -----------------------------------------------------------------*/
-
+    /////////////////////////////////顯示畫面/////////////////////////////////// 
+      ipcrender.send('ready-to-show', 'member')
+      ipcrender.send('ready-to-show', 'Sdl')
+    /////////////////////////////////設定sidebar/////////////////////////////////// 
+      sidebar_setup('bagi')
+    /////////////////////////////////fullcalendar setup/////////////////////////////////// 
       $('#external-events .fc-event').each(function () {
 
         // store data so the calendar knows to render an event upon drop
         $(this).data('event', {
           title: $.trim($(this).text()), // use the element's text as the event title
-          stick: true // maintain when user navigates (see docs on the renderEvent method)
+          stick: true, // maintain when user navigates (see docs on the renderEvent method)
         });
 
         // make the event draggable using jQuery UI
@@ -38,185 +59,70 @@
 
       });
 
-
-      /* initialize the calendar
-      -----------------------------------------------------------------*/
-
       $('#calendar').fullCalendar({
         header: {
           left: 'prev,next today',
           center: 'title',
           right: 'month,agendaWeek,agendaDay'
-        },
+        }, 
         editable: true,
         droppable: true, // this allows things to be dropped onto the calendar
         drop: function () {
+          current_index++
           // is the "remove after drop" checkbox checked?
           if ($('#drop-remove').is(':checked')) {
             // if so, remove the element from the "Draggable Events" list
             $(this).remove();
           }
+        },
+        eventDragStop: function (event, jsEvent) {
+          let x = jsEvent.pageX
+          let y = jsEvent.pageY
+
+          let cal = $('#calendar')[0]
+          let top = cal.getBoundingClientRect().top + $(window)['scrollTop']()
+          let right = cal.getBoundingClientRect().right + $(window)['scrollLeft']()
+          let down = cal.getBoundingClientRect().bottom + $(window)['scrollTop']()
+          let left = cal.getBoundingClientRect().left + $(window)['scrollLeft']()          
+    
+          if (!((x <= right ) && (x >= left) && (y >= top) && (y <= down))){ 
+            if(Number.isInteger(event.id))
+              sdlmanager.ThrowToBin(event.id)
+            $('#calendar').fullCalendar('removeEvents', event.id)
+            
+          }
         }
       });
 
+      $('#add-event-btn').on('click',()=>{
+        let dv = document.createElement('div')
+        dv.contentEditable = true
+        dv.textContent = '輸入工作名稱'
+        dv.className = 'fc-event'
+        $(dv).data('event', {
+          title: $.trim($(dv).text()),
+          stick: true ,
+          id: 'loc_' + current_index
+        });
+        $(dv).draggable({
+          zIndex: 999,
+          revert: true,     
+          revertDuration: 0  
+        });
+        $('#external-events').append(dv)
+      })
 
+      $('#save-btn').on('click', () => {
+         sdlmanager.SaveSdl()
+      })
+      $('#staff-list').change(function () {
+        sdlmanager.ShowSdl()
+      });
     });
 
+   
+
   </script>
-  <style>
-   body {
-    margin-top: 40px;
-    text-align: center;
-    font-size: 14px;
-    font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-  }
-
-  #wrap {
-    width: 1400px;
-  }
-
-  #wrap div{
-    float:left;
-    display: block;
-  }
-  #external-events {
-    width: 150px;
-    padding: 0 10px;
-    border: 1px solid #ccc;
-    background: #eee; 
-    text-align: left;
-    display: block;
-    float: left;
-  }
-
-  #external-events h4 {
-    font-size: 16px;
-    margin-top: 0;
-    padding-top: 1em;
-  }
-
-  #external-events .fc-event {
-    margin: 10px 0;
-    cursor: pointer;
-  }
-
-  #external-events p {
-    margin: 1.5em 0;
-    font-size: 11px;
-    color: #666;
-  }
-
-  #external-events p input {
-    margin: 0;
-    vertical-align: middle;
-  }
-
-  #calendar {
-    width: 900px;
-  }
-
-#sidebar a[data-toggle="collapse"] {
-    position: relative;
-}
-
-#sidebar a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
-    content: '\e259';
-    display: block;
-    position: absolute;
-    right: 20px;
-    font-family: 'Glyphicons Halflings';
-    font-size: 0.6em;
-}
-
-#sidebar a[aria-expanded="true"]::before {
-    content: '\e260';
-}
-#sidebar a, a:hover, a:focus {
-    color: inherit;
-    text-decoration: none;
-    transition: all 0.3s;
-}
-
-#sidebar {
-  min-width: 280px;
-	max-width: 280px;
-	min-height: 100vh;
-  background: rgb(2, 9, 37);
-  color: #fff;
-  transition: all 0.3s;
-}
-
-#sidebar.active {
-    margin-left: -250px;
-}
-
-#sidebar .sidebar-header {
-    width: 250px;
-    padding: 20px;
-    background: rgb(2, 9, 37);
-}
-
-#sidebar ul.components {
-    padding: 20px 0;
-    border-bottom: 1px solid #47748b;
-}
-
-#sidebar ul p {
-    color: #fff;
-    padding: 10px;
-}
-
-#sidebar ul li a {
-    padding: 10px;
-    font-size: 1.1em;
-    text-align: left;
-    font-size: 16px;
-    font-family: '微軟正黑體';
-    display: block;
-}
-#sidebar ul li a:hover {
-    color: #7386D5;
-    background: #122161;
-}
-
-#sidebar ul li.active > a, a[aria-expanded="true"] {
-    color: #fff;
-    background: #122161;
-}
-#sidebar ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
-#close_btn{
-    padding: 10px;
-    text-align: right;
-}
-#close_btn:hover{
-    color: #7386D5;
-    background: #fff;
-}
-
-#sidebar button{
-    background-color: #7386D5;
-    border: none;
-    color:white;
-    padding: 10px;
-    margin: 4px 2px;
-    text-decoration: none;     
-    outline: none;           
-    text-align: center;
-    border-radius: 8px;
-}
-#sidebar button:hover{
-    background-color: #781491;
-}
-#sidebar button:active {
-    background-color: #781491;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
-}
-  </style>
 </head>
 <body>
 <div id='wrap'>
@@ -230,16 +136,19 @@
     </ul>
   </div>
   <div id='external-events'>
+    <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+      <i class="glyphicon glyphicon-align-left"></i>
+      ☰
+    </button>
+    <select id="staff-list">
+    </select>
+    <button id="save-btn">Save</button>
     <h4>Draggable Events</h4>
-    <div class='fc-event'>My Event 1</div>
-    <div class='fc-event'>My Event 2</div>
-    <div class='fc-event'>My Event 3</div>
-    <div class='fc-event'>My Event 4</div>
-    <div class='fc-event'>My Event 5</div>
     <p>
       <input type='checkbox' id='drop-remove' />
       <label for='drop-remove'>remove after drop</label>
     </p>
+    <button id="add-event-btn" style="margin-left:70%;">+</button>
   </div>
 
   <div id='calendar'></div>

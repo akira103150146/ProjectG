@@ -20,6 +20,11 @@
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'history')
             sidebar_setup('history')
+            $('#form-list').change(function () {
+                const index = $('#form-list :selected')[0].id
+                redips.showform(index)
+                redips.current_select_form_index = index
+            });
         });      
     </script>
 </head>
@@ -41,10 +46,8 @@
                 ☰
             </button>
 
-            <div class="scroll-menu">
-                <ul id="form-list">
-                </ul>
-            </div>
+            <select id="form-list">
+            </select>
            
             <div class="form_attribute">
                 ID

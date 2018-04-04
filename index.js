@@ -110,40 +110,6 @@ app.on('ready', () => {
 
   })
 
-  ///////////////////////////////////////////////////////更新//////////////////////////////////////////////////////
-  ipcMain.on('update', (event, which, id, body, tag) => {
-    console.log('update')
-    console.log('tag :' + tag)
-    if (which === 'member') {
-      bim.UpdateUser(id, body)
-    }
-    else if (which === 'device') {
-      bim.UpdateDevice(id, body)
-    }
-    else if (which === 'form') {
-      bim.UpdateFormTemplate(id, body)
-    }
-    else if (which === 'post') {
-      bim.UpdatePost(id, body)
-    }
-    else if (which === 'info') {
-      bim.UpdateCpn(id, body)
-    }
-    else if (which === 'Sdl') {
-      bim.UpdateSdl(id, body)
-    }
-    else {
-      console.log('which is not defined !')
-    }
-
-    rp(bim.GetOption()).then((parseBody) => {
-      console.log(parseBody)
-      bim.Reset()
-    }).catch((err) => {
-      //console.log(err)
-    })
-  })
-
   ///////////////////////////////////////////////////////新增//////////////////////////////////////////////////////
   ipcMain.on('add', (event, which, body, tag) => {
     console.log('add')
@@ -176,7 +142,7 @@ app.on('ready', () => {
       bim.AddCpnType(body)
       path = 'update-Cpn-type'
     }
-    else if (which === 'Sdl') {
+    else if (which === 'sdl') {
       bim.AddSdl(body)
       path = 'update-Sdl'
     }
@@ -192,7 +158,40 @@ app.on('ready', () => {
       //console.log(err)
     })
   })
+  
+  ///////////////////////////////////////////////////////更新//////////////////////////////////////////////////////
+  ipcMain.on('update', (event, which, id, body, tag) => {
+    console.log('update')
+    console.log('tag :' + tag)
+    if (which === 'member') {
+      bim.UpdateUser(id, body)
+    }
+    else if (which === 'device') {
+      bim.UpdateDevice(id, body)
+    }
+    else if (which === 'form') {
+      bim.UpdateFormTemplate(id, body)
+    }
+    else if (which === 'post') {
+      bim.UpdatePost(id, body)
+    }
+    else if (which === 'info') {
+      bim.UpdateCpn(id, body)
+    }
+    else if (which === 'sdl') {
+      bim.UpdateSdl(id, body)
+    }
+    else {
+      console.log('which is not defined !')
+    }
 
+    rp(bim.GetOption()).then((parseBody) => {
+      console.log(parseBody)
+      bim.Reset()
+    }).catch((err) => {
+      //console.log(err)
+    })
+  })
   ///////////////////////////////////////////////////////刪除//////////////////////////////////////////////////////
   ipcMain.on('remove', (event, which, body) => {
     console.log('remove')
@@ -211,6 +210,9 @@ app.on('ready', () => {
     }
     else if (which === 'info') {
       bim.RemoveCpn(body)
+    }
+    else if(which === 'sdl'){
+      bim.RemoveSdl(body)
     }
     else {
       console.log('which is not defined')
@@ -231,7 +233,6 @@ app.on('ready', () => {
     let back_path = ''
     if (which === 'member') {
       console.log('ready-member')
-
       bim.GetStaffList()
       back_path = 'reply-member'
     }

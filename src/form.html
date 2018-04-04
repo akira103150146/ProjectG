@@ -19,7 +19,7 @@
             redips.showlist(info)
         })
         ipcrender.on('update-form',function(event, content,tag){
-            redips.updateform(content,tag)
+            ipcrender.send('ready-to-show', 'form')
         })
         ipcrender.on('bind_devices', function (event, arg) {
                //console.log(arg.toString())
@@ -42,9 +42,17 @@
         })
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'form')
-           sidebar_setup('form')
+            sidebar_setup('form')
+            $('#form-list').change(function () {
+                console.log($('#form-list :selected'))
+                const index = $('#form-list :selected')[0].id
+                //console.log(index)
+                redips.update_to_json(redips.current_select_form_index, redips.get_loc_formdata())//將local編輯的結果儲存下來 
+                redips.showform(index)
+                redips.current_select_form_index = index
+            });
         });
-        
+      
         $(function () {
             $('#mainTable').contextMenu({
                 selector: 'td',
@@ -84,6 +92,7 @@
                 }
             });
         });
+      
     </script>
   
 </head>
@@ -105,10 +114,8 @@
                 ☰
             </button>
 
-            <div class="scroll-menu">
-                <ul id="form-list">
-                </ul>
-            </div>
+            <select id="form-list">
+            </select>
 
             <table id="toolbox">
                 <tbody>

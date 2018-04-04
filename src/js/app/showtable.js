@@ -1,4 +1,5 @@
 "use strict";
+
 function table_manager(){
     this.ipcrender = require('electron').ipcRenderer
     this.current_index = 0
@@ -11,9 +12,10 @@ function table_manager(){
 }
 ///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
 table_manager.prototype.showtable = function(data,which){
+    this.ClearTable()
     let l = data.length
     this.current_index = l
-
+   
     for(let i =0;i<l;i++){
         let content
         if(which === 'member'){
@@ -39,6 +41,10 @@ table_manager.prototype.showtable = function(data,which){
         
     }
 }
+table_manager.prototype.ClearTable = function(){
+    $('#target')[0].innerHTML = ''
+}
+
 ///////////////////////////////////////////////////////新增表格/////////////////////////////////////////////////
 table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
 
@@ -48,23 +54,25 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
    
     for(let i=0;i<l;i++){
         let td = document.createElement('TD')
+      
         //if add new add tag to td
         if(isnew)
             td.setAttribute('id', 'new') 
 
         //member.html need set id to options
         if(add_type === 'member' && i === 2){
-            let texts = ['管理員', '工程師', '檢修人員']
-            td.appendChild(this.add_slc(texts,content[2]))
-            td.setAttribute('className','staffID')
+            td.className = 'staffID'
+            td.appendChild(this.add_slc(content[2]))
         }
         else{
             if (add_type === 'post' && (i == 0 || i == l-1))
                 td.contentEditable = false
             else if(add_type === 'member' && i == l-1)
                 td.contentEditable = false
-            else
+            else{
                 td.setAttribute('contentEditable', true)
+                td.className = "data-field"
+            }
             td.textContent = content[i]
         }     
         tr.appendChild(td)
@@ -102,7 +110,8 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
     $('#target')[0].appendChild(tr) 
 }
 ///////////////////////////////////////////////////////顯示選項/////////////////////////////////////////////////
-table_manager.prototype.add_slc = function(texts,value){
+table_manager.prototype.add_slc = function(value){
+    let texts = ['管理員', '工程師', '檢修人員']
     let slc = document.createElement('select')
     let dfselected
 
@@ -162,37 +171,33 @@ table_manager.prototype.save = function(table_name,type){
         let id = $(this)[0].parentNode.previousSibling.id// get previous td 
         const tag = $(this)[0].parentNode.parentNode.id
         console.log(tag)
-        $(this)[0].parentNode.parentNode.childNodes.forEach((item) => {
-            if (count-- > 0) {  
-                if(type === 'member' && count === 3 ){//如果是member 要從selec 取出值
-                    item.childNodes.forEach((e)=>{
-                        if(e.nodeName === 'SELECT'){
-                            arr[count] = e.options[e.selectedIndex].value                           
-                        }
-                    })
-                }
-                else             
-                    arr[count]=item.textContent               
-            }
-            //remove new tag
-            item.setAttribute('id', '')
+        let i = 0
+        $('#' + tag).find('td').each(function(index,e){
+            console.log(e.className)
+                if(e.className == 'data-field')
+                    arr[i] = e.textContent
+                else if (e.className == 'staffID')
+                    arr[i] = $(e).find('select')[0].selectedIndex                
+
+                i++
         })
+       
        
         if(type === 'member'){           
             obj = {
-                'name': arr[5],
-                'password': arr[2],
-                'number': arr[4],
-                'identity': arr[3],
-                'emailAddress': arr[1]
+                'name': arr[0],
+                'number': arr[1],
+                'identity': arr[2],
+                'password': arr[3],
+                'emailAddress': arr[4]
             }           
         }
         else if(type === 'device'){           
             obj = {
-                'name': arr[3],
-                'Description': arr[2],
-                'position': arr[1],
-                'tagName': arr[0]
+                'name': arr[0],
+                'Description': arr[1],
+                'position': arr[2],
+                'tagName': arr[3]
             }            
         }
         else if(type === 'post'){           
@@ -203,9 +208,9 @@ table_manager.prototype.save = function(table_name,type){
         }
         else if(type === 'info'){
             obj = {
-               'name': arr[2],
+               'name': arr[0],
                'number' : arr[1],
-               'quantity' : arr[0],
+               'quantity' : arr[2],
                'componentTypeId': 2,
                'bindedDeviceId' : 8
             }

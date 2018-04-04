@@ -29,13 +29,13 @@
             tb_manager.showtable(arg,'member')
         })
         ipcrender.on('updatecell-member',(event,content,tag)=>{
-            tb_manager.update_cell('member',content,tag) // tag 是給tr的編號 
+            ipcrender.send('ready-to-show', 'member')
         })              
         $(document).ready(function (){ 
             ipcrender.send('ready-to-show','member')
             tb_manager.add_cell('#add-btn','member')
             tb_manager.delete_cell('#target','member');
-            tb_manager.save('#target',6,'member')
+            tb_manager.save('#target','member')
             sidebar_setup('member')
             $('#search-btn').click(function(){              
                             

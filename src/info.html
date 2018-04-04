@@ -28,12 +28,7 @@
                 })                
             })
             ipcrender.on('update-Cpn-type',(event,info,tag)=>{
-                console.log(info)
-                console.log(tag)
-                let op = document.getElementById(tag)
-                console.log(op)
-                if(op)
-                    op.id = info.id//update option id
+                 ipcrender.send('ready-to-show', 'Cpn-type')
             })
             $(document).ready(function () {
             /////////////////////////////////新增類別/////////////////////////////////// 
@@ -78,6 +73,10 @@
                 </ul>
             </nav>
             <div class="content">
+                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                    <i class="glyphicon glyphicon-align-left"></i>
+                    ☰
+                </button>
                 <input id="class-input" type="text">
                 <button id="add-classfication">新增類別</button>
                 <select id="selection">                    
