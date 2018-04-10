@@ -23,8 +23,13 @@
                 ipcrender.send('ready-to-show', 'post')
 
               })
+              ipcrender.on('reply-member', (event, info) => {
+                    console.log(info)
+                    localStorage.member_list = JSON.stringify(info)
+              })
               $(document).ready(function () {  
                     ipcrender.send('ready-to-show', 'post')
+                    ipcrender.send('ready-to-show', 'member')
                     tb_manager.add_cell('#add-btn', 'post')
                     tb_manager.delete_cell('#target', 'post')
                     tb_manager.save('#target', 'post')                
@@ -59,9 +64,7 @@
                            <th></th>
                         </tr>
                     </tbody>
-                </table>
-               
-
+                </table>               
             </div>
 
         </div>

@@ -220,7 +220,18 @@ bim_app_window.prototype.AddCpnType = function(info){
   this.how = 'POST'
   this.Send(info)
 }
-
+bim_app_window.prototype.UpdateCpnType = function(id,info){
+  this.api = 'admin/component_type/'
+  this.op = 'update?id=' + id
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.RemoveCpnType = function(id){
+  this.api = 'admin/component_type/'
+  this.op = 'remove?id=' + id
+  this.how = 'DELETE'
+  this.Send(null)
+}
 bim_app_window.prototype.GetSdlList = function(){
   this.api = 'schedule/'
   this.op = 'list'

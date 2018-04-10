@@ -1,15 +1,16 @@
 <html>
+
 <head>
     <meta charset="UTF-8">
     <style>
-        .binded td{
+        .binded td {
             background-color: rgb(208, 255, 0);
         }
     </style>
     <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script>
-        "use strict"; 
+        "use strict";
         let $ = require('jquery')
         let jQuery = require('jquery')
     </script>
@@ -19,61 +20,63 @@
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager()
         var bind_list = []
-        ipcrender.on('reply-device', (event, arg) => {            
-            tb_manager.showtable(arg, 'bind_device')
-           // $('#Unbind button').hide()
-        })    
-        ipcrender.on('update-bind-list',(event,arg)=>{
-            bind_list = arg 
-            console.log(arg) 
-            $('tr').each((index,e)=>{
+        ipcrender.on('reply-Cpn', (event, info) => {
+            console.log('reply')
+            localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+            console.log(info)
+            tb_manager.showtable(info, 'bind_Cpn')
+            //tb_manager.ShowByFilter('info')
+        })
+        ipcrender.on('update-bind-list', (event, arg) => {
+            bind_list = arg
+            console.log(arg)
+            $('tr').each((index, e) => {
                 let index_ = bind_list.indexOf(e.id)
-                if(index_ != -1)
+                if (index_ != -1)
                     e.className = 'binded'
             })
         })
-        
+
         $(document).ready(function () {
-            ipcrender.send('ready-to-show', 'device')
-             $('#target').on('click', 'button#bind', function () {
+            ipcrender.send('ready-to-show', 'Cpn')
+            $('#target').on('click', 'button#bind', function () {
                 let id = $(this)[0].parentNode.parentNode.id
                 $(this)[0].parentNode.parentNode.className = 'binded'
                 console.log(id)
                 bind_list.push(id)
             })
             $('#target').on('click', '.Unbind', function () {
-              
                 let id = $(this)[0].parentNode.parentNode.id
                 $(this)[0].parentNode.parentNode.className = ''
                 console.log(id)
-                bind_list.splice(bind_list.indexOf(id),1)
+                bind_list.splice(bind_list.indexOf(id), 1)
             })
         });
         var CloseSubWindow = function () {
-                console.log(bind_list)
-                ipcrender.send('toggle-result', 'bind', bind_list)
-                bind_list = []
-         }
-    </script>  
+            console.log(bind_list)
+            ipcrender.send('toggle-result', 'bind-Cpn', bind_list)
+            bind_list = []
+        }
+    </script>
 </head>
 
 <body>
-    <div class="wrapper">      
-        <div class="content">    
+    <div class="wrapper">
+        <div class="content">
             <button onclick=" CloseSubWindow()" style="float:right;">確認綁定</button>
-                <table id="target">
-                    <tbody>
-                        <tr>
-                            <th>設備編號</th>
-                            <th>設備說明</th>
-                            <th>設備位置</th>
-                            <th>監控點說明</th>
-                            <th></th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table id="target">
+                <tbody>
+                    <tr>
+                        <th>零件名稱</th>
+                        <th>零件料號</th>
+                        <th>數量</th>
+                        <th></th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+    </div>
 </body>
+
 </html>

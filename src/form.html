@@ -22,23 +22,13 @@
             ipcrender.send('ready-to-show', 'form')
         })
         ipcrender.on('bind_devices', function (event, arg) {
-               //console.log(arg.toString())
-                var includes = function (e) {//用來判斷是否有重複存在的ID
-                    let arr =  $('#bind-list li')
-                    for(let i = 0;i<arr.length;i++){
-                        if(arr[i].textContent == e)return true
-                    }  
-                    return false                     
-                }
+               console.log(arg)
+                 $('#bind-list')[0].innerHTML = ''
                 for(var i =0;i<arg.length;i++){                   
-                    if(!includes(arg[i])){//如果綁定的ID不存在的話就加入li
-                        //console.log('e')
-                      let temp = document.createElement('li')
+                      let temp = document.createElement('option')
                       temp.textContent = arg[i]
-                      $('#bind-list').append(temp)
-                    }
-                }             
-
+                      $('#bind-list')[0].appendChild(temp)                    
+                }           
         })
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'form')
@@ -46,7 +36,6 @@
             $('#form-list').change(function () {
                 console.log($('#form-list :selected'))
                 const index = $('#form-list :selected')[0].id
-                //console.log(index)
                 redips.update_to_json(redips.current_select_form_index, redips.get_loc_formdata())//將local編輯的結果儲存下來 
                 redips.showform(index)
                 redips.current_select_form_index = index
@@ -156,8 +145,9 @@
                 <input type="text" id="title" value="" /> 
                 創建日期
                 <input type="text" id="date" value="" disabled />
-                <ul id="bind-list">
-                </ul>
+                綁定設備
+                <select id="bind-list">
+                </select>
             </div>
             <table id="mainTable">
                 <tbody>

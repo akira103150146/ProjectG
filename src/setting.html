@@ -7,8 +7,7 @@
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- <script src="js/lib/jqueryImporter.js"></script> -->
     <script>
-        "use strict";
-        
+        "use strict"; 
         var QRCode = require('./js/lib/qrcode/qrcode.min.js')
         let $ = require('jquery')
         let jQuery = require('jquery')
@@ -19,19 +18,34 @@
     <script>
         "use strict";
         let ipcrender = require('electron').ipcRenderer
-        let tb_manager = new table_manager()         
+        let tb_manager = new table_manager()    
+        var current_bind_index = 0     
         ipcrender.on('reply-device', (event, info) => {
             localStorage.list_device = JSON.stringify(info)
             console.log(info)
             tb_manager.showtable(info,'device')
         })  
         ipcrender.on('updatecell-device', (event, content, tag) => {
-            tb_manager.update_cell('device',content, tag)
+            ipcrender.send('ready-to-show', 'device')
+        })
+        ipcrender.on('bind_Cpn', function (event, arg) {
+             console.log(arg)
+             let list = JSON.parse(localStorage.list_device)
+             console.log(list)
+             for(let i =0;i<list.length;i++){
+                 if(list[i].id == current_bind_index){
+                    console.log('founded!')
+                    list[i].componentIds = arg
+                    break
+                }
+             }
+             localStorage.list_device = JSON.stringify(list)
         })
         $(document).ready(function () {  
             let qr = new QRCode('qrcode')
             let link = document.createElement('a')
-            qr.makeCode('10')          
+            qr.makeCode('10')   
+            $('#back-btn').hide()       
             //向main process傳送訊息使其和伺服器溝通回傳資料
             ipcrender.send('ready-to-show', 'device')
             tb_manager.add_cell('#add-btn', 'device')            
@@ -47,7 +61,24 @@
                 a[0].click()
                 a.remove()
                 qr.makeCode(id)               
-            })         
+            }) 
+            
+            $('#search-btn').click(function () {
+                tb_manager.ShowByFilter('device')
+                $('#back-btn').show()
+                $('#search-btn').hide()
+            })
+            $('#back-btn').click(function () {
+                let info = JSON.parse(localStorage.list_device)
+                tb_manager.showtable(info, 'device')
+                $('#back-btn').hide()
+                $('#search-btn').show()
+            })
+            $('#target').on('click','.binded-Cpn',function(){
+                console.log('bind')
+                current_bind_index = $(this)[0].parentNode.parentNode.id
+                ipcrender.send('toggle-result', 'device')
+            })
         });
     </script>
     <script>
@@ -85,9 +116,15 @@
             </button>
             <div class="search">
                 設備編號
-                <input type="text" name="設備編號"> 設備機型
-                <input type="text" name="設備機型">
-                <button>查詢</button>
+                <input type="text" name="設備編號" id="device-num"> 
+                設備機型
+                <input type="text" name="設備位置" id="device-pos">
+                <button id="search-btn">
+                    查詢
+                </button>
+                <button id="back-btn">
+                    Back
+                </button>
             </div>
             <div>
                 <br>

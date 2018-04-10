@@ -24,9 +24,10 @@
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager() 
               
-        ipcrender.on('reply-member',(event,arg)=>{
-            //console.log(arg)
-            tb_manager.showtable(arg,'member')
+        ipcrender.on('reply-member',(event,info)=>{
+            console.log(info)
+            localStorage.member_list = JSON.stringify(info)
+            tb_manager.showtable(info,'member')
         })
         ipcrender.on('updatecell-member',(event,content,tag)=>{
             ipcrender.send('ready-to-show', 'member')
@@ -37,8 +38,17 @@
             tb_manager.delete_cell('#target','member');
             tb_manager.save('#target','member')
             sidebar_setup('member')
+            $('#back-btn').hide()
             $('#search-btn').click(function(){              
-                            
+                tb_manager.ShowByFilter('member')
+                 $('#back-btn').show()
+                 $('#search-btn').hide()
+            })
+             $('#back-btn').click(function () {
+                let info = JSON.parse(localStorage.member_list)
+                tb_manager.showtable(info, 'member')
+                $('#back-btn').hide()
+                 $('#search-btn').show()
             })
                             
         })          
@@ -63,13 +73,16 @@
             </button>
             <div class="search">
                 人員姓名
-                <input type="text" name="人員姓名"> 
+                <input type="text" name="人員姓名" id="member-name"> 
                 人員編號
-                <input type="text" name="人員編號"> 
-                人員身分
-                <input type="text" name="人員身分">
+                <input type="text" name="人員編號" id="member-number"> 
+                電子郵件
+                <input type="text" name="電子郵件" id="member-email">
                 <button id="search-btn">
                     查詢 
+                </button>
+                <button id="back-btn">
+                    Back
                 </button>
             </div>
             <div>

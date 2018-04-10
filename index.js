@@ -39,7 +39,6 @@ app.on('ready', () => {
   result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: false }) 
 
   win.loadURL(`file://${__dirname}/src/login.html`)
-
   win.on('closed', () => { win = null })
   result_win.on('closed', () => { result_win = null })
 
@@ -91,18 +90,38 @@ app.on('ready', () => {
   ///////////////////////////////////////////////////////開啟小視窗//////////////////////////////////////////////////////
   ipcMain.on('toggle-result', function (event, which, data) {
     console.log('call')
-    if (!result_win) {
+    console.log(data)
+    if (!result_win && which === 'form') {
       result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: false })
-      result_win.loadURL('file://' + __dirname + '/bind_device.html')
+      result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
       result_win.webContents.openDevTools()
+      result_win.reload()
+      result_win.on('closed', () => { result_win = null })
+    }
+    else if (!result_win && which === 'device'){
+      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: false })
+      result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
+      result_win.webContents.openDevTools()
+      result_win.reload()
       result_win.on('closed', () => { result_win = null })
     }
     if (result_win.isVisible()) {
       if (which === 'bind')
         win.webContents.send('bind_devices', data)//送綁定資料到main window
+      else if(which === 'bind-Cpn')
+        win.webContents.send('bind_Cpn', data)//送綁定資料到main window
       result_win.hide()
     }
-    else {
+    else if (!result_win.isVisible() && which === 'form'){
+      console.log('form')
+      result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
+      result_win.webContents.send('update-bind-list', data)//送綁定資料到sub window
+      result_win.show()
+      result_win.reload()
+    }
+    else if (!result_win.isVisible() && which === 'device'){
+      console.log('device')
+      result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
       result_win.webContents.send('update-bind-list', data)//送綁定資料到sub window
       result_win.show()
       result_win.reload()
@@ -137,6 +156,7 @@ app.on('ready', () => {
     }
     else if (which === 'info') {
       bim.AddCpn(body)
+      path = 'update-Cpn'
     }
     else if (which === 'Cpn-type') {
       bim.AddCpnType(body)
@@ -162,7 +182,8 @@ app.on('ready', () => {
   ///////////////////////////////////////////////////////更新//////////////////////////////////////////////////////
   ipcMain.on('update', (event, which, id, body, tag) => {
     console.log('update')
-    console.log('tag :' + tag)
+    console.log('tag :' + id)
+    console.log(body)
     if (which === 'member') {
       bim.UpdateUser(id, body)
     }
@@ -180,6 +201,9 @@ app.on('ready', () => {
     }
     else if (which === 'sdl') {
       bim.UpdateSdl(id, body)
+    }
+    else if (which === 'Cpn-type') {
+      bim.UpdateCpnType(id, body)
     }
     else {
       console.log('which is not defined !')
@@ -213,6 +237,9 @@ app.on('ready', () => {
     }
     else if(which === 'sdl'){
       bim.RemoveSdl(body)
+    }
+    else if (which === 'Cpn-type') {
+      bim.RemoveCpnType(body)     
     }
     else {
       console.log('which is not defined')

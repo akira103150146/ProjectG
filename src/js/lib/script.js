@@ -100,12 +100,18 @@ redips.fillform = function(item){
     ID.value = item.id
     table.innerHTML = item.content
     title.value = item.title
+   
     if(bind_list){
         bind_list.innerHTML = ''
         item.deviceIds.forEach((e)=>{
             let temp = document.createElement('option')
             temp.textContent = e
             bind_list.appendChild(temp)
+        })
+    }
+    else{
+        $('#mainTable td').each((index, e) => {
+            e.contentEditable = false;
         })
     }
     if(item.createTime)
@@ -180,7 +186,7 @@ redips.get_loc_formdata = function(){
 redips.get_bind_arr = function(){
     let arr = []
     
-    $('#bind-list li').each(
+    $('#bind-list option').each(
         function(e){
            arr.push(this.textContent)
         }

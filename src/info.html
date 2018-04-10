@@ -16,19 +16,24 @@
             ipcrender.on('reply-Cpn',(event,info)=>{
                 console.log('reply')
                 localStorage.list_info = JSON.stringify(info)//將傳入list存入local
-                console.log(localStorage.list_info)
+                console.log(info)
                 tb_manager.showtable(info,'Cpn')
+                //tb_manager.ShowByFilter('info')
             })
-            ipcrender.on('reply-Cpn-type',(event,info)=>{ //將資料庫的類別都加入option              
+            ipcrender.on('reply-Cpn-type',(event,info)=>{ //將資料庫的類別都加入option  
+                console.log(info)            
                 info.forEach((e)=>{
-                    var op = document.createElement('option')
+                    let op = document.createElement('option')
                     op.textContent = e.name
                     op.id = e.id
                     $('#selection')[0].appendChild(op)
-                })                
+                })               
             })
             ipcrender.on('update-Cpn-type',(event,info,tag)=>{
-                 ipcrender.send('ready-to-show', 'Cpn-type')
+                ipcrender.send('ready-to-show', 'Cpn-type')
+            })
+            ipcrender.on('update-Cpn', (event, info, tag) => {
+                ipcrender.send('ready-to-show', 'Cpn')
             })
             $(document).ready(function () {
             /////////////////////////////////新增類別/////////////////////////////////// 
@@ -48,16 +53,34 @@
                     if($('#class-input')[0].value != ''){
                         var op = document.createElement('option')
                         op.textContent = $('#class-input')[0].value;
-                        op.id = 'Cpnloc_' + type_count.toString()
-                        console.log(op)
                         $('#selection')[0].appendChild(op)
                         let obj = {'name': op.textContent}
-                        ipcrender.send('add','Cpn-type',obj,'Cpnloc_'+type_count.toString())
-                        type_count++
+                        ipcrender.send('add','Cpn-type',obj)
                     }
                     else
                         alert('輸入為空')
                 })
+                $('#remove-classfication').click(function () {
+                   // ipcrender.send('remove', 'Cpn-type', $('#selection :selected')[0].id)
+                    $('#selection :selected')[0].parentNode.removeChild($('#selection :selected')[0])     
+                })
+                $('#update-classfication').click(function () {
+                     console.log('update')
+                    if ($('#class-input')[0].value != '') {
+                        console.log($('#selection :selected')[0].id )
+                        ipcrender.send('update', 'Cpn-type', $('#selection :selected')[0].id , { 'name': $('#class-input')[0].value } , 0)
+                        $('#selection :selected')[0].textContent = $('#class-input')[0].value            
+                    }
+                    else
+                        alert('輸入為空')
+                })
+                $('#target').on('click', '#set-class', function () {
+                    console.log('set class')
+                })
+                $('#selection').change(function () {
+                    console.log('change')
+                    tb_manager.ShowByFilter('info')
+                });
             });
     </script>
 </head>
@@ -79,6 +102,8 @@
                 </button>
                 <input id="class-input" type="text">
                 <button id="add-classfication">新增類別</button>
+                <button id="remove-classfication">刪除類別</button>
+                <button id="update-classfication">更新類別</button>
                 <select id="selection">                    
                 </select>
                 <div>

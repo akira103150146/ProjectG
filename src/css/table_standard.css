@@ -10,11 +10,17 @@ th,td{
     background-color: rgb(186, 222, 252);          
     margin: 8px;
     height: 50px;
-    width: 100px;            
+    width: auto;            
+}
+td button{
+    display: inline;
 }
 #new{
     background-color: rgb(245, 248, 37); 
 }    
+#notype{
+    background-color: bisque;
+}
 table{
     width: 100%;
 }        
