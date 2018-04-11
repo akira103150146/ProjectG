@@ -92,14 +92,14 @@ app.on('ready', () => {
     console.log('call')
     console.log(data)
     if (!result_win && which === 'form') {
-      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: false })
+      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: true })
       result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
       result_win.webContents.openDevTools()
       result_win.reload()
       result_win.on('closed', () => { result_win = null })
     }
     else if (!result_win && which === 'device'){
-      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: false })
+      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: true })
       result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
       result_win.webContents.openDevTools()
       result_win.reload()

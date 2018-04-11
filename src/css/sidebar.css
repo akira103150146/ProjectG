@@ -31,14 +31,14 @@ a, a:hover, a:focus {
     min-width: 250px;
 	max-width: 250px;
 	min-height: 100vh;
-    background: rgb(2, 9, 37);
+    background: rgb(5, 18, 75);
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: rgb(2, 9, 37);
+    background: rgb(5, 18, 75);
 }
 
 #sidebar ul.components {

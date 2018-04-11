@@ -1,10 +1,12 @@
 body{
-    font-size: 16px;
+    font-size: 18px;
     font-family: '微軟正黑體';
+    background: rgb(228, 220, 220);
 }
 .content{
     margin: 20px auto;
-	border: 2px dashed LightBlue;
+    border: 2px dashed LightBlue;
+    width:75%;
 }
 th,td{            
     background-color: rgb(186, 222, 252);          

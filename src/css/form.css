@@ -1,5 +1,6 @@
 body {
 	font-family: '微軟正黑體';
+	font-size: 18px;
 }
 /* container */
 #myContainer {
@@ -7,6 +8,7 @@ body {
 	border: 2px dashed LightBlue;
 	font-size: 12pt;
 	display: table;
+	width: 100%;
 }
 /* both tables */
 div#myContainer table {
@@ -18,12 +20,17 @@ div#myContainer table {
 #toolbox {
 	background-color: rgb(204, 204, 204);
 	margin: 7px 7px 15px 7px;
+	width: 95%;
+}
+#toolbox input {
+	display: inline;
 }
 /* main table */
 #mainTable {
 	color: #777;
 	background-color: #eee;
-	margin: 7px;	
+	margin: 7px;
+	width: 95%;	
 }
 /* table cells */
 div#myContainer td {
