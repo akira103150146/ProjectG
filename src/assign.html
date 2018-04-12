@@ -112,6 +112,7 @@
           revertDuration: 0  
         });
         $('#external-events').append(dv)
+        $('#myModal')
       })
 
       $('#save-btn').on('click', () => {
@@ -125,6 +126,15 @@
 </head>
 <body>
 <div id='wrap'>
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>
   <div id="sidebar">
     <div class="sidebar-header">
       <h3 id="close_btn">Close &times;</h3>
@@ -135,7 +145,6 @@
     </ul>
   </div>
   <div id='external-events'>
-    <i class="fa fa-trash"></i>
     <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
       <i class="glyphicon glyphicon-align-left"></i>
       ☰
@@ -146,9 +155,10 @@
     <h4>新增任務</h4>
     <p>
       <input type='checkbox' id='drop-remove' />
-      <label for='drop-remove'>remove after drop</label>
+      <label for='drop-remove'>拖曳後移除</label>
     </p>
     <button id="add-event-btn" style="margin-left:70%;">+</button>
+    <i class="fa fa-trash"></i>
   </div>
 
   <div id='calendar'></div>

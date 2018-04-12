@@ -21,6 +21,7 @@ let auth
 let win
 let result_win
 //crashReporter.start();
+const fs = require('fs')
 
 
 
@@ -61,6 +62,14 @@ app.on('ready', () => {
         var id = parseBody['content'].id
         var token = parseBody['content'].token
         auth = id + '_' + token
+        fs.appendFile('log.txt', new Date().toDateString() + '\n' +  'Login' + '\n' +
+          '帳號: ' + arg + '\n' + '密碼: ' + arg2 + '\n' + '--------------------------------------- \n', 
+          function (err) {
+            if (err)
+              return console.log(err);
+            console.log('Wrote Hello World in file helloworld.txt, just check it');
+          })
+        
         bim.SetAuth(auth)
         win.webContents.send('reply-login', id, arg)//初始化使用者資料
         win.loadURL(`file://${__dirname}/src/post.html`)
@@ -80,6 +89,11 @@ app.on('ready', () => {
     bim.Logout()
     rp(bim.GetOption()).then((parseBody) => {
       console.log(parseBody)
+      fs.appendFile('log.txt', new Date().toDateString() + '\n' + 'Logout \n' + '--------------------------------------- \n' , function (err) {
+          if (err)
+            return console.log(err);
+          console.log('Wrote Hello World in file helloworld.txt, just check it');
+        })
       bim.Reset()
       win.loadURL(`file://${__dirname}/src/login.html`)
     }).catch((err) => {
@@ -106,11 +120,21 @@ app.on('ready', () => {
       result_win.on('closed', () => { result_win = null })
     }
     if (result_win.isVisible()) {
-      if (which === 'bind')
+      if (which === 'bind'){
         win.webContents.send('bind_devices', data)//送綁定資料到main window
-      else if(which === 'bind-Cpn')
+        result_win.hide()
+      }
+      else if(which === 'bind-Cpn'){
         win.webContents.send('bind_Cpn', data)//送綁定資料到main window
-      result_win.hide()
+        result_win.hide()
+      }
+      else if (which === 'form'){
+        result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
+      }
+      else if (which === 'device'){
+        result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
+      }
+     
     }
     else if (!result_win.isVisible() && which === 'form'){
       console.log('form')

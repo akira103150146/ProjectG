@@ -128,6 +128,24 @@ bim_app_window.prototype.GetFormList = function(){
   this.how = 'GET'
   this.Send(null)
 }
+bim_app_window.prototype.AssignForm = function(info){
+  this.api = 'admin/form/'
+  this.op = 'assign'
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.UpdateAssignForm = function (id, info) {
+  this.api = 'admin/form/template/'
+  this.op = 'update?id=' + id
+  this.how = 'POST'
+  this.Send(info)
+}
+bim_app_window.prototype.RemoveAssignForm = function (id) {
+  this.api = 'admin/form/'
+  this.op = 'remove?id=' + id
+  this.how = 'DELETE'
+  this.Send(null)
+}
 //////////////////////////////////////設備操作///////////////////////////////////////////
 bim_app_window.prototype.GetDeviceList = function(){
   this.api = 'device/'
