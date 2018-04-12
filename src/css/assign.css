@@ -1,7 +1,8 @@
 body {
     text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+    background: rgb(235, 239, 240);
 }
 
 #wrap {
@@ -33,12 +34,40 @@ body {
     margin: 1.5em 0;
     color: #666;
 }
+#external-events button{
+    font-size: 20px;
+    background-color: #7386D5;
+    border: none;
+    color:white;
+    padding: 10px;
+    margin: 4px 2px;
+    text-decoration: none;     
+    outline: none;           
+    text-align: center;
+    border-radius: 8px;
+}
+
+#external-events button:hover{
+    background-color: #781491;
+}
+
+#external-events button:active {
+    background-color: #781491;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
 
 #external-events p input {
     margin: 0;
     vertical-align: middle;
 }
 
+#external-events select{
+    width: auto;
+    padding: 4px;
+    height: 40px;
+    font-size: 20px;
+}
 #calendar {
     width: auto;
     margin-left: 31%;
@@ -47,15 +76,32 @@ body {
     height: 80px;
     margin-top: 20px;
 }
-
+.fc-body td{
+  border-color: rgb(0, 0, 0);
+  background: white;
+  font-size: 24px;
+}
+.fc-row .fc-widget-header{
+  border-color: rgb(0, 0, 0);
+  background: white;
+}
+.fc-widget-header .fc-sat{
+  border-color: rgb(0, 0, 0);
+  color: rgb(199, 32, 32);
+}
+.fc-widget-header .fc-sun{
+  border-color: rgb(0, 0, 0);
+  color: rgb(199, 32, 32);
+}
 #sidebar {
   float: left;
   width: 16%;
   min-height: 100vh;
-  background: rgb(2, 9, 37);
+  background: rgb(5, 18, 75);
   color: #fff;
   transition: all 0.3s;
   font-family: '微軟正黑體';
+  font-size: 20px;
 }
 
 #sidebar a[data-toggle="collapse"] {
@@ -86,7 +132,7 @@ body {
 #sidebar .sidebar-header {
     width: inherit;
     padding: 20px;
-    background: rgb(2, 9, 37);
+    background: rgb(5, 18, 75);
 }
 
 #sidebar ul.components {
@@ -103,7 +149,7 @@ body {
     padding: 10px;
     font-size: 1.1em;
     text-align: left;
-    font-size: 16px;
+    font-size: 20px;
     display: block;
 }
 #sidebar ul li a:hover {
@@ -130,11 +176,12 @@ body {
 }
 
 #sidebar button{
+    width: 60px;
     background-color: #7386D5;
     border: none;
     color:white;
     padding: 10px;
-    margin: 4px 4px 10px 120px;
+    margin: 4px 4px 10px 100px;
     text-decoration: none;     
     outline: none;           
     text-align: center;

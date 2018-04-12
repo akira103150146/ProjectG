@@ -1,12 +1,11 @@
 body {
 	font-family: '微軟正黑體';
-	font-size: 18px;
+	font-size: 20px;
 }
 /* container */
 #myContainer {
 	margin: 20px auto;
 	border: 2px dashed LightBlue;
-	font-size: 12pt;
 	display: table;
 	width: 100%;
 }
@@ -20,7 +19,7 @@ div#myContainer table {
 #toolbox {
 	background-color: rgb(204, 204, 204);
 	margin: 7px 7px 15px 7px;
-	width: 95%;
+	width: 80%;
 }
 #toolbox input {
 	display: inline;
@@ -30,10 +29,11 @@ div#myContainer table {
 	color: #777;
 	background-color: #eee;
 	margin: 7px;
-	width: 95%;	
+	width: 80%;	
 }
 /* table cells */
 div#myContainer td {
+	font-size: 20px;
 	width: 105px;
 	height: 60px;
 	border: 1px solid black;
@@ -46,7 +46,17 @@ div#myContainer td {
 	height: 100%;
 }
 
+select{
+    width: auto;
+    padding: 4px;
+    height: 40px;
+    font-size: 20px;
+}
+input{
+    height: 40px;
+}
 button,.button {
+	font-size: 20px;
  	background-color: #7386D5;
     border: none;
     color:white;

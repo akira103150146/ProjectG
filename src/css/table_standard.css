@@ -1,7 +1,6 @@
 body{
-    font-size: 18px;
+    font-size: 20px;
     font-family: '微軟正黑體';
-    background: rgb(228, 220, 220);
 }
 .content{
     margin: 20px auto;
@@ -9,7 +8,8 @@ body{
     width:75%;
 }
 th,td{            
-    background-color: rgb(186, 222, 252);          
+    background-color: rgb(186, 222, 252);  
+    font-size: 20px;        
     margin: 8px;
     height: 50px;
     width: auto;            
@@ -23,10 +23,20 @@ td button{
 #notype{
     background-color: bisque;
 }
+select{
+    width: auto;
+    padding: 4px;
+    height: 40px;
+    font-size: 20px;
+}
+input{
+    height: 40px;
+}
 table{
     width: 100%;
 }        
 button{
+    font-size: 20px;
     background-color: #7386D5;
     border: none;
     color:white;
