@@ -20,11 +20,19 @@
         let ipcrender = require('electron').ipcRenderer
         let tb_manager = new table_manager()    
         var current_bind_index = 0     
+        var bind_list = []
         ipcrender.on('reply-device', (event, info) => {
             localStorage.list_device = JSON.stringify(info)
             console.log(info)
             tb_manager.showtable(info,'device')
         })  
+        ipcrender.on('reply-Cpn', (event, info) => {
+            console.log('reply')
+            localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+            console.log(info)
+            tb_manager.showtable(info, 'bind_Cpn')
+            //tb_manager.ShowByFilter('info')
+        })
         ipcrender.on('updatecell-device', (event, content, tag) => {
             ipcrender.send('ready-to-show', 'device')
         })
@@ -48,6 +56,8 @@
             $('#back-btn').hide()       
             //向main process傳送訊息使其和伺服器溝通回傳資料
             ipcrender.send('ready-to-show', 'device')
+            ipcrender.send('ready-to-show', 'Cpn')
+
             tb_manager.add_cell('#add-btn', 'device')            
             tb_manager.delete_cell('#target','device')
             tb_manager.save('#target', 'device')
@@ -75,9 +85,46 @@
                 $('#search-btn').show()
             })
             $('#target').on('click','.binded-Cpn',function(){
-                console.log('bind')
                 current_bind_index = $(this)[0].parentNode.parentNode.id
-                ipcrender.send('toggle-result', 'device')
+                console.log('current bind')
+                console.log(current_bind_index)
+                $('#myModal')[0].style.display = "block";
+            })
+              window.onclick = function (event) {
+                if (event.target == $('#myModal')[0]) {
+                    $('#myModal')[0].style.display = "none";
+
+                }
+            }
+            $('.close').on('click', () => {
+                $('#myModal')[0].style.display = "none"
+            })
+            $('#target2').on('click', 'button#bind', function () {
+                let id = $(this)[0].parentNode.parentNode.id
+                $(this)[0].parentNode.parentNode.className = 'binded'
+                console.log(id)
+                bind_list.push(id)
+            })
+            $('#target2').on('click', '.Unbind', function () {
+
+                let id = $(this)[0].parentNode.parentNode.id
+                $(this)[0].parentNode.parentNode.className = ''
+                console.log(id)
+                bind_list.splice(bind_list.indexOf(id), 1)
+            })
+            $('#confirm').on('click', () => {
+                $('#myModal')[0].style.display = "none";
+                console.log(bind_list)
+                let list = JSON.parse(localStorage.list_device)
+                console.log(list)
+                for (let i = 0; i < list.length; i++) {
+                    if (list[i].id == current_bind_index) {
+                        console.log('founded!')
+                        list[i].componentIds = bind_list
+                        break
+                    }
+                }
+                localStorage.list_device = JSON.stringify(list)
             })
         });
     </script>
@@ -100,6 +147,25 @@
 </head>
 <body>
     <div class="wrapper">
+        <!-- Modal content -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h1>綁定設備</h1>
+                <table id="target2">
+                    <tbody>
+                        <tr>
+                            <th>零件名稱</th>
+                            <th>零件料號</th>
+                            <th>數量</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="confirm">確認綁定</button>
+            </div>
+        </div>
         <nav id="sidebar">
             <div class="sidebar-header">
                 <h3 id="close_btn">Close &times;</h3>

@@ -10,28 +10,29 @@
     <script type="text/javascript" src="js/lib/redips-table-min.js"></script>
     <script type="text/javascript" src="js/lib/script.js"></script>
     <script src="../../node_modules/jquery-contextmenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+    <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script>
         "use strict";
         var ipcrender = require('electron').ipcRenderer
-        ipcrender.on('reply-form',function (event, info){
+        var tb_manager = new table_manager()   
+        var bind_list = [] 
+        ipcrender.on('reply-form', function (event, info){
             localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
             redips.showlist(info)
         })
-        ipcrender.on('update-form',function(event, content,tag){
+        ipcrender.on('update-form', function(event, content,tag){
             ipcrender.send('ready-to-show', 'form')
         })
-        ipcrender.on('bind_devices', function (event, arg) {
-               console.log(arg)
-                 $('#bind-list')[0].innerHTML = ''
-                for(var i =0;i<arg.length;i++){                   
-                      let temp = document.createElement('option')
-                      temp.textContent = arg[i]
-                      $('#bind-list')[0].appendChild(temp)                    
-                }           
-        })
+        ipcrender.on('reply-device', (event, info) => {
+            localStorage.list_device = JSON.stringify(info)
+            console.log(info)
+            tb_manager.showtable(info, 'bind_device')
+        })  
+        
         $(document).ready(function () {
             ipcrender.send('ready-to-show', 'form')
+            ipcrender.send('ready-to-show', 'device')
             sidebar_setup('form')
             $('#form-list').change(function () {
                 console.log($('#form-list :selected'))
@@ -40,6 +41,39 @@
                 redips.showform(index)
                 redips.current_select_form_index = index
             });
+            window.onclick = function (event) {
+                if (event.target == $('#myModal')[0]) {
+                    $('#myModal')[0].style.display = "none";
+                 
+                }
+            }
+            $('.close').on('click', () => {
+                $('#myModal')[0].style.display = "none"
+           
+            })
+            $('#target').on('click', 'button#bind', function () {
+                let id = $(this)[0].parentNode.parentNode.id
+                $(this)[0].parentNode.parentNode.className = 'binded'
+                console.log(id)
+                bind_list.push(id)
+            })
+            $('#target').on('click', '.Unbind', function () {
+
+                let id = $(this)[0].parentNode.parentNode.id
+                $(this)[0].parentNode.parentNode.className = ''
+                console.log(id)
+                bind_list.splice(bind_list.indexOf(id), 1)
+            })
+             $('#confirm').on('click', () => {
+                 $('#bind-list')[0].innerHTML = ''
+                 for(var i = 0;i<bind_list.length;i++){
+                     let op = document.createElement('option')
+                     op.textContent = bind_list[i]
+                      $('#bind-list')[0].appendChild(op)
+                 }
+                $('#myModal')[0].style.display = "none";
+           
+             })
         });
       
         $(function () {
@@ -88,6 +122,28 @@
 
 <body>
     <div class="wrapper">
+        <!-- Modal content -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h1>綁定設備</h1>
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>設備編號</th>
+                            <th>設備說明</th>
+                            <th>設備位置</th>
+                            <th>監控點說明</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <button id="confirm">確認綁定</button>
+            </div>
+        </div>
+      
         <nav id="sidebar">
             <div class="sidebar-header">
                 <h3 id="close_btn">Close &times;</h3>

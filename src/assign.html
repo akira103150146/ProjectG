@@ -33,6 +33,15 @@
         sdlmanager.AddStaff()
         //sdlmanager.ShowSdl(0, info)
     })
+    ipcrender.on('reply-device', (event, info) => {
+        localStorage.list_device = JSON.stringify(info)
+        console.log(info)
+        sdlmanager.ShowDevice()
+      })  
+    ipcrender.on('reply-form', function (event, info) {
+        localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
+        console.log(info)
+    })
     ipcrender.on('update-Sdl', (event, content, tag)=>{
        console.log('refresh')
        ipcrender.send('ready-to-show', 'Sdl')
@@ -41,6 +50,8 @@
     /////////////////////////////////顯示畫面/////////////////////////////////// 
       ipcrender.send('ready-to-show', 'member')
       ipcrender.send('ready-to-show', 'Sdl')
+      ipcrender.send('ready-to-show', 'device')
+       ipcrender.send('ready-to-show', 'form')
     /////////////////////////////////設定sidebar/////////////////////////////////// 
       sidebar_setup('bagi')
     /////////////////////////////////fullcalendar setup/////////////////////////////////// 
@@ -97,30 +108,41 @@
       });
 
       $('#add-event-btn').on('click',()=>{
-        let dv = document.createElement('div')
-        dv.contentEditable = true
-        dv.textContent = '輸入工作名稱'
-        dv.className = 'fc-event'
-        $(dv).data('event', {
-          title: $.trim($(dv).text()),
-          stick: true ,
-          id: 'loc_' + current_index
-        });
-        $(dv).draggable({
-          zIndex: 999,
-          revert: true,     
-          revertDuration: 0  
-        });
-        $('#external-events').append(dv)
         $('#myModal')[0].style.display = "block"
-      
+        $('#calendar')[0].style.display = "none";
+        $('#input-m_name')[0].value = ''
       })
        $('.close').on('click', ()=>{
-         $('#myModal')[0].style.display = "none"
+          $('#myModal')[0].style.display = "none"
+          $('#calendar')[0].style.display = "block";
+       })
+       $('#confirm').on('click',()=>{
+          let dv = document.createElement('div')
+         dv.contentEditable = true
+         dv.textContent = $('#input-m_name')[0].value
+         dv.className = 'fc-event'
+         $(dv).data('event', {
+           title: $.trim($(dv).text()),
+           stick: true,
+           id: 'loc_' + current_index,
+           deviceId: $('#select-device :selected')[0].id,
+           formId: $('#select-form :selected')[0].id,
+           offset: $('#select-offset :selected')[0].value
+         });
+        
+         $(dv).draggable({
+           zIndex: 999,
+           revert: true,
+           revertDuration: 0
+         });
+         $('#external-events').append(dv)
+         $('#myModal')[0].style.display = "none";
+         $('#calendar')[0].style.display = "block";
        })
        window.onclick = function (event) {
         if (event.target == $('#myModal')[0]) {
           $('#myModal')[0].style.display = "none";
+          $('#calendar')[0].style.display = "block";
         }
       }
       $('#save-btn').on('click', () => {
@@ -129,6 +151,10 @@
       $('#staff-list').change(function () {
         sdlmanager.ShowSdl()
       });
+      $('#select-device').change(function () {
+        sdlmanager.ShowForm()
+        console.log('click')
+      });
 
     });
   </script>
@@ -136,11 +162,33 @@
 <body>
 <div id='wrap'>
 <div id="myModal" class="modal">
-
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
+    <p>任務名稱</p>
+    <input type="text" id="input-m_name">
+    <p>選擇設備</p>
+    <select id="select-device">
+      <option disabled selected value> -- select an option -- </option>
+    </select>
+    <p>選擇表單</p>
+      <select id="select-form">
+        <option disabled selected value> -- select an option -- </option>
+      </select>
+    <p>隔幾天通知</p>
+      <select id="select-offset">
+        <option disabled selected value> -- select an option -- </option>
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+      </select>
+      <br>
+      <button id="confirm">確認</button>
   </div>
 
 </div>
@@ -167,7 +215,7 @@
       <label for='drop-remove'>拖曳後移除</label>
     </p>
     <button id="add-event-btn" style="margin-left:70%;">+</button>
-    <i class="fa fa-trash"></i>
+    <i class="fa fa-trash" style="font-size: 72px;" ></i>
   </div>
 
   <div id='calendar'></div>

@@ -53,7 +53,7 @@ SdlManager.prototype.SaveSdl = function(){
     let staffid = staff_list.filter(x => x.name == staffname)[0].id
     let obj
     list.forEach((e)=>{
-        //console.log(e)
+        console.log(e)
         let start 
         let end
         if(e.start)
@@ -71,7 +71,7 @@ SdlManager.prototype.SaveSdl = function(){
                 'repeatInterval': 0
             }
             console.log(obj)
-           ipcrender.send('add', 'sdl', obj)
+          // ipcrender.send('add', 'sdl', obj)
         }
         else{// do update
             console.log('update')
@@ -83,7 +83,7 @@ SdlManager.prototype.SaveSdl = function(){
                 'repeatInterval': 0
             }
             console.log(obj)
-           ipcrender.send('update', 'sdl', e.id,obj)
+          // ipcrender.send('update', 'sdl', e.id,obj)
         }
     })
     if(this.trash_bin.length > 0)
@@ -102,4 +102,29 @@ SdlManager.prototype.DeleteSdl = function(){
     })
     this.trash_bin = []
 }
-
+///////////////////////////////////////////////////////assign form/////////////////////////////////////////////////
+SdlManager.prototype.ShowDevice = function(){
+    let list = JSON.parse(localStorage.list_device)
+    list.forEach((e)=>{
+        let op = document.createElement('option')
+        op.textContent = e.name
+        op.id = e.id
+        $('#select-device')[0].appendChild(op)
+    })
+}
+SdlManager.prototype.ShowForm = function(){
+    let list = JSON.parse(localStorage.list_form)
+    let selected_deviceId = $('#select-device :selected')[0].id
+    console.log(selected_deviceId)
+    $('#select-form')[0].innerHTML = ''
+    list.forEach((e) => {
+        console.log(e.deviceIds)
+        if (e.deviceIds.indexOf(parseInt(selected_deviceId)) >= 0)
+        {
+            let op = document.createElement('option')
+            op.textContent = e.title
+            op.id = e.id
+            $('#select-form')[0].appendChild(op)
+        }
+    })
+}

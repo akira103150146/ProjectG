@@ -11,7 +11,7 @@ function table_manager(){
     }
 }
 ///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
-table_manager.prototype.showtable = function(data,which){
+table_manager.prototype.showtable = function(data, which){
     this.ClearTable()
     let l = data.length
     this.current_index = l
@@ -108,7 +108,7 @@ table_manager.prototype.ClearTable = function(){
 }
 
 ///////////////////////////////////////////////////////新增表格/////////////////////////////////////////////////
-table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
+table_manager.prototype.append_cell = function (content,tr_index,add_type,isnew){
     let l = content.length
     let tr = document.createElement('tr')
     let list = JSON.parse(localStorage.member_list)
@@ -148,7 +148,7 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
             else
                 td.textContent = content[i]
         }     
-        if(!(add_type === 'Cpn' && i == l-1))
+        if (!((add_type === 'Cpn' || add_type === 'bind_Cpn') && i == l-1))
             tr.appendChild(td)
     }
         //將物件id綁在tr上
@@ -197,7 +197,11 @@ table_manager.prototype.append_cell = function(content,tr_index,add_type,isnew){
         td_2.appendChild(btn6)
     }
     tr.appendChild(td_2)
-    $('#target')[0].appendChild(tr) 
+    if (add_type != 'bind_Cpn')
+       $('#target')[0].appendChild(tr) 
+    else
+       $('#target2')[0].appendChild(tr) 
+
 }
 ///////////////////////////////////////////////////////顯示選項/////////////////////////////////////////////////
 table_manager.prototype.add_slc = function(value){

@@ -59,7 +59,7 @@ redips.showlist = function(info){
     let init_to_show
     let jstring = JSON.stringify(info)
     localStorage.setItem('list_content',jstring)//將表單資料全部丟進去 local
-    $('#form-list')[0].innerHTML = ''
+    $('#form-list')[0].innerHTML = '<option disabled selected value> -- select an option -- </option>'
     const l = info.length
     for(let i=0;i<l;i++){//將表單資料撈出來 新增list項目       
         const index = info[i].id
@@ -255,5 +255,5 @@ redips.removeform = function(){
 
 redips.bind_device = function(){
     console.log('open sub window')    
-    ipcrender.send('toggle-result', 'form', this.get_bind_arr())
+    $('#myModal')[0].style.display = "block";
 }

@@ -100,59 +100,6 @@ app.on('ready', () => {
       //console.log(err)
     })
   })
-
-  ///////////////////////////////////////////////////////開啟小視窗//////////////////////////////////////////////////////
-  ipcMain.on('toggle-result', function (event, which, data) {
-    console.log('call')
-    console.log(data)
-    if (!result_win && which === 'form') {
-      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: true })
-      result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
-      result_win.webContents.openDevTools()
-      result_win.reload()
-      result_win.on('closed', () => { result_win = null })
-    }
-    else if (!result_win && which === 'device'){
-      result_win = new BrowserWindow({ width: 800, height: 600, parent: win, modal: true, show: true })
-      result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
-      result_win.webContents.openDevTools()
-      result_win.reload()
-      result_win.on('closed', () => { result_win = null })
-    }
-    if (result_win.isVisible()) {
-      if (which === 'bind'){
-        win.webContents.send('bind_devices', data)//送綁定資料到main window
-        result_win.hide()
-      }
-      else if(which === 'bind-Cpn'){
-        win.webContents.send('bind_Cpn', data)//送綁定資料到main window
-        result_win.hide()
-      }
-      else if (which === 'form'){
-        result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
-      }
-      else if (which === 'device'){
-        result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
-      }
-     
-    }
-    else if (!result_win.isVisible() && which === 'form'){
-      console.log('form')
-      result_win.loadURL(`file://${__dirname}/src/bind_device.html`)
-      result_win.webContents.send('update-bind-list', data)//送綁定資料到sub window
-      result_win.show()
-      result_win.reload()
-    }
-    else if (!result_win.isVisible() && which === 'device'){
-      console.log('device')
-      result_win.loadURL(`file://${__dirname}/src/bind_Cpn.html`)
-      result_win.webContents.send('update-bind-list', data)//送綁定資料到sub window
-      result_win.show()
-      result_win.reload()
-    }
-
-  })
-
   ///////////////////////////////////////////////////////新增//////////////////////////////////////////////////////
   ipcMain.on('add', (event, which, body, tag) => {
     console.log('add')
