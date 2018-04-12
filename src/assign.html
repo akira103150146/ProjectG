@@ -112,15 +112,24 @@
           revertDuration: 0  
         });
         $('#external-events').append(dv)
-        $('#myModal')
+        $('#myModal')[0].style.display = "block"
+      
       })
-
+       $('.close').on('click', ()=>{
+         $('#myModal')[0].style.display = "none"
+       })
+       window.onclick = function (event) {
+        if (event.target == $('#myModal')[0]) {
+          $('#myModal')[0].style.display = "none";
+        }
+      }
       $('#save-btn').on('click', () => {
          sdlmanager.SaveSdl()
       })
       $('#staff-list').change(function () {
         sdlmanager.ShowSdl()
       });
+
     });
   </script>
 </head>
