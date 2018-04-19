@@ -1,6 +1,7 @@
 "use strict";
 function SdlManager(){
-    this.trash_bin = []
+    this.trash_bin = []      //用來儲存要刪除的事件
+    this.AssignForms = []    //用來儲存要指派的任務
 }
 ///////////////////////////////////////////////////////顯示行程/////////////////////////////////////////////////
 SdlManager.prototype.ShowSdl = function(){
@@ -71,7 +72,7 @@ SdlManager.prototype.SaveSdl = function(){
                 'repeatInterval': 0
             }
             console.log(obj)
-          // ipcrender.send('add', 'sdl', obj)
+          ipcrender.send('add', 'sdl', obj, e.id)   //將local id傳過去 才能判別傳回來的時候到底要抓哪一筆資料去assign form
         }
         else{// do update
             console.log('update')
@@ -83,7 +84,7 @@ SdlManager.prototype.SaveSdl = function(){
                 'repeatInterval': 0
             }
             console.log(obj)
-          // ipcrender.send('update', 'sdl', e.id,obj)
+          ipcrender.send('update', 'sdl', e.id,obj)
         }
     })
     if(this.trash_bin.length > 0)
@@ -127,4 +128,18 @@ SdlManager.prototype.ShowForm = function(){
             $('#select-form')[0].appendChild(op)
         }
     })
+}
+
+SdlManager.prototype.AddTempSdl = function(info){
+    console.log('AddTemp')
+    console.log(info)
+    this.AssignForms.push(info)
+}
+
+SdlManager.prototype.AssignSdl = function(tag, id){
+    console.log('Assign!')
+    let result = this.AssignForms.filter(x => x.scheduleId == tag)
+    result.scheduleId = id
+    console.log(result)
+    ipcrender.send('add', 'assign', result)
 }

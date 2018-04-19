@@ -123,7 +123,7 @@ app.on('ready', () => {
       path = 'update-post'
     }
     else if (which === 'assign') {
-      bim.Assign_Form(body)
+      bim.AssignForm(body)
     }
     else if (which === 'info') {
       bim.AddCpn(body)

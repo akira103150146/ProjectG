@@ -44,14 +44,17 @@
     })
     ipcrender.on('update-Sdl', (event, content, tag)=>{
        console.log('refresh')
-       ipcrender.send('ready-to-show', 'Sdl')
+       console.log(tag)
+       console.log(content)
+       sdlmanager.AssignSdl(tag, content.id)
+      // ipcrender.send('ready-to-show', 'Sdl')
     })
     $(document).ready(function () {
     /////////////////////////////////顯示畫面/////////////////////////////////// 
       ipcrender.send('ready-to-show', 'member')
       ipcrender.send('ready-to-show', 'Sdl')
       ipcrender.send('ready-to-show', 'device')
-       ipcrender.send('ready-to-show', 'form')
+      ipcrender.send('ready-to-show', 'form')
     /////////////////////////////////設定sidebar/////////////////////////////////// 
       sidebar_setup('bagi')
     /////////////////////////////////fullcalendar setup/////////////////////////////////// 
@@ -81,7 +84,6 @@
         editable: true,
         droppable: true, // this allows things to be dropped onto the calendar
         drop: function () {
-          current_index++
           // is the "remove after drop" checkbox checked?
           if ($('#drop-remove').is(':checked')) {
             // if so, remove the element from the "Draggable Events" list
@@ -92,11 +94,11 @@
           let x = jsEvent.pageX
           let y = jsEvent.pageY
 
-          let cal = $('#calendar')[0]
-          let top = cal.getBoundingClientRect().top + $(window)['scrollTop']()
+          let cal   = $('#calendar')[0]
+          let top   = cal.getBoundingClientRect().top + $(window)['scrollTop']()
           let right = cal.getBoundingClientRect().right + $(window)['scrollLeft']()
-          let down = cal.getBoundingClientRect().bottom + $(window)['scrollTop']()
-          let left = cal.getBoundingClientRect().left + $(window)['scrollLeft']()          
+          let down  = cal.getBoundingClientRect().bottom + $(window)['scrollTop']()
+          let left  = cal.getBoundingClientRect().left + $(window)['scrollLeft']()          
     
           if (!((x <= right ) && (x >= left) && (y >= top) && (y <= down))){ 
             if(Number.isInteger(event.id))
@@ -124,12 +126,16 @@
          $(dv).data('event', {
            title: $.trim($(dv).text()),
            stick: true,
-           id: 'loc_' + current_index,
-           deviceId: $('#select-device :selected')[0].id,
-           formId: $('#select-form :selected')[0].id,
-           offset: $('#select-offset :selected')[0].value
+           id: 'loc_' + current_index
          });
-        
+         let obj = {
+           'bindedDeviceId': $('#select-device :selected')[0].id,
+           'formTemplateId': $('#select-form :selected')[0].id,
+           'notificationOffset': $('#select-offset :selected')[0].value,
+           'scheduleId': 'loc_' + current_index
+         }
+         sdlmanager.AddTempSdl(obj) //將之後要發配的表單儲存，因為Server api設計 不能做到一次新增 所以才要做暫存
+         current_index++
          $(dv).draggable({
            zIndex: 999,
            revert: true,
