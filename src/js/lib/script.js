@@ -173,6 +173,7 @@ redips.get_loc_formdata = function(){
     const title = document.getElementById('title')
     const ID = document.getElementById('ID')
     const date = document.getElementById('date')
+    REDIPS.table.remove_selection()
     let content = {
         'id': ID.value,
         'title': title.value,

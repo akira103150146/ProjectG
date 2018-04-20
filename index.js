@@ -143,7 +143,8 @@ app.on('ready', () => {
     }
     rp(bim.GetOption()).then((parseBody) => {
       console.log(parseBody)
-      event.sender.send(path, parseBody.content, tag)
+      if(path != '')
+        event.sender.send(path, parseBody.content, tag)
       bim.Reset()
     }).catch((err) => {
       //console.log(err)

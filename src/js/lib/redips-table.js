@@ -780,7 +780,9 @@ REDIPS.table = (function () {
 
 	/**
 	 * Method removes text selection.
-	 * @private
+	 * @public
+	 * @function
+	 * @name REDIPS.table#remove_selection
 	 * @memberOf REDIPS.table#
 	 */
 	remove_selection = function () {
