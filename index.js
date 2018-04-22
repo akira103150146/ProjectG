@@ -11,6 +11,7 @@ const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const crashReporter = electron.crashReporter;
 const shell = electron.shell;
+const dialog = require('electron').dialog
 let menu;
 let template;
 let mainWindow = null;
@@ -81,6 +82,7 @@ app.on('ready', () => {
       bim.Reset()
     }).catch((err) => {
       console.log(err)
+      dialog.showErrorBox("登入", "伺服器錯誤")
     })
   })
 
@@ -98,6 +100,7 @@ app.on('ready', () => {
       win.loadURL(`file://${__dirname}/src/login.html`)
     }).catch((err) => {
       //console.log(err)
+      dialog.showErrorBox("登出", "伺服器錯誤")
     })
   })
   ///////////////////////////////////////////////////////新增//////////////////////////////////////////////////////
@@ -148,11 +151,12 @@ app.on('ready', () => {
       bim.Reset()
     }).catch((err) => {
       //console.log(err)
+      dialog.showErrorBox("新增資料", "伺服器錯誤!" + err)
     })
   })
   
   ///////////////////////////////////////////////////////更新//////////////////////////////////////////////////////
-  ipcMain.on('update', (event, which, id, body, tag) => {
+  ipcMain.on('update', (event, which, id, body, id2, body2) => { //id2 和 body2只用在更新派遣任務 其餘都是null 不會有值
     console.log('update')
     console.log('tag :' + id)
     console.log(body)
@@ -183,9 +187,20 @@ app.on('ready', () => {
 
     rp(bim.GetOption()).then((parseBody) => {
       console.log(parseBody)
+      if(which === 'sdl'){  //更新行程的時候同時也要更新派遣的任務
+        bim.Reset()
+        bim.UpdateAssignForm(id2, body2)
+        rp(bim.GetOption()).then((parseBody) =>{
+          console.log(parseBody)
+        }).catch((err) =>{
+          dialog.showErrorBox("更新", "伺服器錯誤!" + err)
+        })
+      }
+      
       bim.Reset()
     }).catch((err) => {
       //console.log(err)
+      dialog.showErrorBox("更新", "伺服器錯誤!" + err)
     })
   })
   ///////////////////////////////////////////////////////刪除//////////////////////////////////////////////////////
@@ -213,6 +228,9 @@ app.on('ready', () => {
     else if (which === 'Cpn-type') {
       bim.RemoveCpnType(body)     
     }
+    else if (which === 'notify'){
+      bim.RemoveNotification(body)
+    }
     else {
       console.log('which is not defined')
       console.log(which)
@@ -222,13 +240,14 @@ app.on('ready', () => {
       bim.Reset()
     }).catch((err) => {
       //console.log(err)
+      dialog.showErrorBox("刪除", "伺服器錯誤!" + err)
     })
 
   })
 
   ///////////////////////////////////////////////////////顯示網頁//////////////////////////////////////////////////////
-  ipcMain.on('ready-to-show', (event, which) => {
-    console.log('ready-to-show')
+  ipcMain.on('ready-to-show', (event, which, arg1) => {
+    console.log('ready-to-show' + which)
     let back_path = ''
     if (which === 'member') {
       console.log('ready-member')
@@ -264,6 +283,12 @@ app.on('ready', () => {
       bim.GetSdlList()
       back_path = 'reply-Sdl'
     }
+    else if(which === 'notify'){
+      console.log(arg1)
+      bim.GetAssignList(arg1)
+      console.log(bim.GetOption())
+      back_path = 'reply-notify'
+    }
     else {
     }
     rp(bim.GetOption()).then((parseBody) => {
@@ -271,7 +296,8 @@ app.on('ready', () => {
       event.sender.send(back_path, parseBody['content'])
       bim.Reset()
     }).catch((err) => {
-      console.log(err)
+      //console.log(err)
+      dialog.showErrorBox("顯示","伺服器錯誤!" + err)
     })
 
   })

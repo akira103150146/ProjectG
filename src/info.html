@@ -17,6 +17,11 @@
                 console.log('reply')
                 localStorage.list_info = JSON.stringify(info)//將傳入list存入local
                 console.log(info)
+                info.sort((a, b) => {
+                    let x = a.name.toLowerCase()
+                    let y = b.name.toLowerCase()
+                    return x < y ? -1 : x > y ? 1 : 0
+                })
                 tb_manager.showtable(info,'Cpn')
                 //tb_manager.ShowByFilter('info')
             })

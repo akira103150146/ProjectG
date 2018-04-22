@@ -61,9 +61,13 @@ redips.showlist = function(info){
     localStorage.setItem('list_content',jstring)//將表單資料全部丟進去 local
     $('#form-list')[0].innerHTML = '<option disabled selected value> -- select an option -- </option>'
     const l = info.length
+    const ishistory = document.getElementById('bind-list') == null ? true:false;    //歷史表單不會有bind-list
     for(let i=0;i<l;i++){//將表單資料撈出來 新增list項目       
         const index = info[i].id
-        const title = info[i].title
+        let title = info[i].title
+        if(ishistory)
+            title = title + "---" + new Date(info[i].submitTime).toISOString()
+        
         if(i === 0){
             init_to_show = index
             current_select_form_index = index
@@ -103,9 +107,14 @@ redips.fillform = function(item){
    
     if(bind_list){
         bind_list.innerHTML = ''
+        let list = JSON.parse(localStorage.dist_device)
+        console.log(list)
         item.deviceIds.forEach((e)=>{
             let temp = document.createElement('option')
-            temp.textContent = e
+           // const result = list.filter(x => x.id == e)[0].name
+            //console.log(result)
+            //if(result)
+            temp.textContent =  list[e] 
             bind_list.appendChild(temp)
         })
     }
@@ -115,9 +124,9 @@ redips.fillform = function(item){
         })
     }
     if(item.createTime)
-        date.value = new Date(item.createTime).toDateString()
+        date.value = new Date(item.createTime).toISOString()
     else
-        date.value = new Date(item.submitTime).toDateString()
+        date.value = new Date(item.submitTime).toISOString()
     redips.init()
 }
 
@@ -146,20 +155,24 @@ redips.addform = function(){
     let item = {
         'id': 'loc_' + loc_id.toString(),
         'content' : tb.innerHTML,
-        'title': 'I am A Title',
-        'createTime': '',
+        'title': '未命名標題' + loc_id,
+        'createTime': Date.now(),
         'deviceIds': []
     }    
     redips.insert_op(item.id, item.title)//add list
     redips.add_to_json(item)//add to json
     document.getElementById(item.id).click()
-    loc_id++    
+    redips.showform(item.id)
+    $('#form-list option').filter(function () {
+        return $(this).text() == '未命名標題' + loc_id
+    }).prop('selected', true)
+    loc_id++   
+  
 }
 
 redips.saveform = function () {
     let content = redips.get_loc_formdata()
     let ID = document.getElementById('ID')
-
     if (ID.value.substr(0,3) === 'loc') { // do add
         ipcrender.send('add','form',content,ID.value)
     }
@@ -173,7 +186,7 @@ redips.get_loc_formdata = function(){
     const title = document.getElementById('title')
     const ID = document.getElementById('ID')
     const date = document.getElementById('date')
-    REDIPS.table.remove_selection()
+    $('#mainTable td').css('background-color','rgb(186, 222, 252)');
     let content = {
         'id': ID.value,
         'title': title.value,

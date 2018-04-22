@@ -9,6 +9,7 @@ SdlManager.prototype.ShowSdl = function(){
     let staff_list = JSON.parse(localStorage.getItem('staff-assign'))
     let staffname = $('#staff-list :selected').text()
     let staffid = staff_list.filter(x => x.name == staffname)[0].id
+    ipcrender.send('ready-to-show', 'notify', staffid)
     const info = list.filter(x => x.staffId == staffid)
     this.ClearAllEvent()
     for(let i= 0;i<info.length;i++){
@@ -42,6 +43,7 @@ SdlManager.prototype.AddStaff = function(){
     list.forEach((e)=>{
         let op = document.createElement('option')
         op.textContent = e.name
+        op.id = e.id
         $('#staff-list').append(op)
     })
         
@@ -67,15 +69,18 @@ SdlManager.prototype.SaveSdl = function(){
             obj = {
                 'staffId': staffid, 
                 'startTime': start == undefined ? null : start, 
-                'endTime': end == undefined ? null : end,
+                'endTime': end == undefined ? start + 39600000 : end,
                 'repeatUnit': 0, 
                 'repeatInterval': 0
             }
             console.log(obj)
-          ipcrender.send('add', 'sdl', obj, e.id)   //將local id傳過去 才能判別傳回來的時候到底要抓哪一筆資料去assign form
+            ipcrender.send('add', 'sdl', obj, e.id)   //將local id傳過去 才能判別傳回來的時候到底要抓哪一筆資料去assign form
         }
         else{// do update
             console.log('update')
+            //從local 儲存抓出資料來
+            let list = JSON.parse(localStorage.list_notify)
+            list = list.filter(x => x.scheduleId == e.id)[0]
             obj = {
                 'staffId': staffid,
                 'startTime': start == undefined ? null : start,
@@ -83,8 +88,15 @@ SdlManager.prototype.SaveSdl = function(){
                 'repeatUnit': 0,
                 'repeatInterval': 0
             }
+            let obj2 = {
+                'bindedDeviceId': list.bindedDeviceId,
+                'formTemplateId': list.formTemplateId ,
+                'notificationOffset': list.notificationOffset,
+                'scheduleId': e.id
+            }
             console.log(obj)
-          ipcrender.send('update', 'sdl', e.id,obj)
+            console.log(obj2)
+            ipcrender.send('update', 'sdl', e.id, obj, list.id, obj2)
         }
     })
     if(this.trash_bin.length > 0)
@@ -138,8 +150,13 @@ SdlManager.prototype.AddTempSdl = function(info){
 
 SdlManager.prototype.AssignSdl = function(tag, id){
     console.log('Assign!')
-    let result = this.AssignForms.filter(x => x.scheduleId == tag)
+    let result = this.AssignForms.filter(x => x.scheduleId == tag)[0]
+    console.log(id)
     result.scheduleId = id
     console.log(result)
     ipcrender.send('add', 'assign', result)
+}
+
+SdlManager.prototype.GetTempSdl = function(){
+    return this.AssignForms
 }

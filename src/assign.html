@@ -21,8 +21,10 @@
     var ipcrender = require('electron').ipcRenderer
     var sdlmanager = new SdlManager()
     var current_index = 0
+    var isopenbyeventclick = false
+    var event_id
     /////////////////////////////////伺服器回應/////////////////////////////////// 
-    ipcrender.on('reply-Sdl',(event,info)=>{
+    ipcrender.on('reply-Sdl',(event, info)=>{
       console.log(info)
       localStorage.setItem('Sdl-list',JSON.stringify(info))
       sdlmanager.ShowSdl()
@@ -42,11 +44,15 @@
         localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
         console.log(info)
     })
+    ipcrender.on('reply-notify', function (event, info) {
+        localStorage.list_notify = JSON.stringify(info)//將傳入list存入local     
+        console.log(info)
+    })
     ipcrender.on('update-Sdl', (event, content, tag)=>{
        console.log('refresh')
        console.log(tag)
        console.log(content)
-       sdlmanager.AssignSdl(tag, content.id)
+       sdlmanager.AssignSdl(tag, content.id)  //在行事曆上面新增但是還要再送一次給server才能真正送到手機 
       // ipcrender.send('ready-to-show', 'Sdl')
     })
     $(document).ready(function () {
@@ -55,11 +61,13 @@
       ipcrender.send('ready-to-show', 'Sdl')
       ipcrender.send('ready-to-show', 'device')
       ipcrender.send('ready-to-show', 'form')
+      /*for(let i =30;i<=32;i++)
+        ipcrender.send('remove', 'notify', i)*/
+     
     /////////////////////////////////設定sidebar/////////////////////////////////// 
       sidebar_setup('bagi')
     /////////////////////////////////fullcalendar setup/////////////////////////////////// 
       $('#external-events .fc-event').each(function () {
-
         // store data so the calendar knows to render an event upon drop
         $(this).data('event', {
           title: $.trim($(this).text()), // use the element's text as the event title
@@ -72,7 +80,6 @@
           revert: true,      // will cause the event to go back to its
           revertDuration: 0  //  original position after the drag
         });
-
       });
 
       $('#calendar').fullCalendar({
@@ -82,68 +89,142 @@
           right: 'month,agendaWeek,agendaDay'
         }, 
         editable: true,
-        droppable: true, // this allows things to be dropped onto the calendar
-        drop: function () {
-          // is the "remove after drop" checkbox checked?
-          if ($('#drop-remove').is(':checked')) {
-            // if so, remove the element from the "Draggable Events" list
-            $(this).remove();
-          }
+        droppable: true,
+        drop: function () {    
+            $(this).remove()    //刪除事件
         },
         eventDragStop: function (event, jsEvent) {
           let x = jsEvent.pageX
           let y = jsEvent.pageY
 
           let cal   = $('#calendar')[0]
-          let top   = cal.getBoundingClientRect().top + $(window)['scrollTop']()
-          let right = cal.getBoundingClientRect().right + $(window)['scrollLeft']()
-          let down  = cal.getBoundingClientRect().bottom + $(window)['scrollTop']()
-          let left  = cal.getBoundingClientRect().left + $(window)['scrollLeft']()          
+          let top   = cal.getBoundingClientRect().top     + $(window)['scrollTop']()
+          let right = cal.getBoundingClientRect().right   + $(window)['scrollLeft']()
+          let down  = cal.getBoundingClientRect().bottom  + $(window)['scrollTop']()
+          let left  = cal.getBoundingClientRect().left    + $(window)['scrollLeft']()          
     
           if (!((x <= right ) && (x >= left) && (y >= top) && (y <= down))){ 
             if(Number.isInteger(event.id))
               sdlmanager.ThrowToBin(event.id)
             $('#calendar').fullCalendar('removeEvents', event.id)
-            
           }
+        },
+        eventClick: function (event) {
+          console.log('click event id:' + event.id)
+          let obj 
+          isopenbyeventclick = true
+          event_id = event.id
+          if(event.id.toString().substr(0,3) === 'loc'){//local
+            let tempsdl = sdlmanager.GetTempSdl()
+            tempsdl = tempsdl.filter(x => x.scheduleId = event.id)[0]
+            obj = {
+              'devicename': tempsdl.bindedDeviceId,
+              'formname':   tempsdl.formTemplateId,
+              'offset':     tempsdl.notificationOffset
+            }
+          }
+          else{//已經加入的行程
+             let list = JSON.parse(localStorage.list_notify)
+             list = list.filter(x=> x.scheduleId == event.id)[0]
+             console.log(list)
+             obj = {
+                'devicename': list.bindedDeviceId,
+                'formname': list.formTemplateId,
+                'offset': list.notificationOffset
+             }
+          }
+          console.log(obj)
+          $('#select-device option').filter(function(){
+            return $(this)[0].id == obj.devicename
+          }).prop('selected', true)
+
+          sdlmanager.ShowForm()
+
+          $('#select-form option').filter(function () {
+            return $(this)[0].id == obj.formname
+          }).prop('selected', true)
+
+          $('#select-offset option').filter(function () {
+            return $(this).text() == obj.offset
+          }).prop('selected', true)
+
+          $('#add-event-btn').click()
         }
+
       });
 
-      $('#add-event-btn').on('click',()=>{
-        $('#myModal')[0].style.display = "block"
-        $('#calendar')[0].style.display = "none";
-        $('#input-m_name')[0].value = ''
-      })
-       $('.close').on('click', ()=>{
+ /////////////////////////////////Modal/////////////////////////////////// 
+        $('#add-event-btn').on('click',()=>{
+          $('#myModal')[0].style.display = "block"
+          $('#calendar')[0].style.display = "none";
+          $('#input-m_name')[0].value = ''
+        })
+        $('.close').on('click', ()=>{
           $('#myModal')[0].style.display = "none"
           $('#calendar')[0].style.display = "block";
-       })
-       $('#confirm').on('click',()=>{
-          let dv = document.createElement('div')
-         dv.contentEditable = true
-         dv.textContent = $('#input-m_name')[0].value
-         dv.className = 'fc-event'
-         $(dv).data('event', {
-           title: $.trim($(dv).text()),
-           stick: true,
-           id: 'loc_' + current_index
-         });
-         let obj = {
-           'bindedDeviceId': $('#select-device :selected')[0].id,
-           'formTemplateId': $('#select-form :selected')[0].id,
-           'notificationOffset': $('#select-offset :selected')[0].value,
-           'scheduleId': 'loc_' + current_index
-         }
-         sdlmanager.AddTempSdl(obj) //將之後要發配的表單儲存，因為Server api設計 不能做到一次新增 所以才要做暫存
-         current_index++
-         $(dv).draggable({
-           zIndex: 999,
-           revert: true,
-           revertDuration: 0
-         });
-         $('#external-events').append(dv)
-         $('#myModal')[0].style.display = "none";
-         $('#calendar')[0].style.display = "block";
+        })
+        $('#confirm').on('click',()=>{
+          if(isopenbyeventclick){
+
+            if($.isNumeric(event_id)){  //代表他是已經存在的event
+                console.log('update event exist! ' + event_id)
+                let list = JSON.parse(localStorage.list_notify)
+      
+                for(let i = 0;i<list.length;i++){
+                  if(list[i].scheduleId == event_id){
+                      list[i].bindedDeviceId = $('#select-device :selected')[0].id
+                      list[i].formTemplateId = $('#select-form :selected')[0].id,
+                      list[i].notificationOffset = $('#select-offset :selected')[0].value
+                      break
+                  }
+                }
+                localStorage.list_notify = JSON.stringify(list)
+            }
+            else{
+                console.log('update event local! ' + event_id)
+                let tempsdl = sdlmanager.GetTempSdl()
+                console.log(tempsdl)
+                tempsdl = tempsdl.filter(x => x.scheduleId == event_id)[0]
+                tempsdl.bindedDeviceId      = $('#select-device :selected')[0].id
+                tempsdl.formTemplateId      = $('#select-form :selected')[0].id
+                tempsdl.notificationOffset  = $('#select-offset :selected')[0].value
+            }
+            isopenbyeventclick = false
+            event_id = -1
+          }
+          else{
+            let dv = document.createElement('div')
+
+            dv.contentEditable = true
+            dv.textContent = $('#input-m_name')[0].value
+            dv.className = 'fc-event'
+
+            $(dv).data('event', {
+              title: $.trim($(dv).text()),
+              stick: true,
+              id: 'loc_' + current_index
+            });
+
+            let obj = {
+              'bindedDeviceId': $('#select-device :selected')[0].id,
+              'formTemplateId': $('#select-form :selected')[0].id,
+              'notificationOffset': $('#select-offset :selected')[0].value,
+              'scheduleId': 'loc_' + current_index
+            }
+            console.log(obj)
+            sdlmanager.AddTempSdl(obj) //將之後要發配的表單儲存
+            current_index++
+
+            $(dv).draggable({
+              zIndex: 999,
+              revert: true,
+              revertDuration: 0
+            });
+
+            $('#external-events').append(dv)
+        }
+         $('#myModal')[0].style.display   = "none";
+         $('#calendar')[0].style.display  = "block";
        })
        window.onclick = function (event) {
         if (event.target == $('#myModal')[0]) {
@@ -151,6 +232,7 @@
           $('#calendar')[0].style.display = "block";
         }
       }
+ /////////////////////////////////UI/////////////////////////////////// 
       $('#save-btn').on('click', () => {
          sdlmanager.SaveSdl()
       })
@@ -216,10 +298,6 @@
     </select>
     <button id="save-btn">Save</button>
     <h4>新增任務</h4>
-    <p>
-      <input type='checkbox' id='drop-remove' />
-      <label for='drop-remove'>拖曳後移除</label>
-    </p>
     <button id="add-event-btn" style="margin-left:70%;">+</button>
     <i class="material-icons" style="font-size: 72px;">delete</i>
   </div>

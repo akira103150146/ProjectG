@@ -5,7 +5,6 @@ body {
 /* container */
 #myContainer {
 	margin: 20px auto;
-	border: 2px dashed LightBlue;
 	display: table;
 	width: 100%;
 }

@@ -16,11 +16,11 @@ table_manager.prototype.showtable = function(data, which){
     let l = data.length
     this.current_index = l
     this.fill_th(which)
-
+    let dist_bind_device = []
     for(let i =0;i<l;i++){
         let content
         if(which === 'member'){
-            content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toDateString()]
+            content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toISOString()]
             this.append_cell(content, data[i].id, 'member', false)
         }
         else if(which === 'device'){
@@ -28,12 +28,13 @@ table_manager.prototype.showtable = function(data, which){
             this.append_cell(content, data[i].id, 'device', false)
         }
         else if(which ==='post'){
-            content = [data[i].publisherId, data[i].content, new Date(data[i].createTime).toDateString()]
+            content = [data[i].publisherId, data[i].content, new Date(data[i].createTime).toISOString()]
             this.append_cell(content, data[i].id, 'post', false)
         }
         else if(which === 'bind_device'){
             content = [data[i].name, data[i].description, data[i].position, data[i].tagName]
             this.append_cell(content, data[i].id, 'bind_device', false)
+            dist_bind_device[parseInt(data[i].id)] = data[i].name
         }
         else if(which === 'bind_Cpn'){
             content = [data[i].name, data[i].number, data[i].quantity, data[i].componentTypeId]
@@ -43,8 +44,10 @@ table_manager.prototype.showtable = function(data, which){
             content = [data[i].name, data[i].number, data[i].quantity, data[i].componentTypeId]
             this.append_cell(content, data[i].id, 'Cpn', false)
         }
-        
+
     }
+    if (which === 'bind_device')
+        localStorage.dist_device = JSON.stringify(dist_bind_device)
 }
 table_manager.prototype.ShowByFilter = function(which){
     this.ClearTable()
@@ -102,6 +105,9 @@ table_manager.prototype.fill_th = function(which){
         $('#target').append('<tr> <th>人員姓名</th><th>人員編號</th><th>身分</th><th>密碼</th><th>電子郵件</th><th>創建日期</th><th></th></tr>')
     else if (which === 'Cpn' || which === 'info')
         $('#target').append('<tr><th>零件名稱</th><th>零件料號</th><th>數量</th><th></th></tr>')
+    else if(which === 'post')
+        $('#target').append('<tr><th>發布者</th><th>內容</th><th>發布時間</th><th></th></tr>')
+        
 }
 table_manager.prototype.ClearTable = function(){
     $('#target')[0].innerHTML = ''

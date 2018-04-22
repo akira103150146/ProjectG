@@ -43,9 +43,18 @@
             });
             window.onclick = function (event) {
                 if (event.target == $('#myModal')[0]) {
-                    $('#myModal')[0].style.display = "none";
-                 
+                    $('#myModal')[0].style.display = "none"
                 }
+                else if (event.target == $('#myContainer')[0]){
+                    console.log('click blank')
+                    //console.log(REDIPS.table.remove_selection)
+                    //console.log($('#mainTable td')[0].redips.selected)
+                    $('#mainTable td').each((index,e) =>{
+                        REDIPS.table.mark(false, e)
+                    })
+                    // REDIPS.table.remove_selection
+                }
+                  
             }
             $('.close').on('click', () => {
                 $('#myModal')[0].style.display = "none"
@@ -64,13 +73,13 @@
                 console.log(id)
                 bind_list.splice(bind_list.indexOf(id), 1)
             })
-             $('#confirm').on('click', () => {
-                 $('#bind-list')[0].innerHTML = ''
-                 for(var i = 0;i<bind_list.length;i++){
-                     let op = document.createElement('option')
-                     op.textContent = bind_list[i]
-                      $('#bind-list')[0].appendChild(op)
-                 }
+            $('#confirm').on('click', () => {
+                $('#bind-list')[0].innerHTML = ''
+                    for(var i = 0;i<bind_list.length;i++){
+                        let op = document.createElement('option')
+                        op.textContent = bind_list[i]
+                        $('#bind-list')[0].appendChild(op)
+                    }
                 $('#myModal')[0].style.display = "none";
            
              })
@@ -108,10 +117,10 @@
                                 }
                             }
                         }
-                    },
-                    "delete": { name: "Delete", icon: "delete" },
+                    }
+                   /* "delete": { name: "Delete", icon: "delete" },
                     "sep1": "---------",
-                    "quit": { name: "Quit", icon: function ($element, key, item) { return 'context-menu-icon context-menu-icon-quit'; } }
+                    "quit": { name: "Quit", icon: function ($element, key, item) { return 'context-menu-icon context-menu-icon-quit'; } }*/
                 }
             });
         });

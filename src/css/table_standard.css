@@ -4,7 +4,6 @@ body{
 }
 .content{
     margin: 20px auto;
-    border: 2px dashed LightBlue;
     width:75%;
 }
 th,td{            
