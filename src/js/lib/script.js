@@ -179,6 +179,9 @@ redips.saveform = function () {
     else { // do update
         ipcrender.send('update', 'form', ID.value, content, ID.value)
     }  
+    $('#mainTable td').each((index, e) => { //取消所有選取
+        REDIPS.table.mark(false, e)
+    })
 }
 
 redips.get_loc_formdata = function(){

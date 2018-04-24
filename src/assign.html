@@ -27,7 +27,7 @@
     ipcrender.on('reply-Sdl',(event, info)=>{
       console.log(info)
       localStorage.setItem('Sdl-list',JSON.stringify(info))
-      sdlmanager.ShowSdl()
+      //sdlmanager.ShowSdl()
     })
     ipcrender.on('reply-member', (event, info) => {
         console.log(info)
@@ -90,10 +90,12 @@
         }, 
         editable: true,
         droppable: true,
+        timezone: 'local', 
         drop: function () {    
             $(this).remove()    //刪除事件
         },
         eventDragStop: function (event, jsEvent) {
+          console.log('drag')
           let x = jsEvent.pageX
           let y = jsEvent.pageY
 

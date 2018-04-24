@@ -40,6 +40,7 @@ SdlManager.prototype.ClearAllEvent = function(){
 ///////////////////////////////////////////////////////新增人員/////////////////////////////////////////////////
 SdlManager.prototype.AddStaff = function(){
     let list = JSON.parse(localStorage.getItem('staff-assign')).filter(x => x.identity != 0) 
+    $('#staff-list').append('<option disabled selected value> -- select an option -- </option>')
     list.forEach((e)=>{
         let op = document.createElement('option')
         op.textContent = e.name
@@ -56,47 +57,50 @@ SdlManager.prototype.SaveSdl = function(){
     let staffid = staff_list.filter(x => x.name == staffname)[0].id
     let obj
     list.forEach((e)=>{
-        console.log(e)
         let start 
         let end
+        console.log(e)
         if(e.start)
-            start = e.start._i
+            start = e.start._d
         if(e.end)
-            end = e.end._i
-         
+            end = e.end._d
+        console.log(start)
+        console.log(end)
         if (!Number.isInteger(e.id)){ // do add
             console.log('add')
             obj = {
                 'staffId': staffid, 
                 'startTime': start == undefined ? null : start, 
-                'endTime': end == undefined ? start + 39600000 : end,
+                'endTime': end == undefined ? start  : end,
                 'repeatUnit': 0, 
                 'repeatInterval': 0
             }
             console.log(obj)
-            ipcrender.send('add', 'sdl', obj, e.id)   //將local id傳過去 才能判別傳回來的時候到底要抓哪一筆資料去assign form
+           ipcrender.send('add', 'sdl', obj, e.id)   //將local id傳過去 才能判別傳回來的時候到底要抓哪一筆資料去assign form
         }
         else{// do update
             console.log('update')
             //從local 儲存抓出資料來
-            let list = JSON.parse(localStorage.list_notify)
-            list = list.filter(x => x.scheduleId == e.id)[0]
+            let list2 = JSON.parse(localStorage.list_notify)
+            list2 = list2.filter(x => x.scheduleId == e.id)[0]
+            console.log(start)
+            console.log(end)
             obj = {
                 'staffId': staffid,
                 'startTime': start == undefined ? null : start,
-                'endTime': end == undefined ? null : end,
+                'endTime': end == undefined ? start : end,
                 'repeatUnit': 0,
                 'repeatInterval': 0
             }
             let obj2 = {
-                'bindedDeviceId': list.bindedDeviceId,
-                'formTemplateId': list.formTemplateId ,
-                'notificationOffset': list.notificationOffset,
+                'bindedDeviceId': list2.bindedDeviceId,
+                'formTemplateId': list2.formTemplateId ,
+                'notificationOffset': list2.notificationOffset,
                 'scheduleId': e.id
             }
             console.log(obj)
             console.log(obj2)
-            ipcrender.send('update', 'sdl', e.id, obj, list.id, obj2)
+            ipcrender.send('update', 'sdl', e.id, obj, list2.id, obj2)
         }
     })
     if(this.trash_bin.length > 0)

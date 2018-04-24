@@ -18,7 +18,12 @@
         var tb_manager = new table_manager()   
         var bind_list = [] 
         ipcrender.on('reply-form', function (event, info){
-            localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
+            localStorage.list_form = JSON.stringify(info)//將傳入list存入local 
+             info.sort((a, b) => {
+                let x = a.title.toLowerCase()
+                let y = b.title.toLowerCase()
+                return x < y ? -1 : x > y ? 1 : 0
+            })    
             redips.showlist(info)
         })
         ipcrender.on('update-form', function(event, content,tag){
@@ -45,16 +50,11 @@
                 if (event.target == $('#myModal')[0]) {
                     $('#myModal')[0].style.display = "none"
                 }
-                else if (event.target == $('#myContainer')[0]){
-                    console.log('click blank')
-                    //console.log(REDIPS.table.remove_selection)
-                    //console.log($('#mainTable td')[0].redips.selected)
+                else if (event.target == $('#myContainer')[0] || event.target == $('.wrapper')[0]){
                     $('#mainTable td').each((index,e) =>{
                         REDIPS.table.mark(false, e)
                     })
-                    // REDIPS.table.remove_selection
                 }
-                  
             }
             $('.close').on('click', () => {
                 $('#myModal')[0].style.display = "none"

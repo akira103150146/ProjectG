@@ -12,11 +12,15 @@ function table_manager(){
 }
 ///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
 table_manager.prototype.showtable = function(data, which){
+
     this.ClearTable()
+
     let l = data.length
     this.current_index = l
     this.fill_th(which)
+
     let dist_bind_device = []
+
     for(let i =0;i<l;i++){
         let content
         if(which === 'member'){
@@ -55,8 +59,6 @@ table_manager.prototype.ShowByFilter = function(which){
     if(which === 'info'){
         let list = JSON.parse(localStorage.list_info)
         let id = $('#selection :selected')[0].id
-        //console.log(list)
-       // console.log(id)
         const info = list.filter(x => x.componentTypeId == id || x.componentTypeId == null)
         console.log(info)
         info.forEach((data)=>{
