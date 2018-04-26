@@ -108,13 +108,10 @@ redips.fillform = function(item){
     if(bind_list){
         bind_list.innerHTML = ''
         let list = JSON.parse(localStorage.dist_device)
-        console.log(list)
         item.deviceIds.forEach((e)=>{
             let temp = document.createElement('option')
-           // const result = list.filter(x => x.id == e)[0].name
-            //console.log(result)
-            //if(result)
-            temp.textContent =  list[e] 
+            temp.textContent = list[e]
+            temp.id = e 
             bind_list.appendChild(temp)
         })
     }
@@ -204,8 +201,8 @@ redips.get_bind_arr = function(){
     let arr = []
     
     $('#bind-list option').each(
-        function(e){
-           arr.push(this.textContent)
+        function(){
+            arr.push($(this)[0].id)
         }
     )
     return arr

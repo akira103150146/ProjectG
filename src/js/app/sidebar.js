@@ -1,15 +1,20 @@
 "use strict";
 function sidebar_setup(type){
     let content_name = ['公佈欄', '巡檢表單編輯', '巡檢設備設定', '巡檢任務派遣', '維修主配件庫存查詢', '運維歷史表單查詢', '巡檢人員帳戶設定']
-    let ids = ['post', 'form', 'setting', 'bagi', 'info', 'histroy', 'member']
+    let ids          = ['post', 'form', 'setting', 'bagi', 'info', 'histroy', 'member']
+    let iname = ['format list bulleted', 'mode edit', 'devices', 'assignment', 'storage', 'history', 'assignment ind']
     for(let i=0;i<7;i++){
-        let l = document.createElement('li')
-        let a = document.createElement('a')
+        let l   = document.createElement('li')
+        let a   = document.createElement('a')
+        let ic  = document.createElement('i') 
         a.id = ids[i]
-        a.textContent = content_name[i]
+        a.textContent   = content_name[i]
+        ic.className    = 'material-icons'
+        ic.textContent  = iname[i]
         if(type === ids[i])
             l.className = 'active'
         l.appendChild(a)
+        l.appendChild(ic)
         $('#sidebar-option').append(l)
     }
     $('#user-name')[0].textContent = localStorage.getItem('user-name') 

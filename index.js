@@ -108,7 +108,7 @@ app.on('ready', () => {
     console.log('add')
     console.log('tag :' + tag)
     let path = ''
-
+    console.log(body)
     if (which === 'member') {
       bim.AddUser(body)
       path = 'updatecell-member'
@@ -145,6 +145,7 @@ app.on('ready', () => {
       console.log(which)
     }
     rp(bim.GetOption()).then((parseBody) => {
+     
       console.log(parseBody)
       if(path != '')
         event.sender.send(path, parseBody.content, tag)
@@ -297,7 +298,7 @@ app.on('ready', () => {
       bim.Reset()
     }).catch((err) => {
       //console.log(err)
-      dialog.showErrorBox("顯示","伺服器錯誤!" + err)
+      //dialog.showErrorBox("顯示","伺服器錯誤!" + err)
     })
 
   })

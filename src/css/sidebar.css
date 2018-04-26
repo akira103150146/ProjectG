@@ -70,6 +70,11 @@ ul ul a {
     padding-left: 30px !important;
     background: #6d7fcc;
 }
+#sidebar i{
+    max-width: 24px;
+    max-height: 24px;
+    align-content: right;
+}
 #close_btn{
     padding: 10px;
     text-align: right;

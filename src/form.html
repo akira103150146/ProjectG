@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
     <link href="../../node_modules/jquery-contextmenu/dist/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="js/lib/jqueryImporter.js"></script>
     <script type="text/javascript" src="js/lib/header.js"></script>
@@ -75,9 +76,11 @@
             })
             $('#confirm').on('click', () => {
                 $('#bind-list')[0].innerHTML = ''
+                let list = JSON.parse(localStorage.dist_device)
                     for(var i = 0;i<bind_list.length;i++){
                         let op = document.createElement('option')
-                        op.textContent = bind_list[i]
+                        op.textContent = list[bind_list[i]]     //用拿到的值去查字典
+                        op.id = bind_list[i]                    //將option設定id
                         $('#bind-list')[0].appendChild(op)
                     }
                 $('#myModal')[0].style.display = "none";

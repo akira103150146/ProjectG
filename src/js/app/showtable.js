@@ -17,8 +17,6 @@ table_manager.prototype.showtable = function(data, which){
 
     let l = data.length
     this.current_index = l
-    this.fill_th(which)
-
     let dist_bind_device = []
 
     for(let i =0;i<l;i++){
@@ -54,8 +52,9 @@ table_manager.prototype.showtable = function(data, which){
         localStorage.dist_device = JSON.stringify(dist_bind_device)
 }
 table_manager.prototype.ShowByFilter = function(which){
+
     this.ClearTable()
-    this.fill_th(which)
+
     if(which === 'info'){
         let list = JSON.parse(localStorage.list_info)
         let id = $('#selection :selected')[0].id
@@ -100,19 +99,10 @@ table_manager.prototype.ShowByFilter = function(which){
     }
 
 }
-table_manager.prototype.fill_th = function(which){
-    if (which === 'device')
-        $('#target').append('<tr><th>設備編號</th><th>設備說明</th><th>設備位置</th><th>監控點說明</th><th></th></tr>')
-    else if (which === 'member')
-        $('#target').append('<tr> <th>人員姓名</th><th>人員編號</th><th>身分</th><th>密碼</th><th>電子郵件</th><th>創建日期</th><th></th></tr>')
-    else if (which === 'Cpn' || which === 'info')
-        $('#target').append('<tr><th>零件名稱</th><th>零件料號</th><th>數量</th><th></th></tr>')
-    else if(which === 'post')
-        $('#target').append('<tr><th>發布者</th><th>內容</th><th>發布時間</th><th></th></tr>')
-        
-}
+
 table_manager.prototype.ClearTable = function(){
-    $('#target')[0].innerHTML = ''
+    console.log('clean table')
+    $('#target tr').slice(1).remove()
 }
 
 ///////////////////////////////////////////////////////新增表格/////////////////////////////////////////////////
@@ -149,7 +139,12 @@ table_manager.prototype.append_cell = function (content,tr_index,add_type,isnew)
                 td.contentEditable = false
             else{
                 td.setAttribute('contentEditable', true)
-                td.className = "data-field"
+                td.className = "data-field"             //要設定成data field 在抓取資料時才會抓這個格子
+                if (add_type === 'post' && i == 1) {
+                    td.style.maxWidth = '500px'
+                    td.style.height = 'auto'
+                    td.contentEditable = true
+                }
             }
             if(add_type === 'post' && i == 0 )
                 td.textContent = list.filter(x => x.id == content[0])[0].name
@@ -296,14 +291,16 @@ table_manager.prototype.save = function(table_name,type){
             }           
         }
         else if(type === 'device'){           
+            let result = JSON.parse(localStorage.list_device).filter(x => x.id == tag)[0]
+            
             obj = {
                 'name': arr[0],
                 'description': arr[1],
                 'position': arr[2],
                 'tagName': arr[3],
-                'componentIds': JSON.parse(localStorage.list_device).filter(x => x.id == tag)[0].componentIds,
+                'componentIds': result == null ? [] : result.componentIds.map(Number)
             }           
-            console.log() 
+            
         }
         else if(type === 'post'){           
             obj = {
@@ -312,12 +309,14 @@ table_manager.prototype.save = function(table_name,type){
             }
         }
         else if(type === 'info'){
+            let result = JSON.parse(localStorage.list_info).filter(x => x.id == tag)[0]
+            console.log(result)
             obj = {
                'name': arr[0],
                'number' : arr[1],
                'quantity' : arr[2],
-               'componentTypeId': $('#selection :selected')[0].id,
-                'bindedDeviceId': JSON.parse(localStorage.list_info).filter(x => x.id == tag).bindedDeviceId
+               'componentTypeId': $('#selection :selected')[0].id == null ? alert('沒有選取到類別') : $('#selection :selected')[0].id,
+               'bindedDeviceId': result == null ? [] : result.bindedDeviceId
             }
         }       
         console.log(obj)

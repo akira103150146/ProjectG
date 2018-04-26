@@ -4,8 +4,7 @@
   "description": "A simple example using webpack and to build an application to both electron and web targets",
   "main": "index.js",
   "scripts": {
-    "electron": "webpack && electron .",
-    "web": "webpack --target web && webpack-dev-server  --target web "
+    "electron": "electron ."
   },
   "author": "",
   "license": "ISC",

@@ -48,6 +48,7 @@ bim_app_window.prototype.Reset = function(){
   console.log('reset')
 }
 bim_app_window.prototype.GetOption = function(){
+  console.log(this.option)
   return this.option
 }
 bim_app_window.prototype.SetAuth = function(value){
@@ -167,10 +168,12 @@ bim_app_window.prototype.GetDeviceList = function(){
 }
 bim_app_window.prototype.AddDevice = function(info){
   let obj = {'name':info.name,
-              'description': info.Description,
+              'description': info.description,
               'position': info.position,
-              'tagName': info.tagName
+              'tagName': info.tagName,
+              'componentIds': info.componentIds == null ? [] : info.componentIds
   }
+  console.log(info)
   this.api = 'admin/device/'
   this.op  = 'add'
   this.how = 'POST'

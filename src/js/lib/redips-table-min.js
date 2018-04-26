@@ -141,17 +141,52 @@ REDIPS.table = (function () {
         }
         return max;
     }; split = function (mode, table) {
-        var tbl, tr, c, cl, rs, n, cols, max, t, i, j, get_rowspan; get_rowspan = function (c, row, col) {
-            var rs, last, i; rs = 0; last = row + c.rowSpan - 1; for (i = col - 1; i >= 0; i--) { if (cl[last + '-' + i] === undefined) { rs++; } }
+        var tbl, tr, c, cl, rs, n, cols, max, t, i, j, get_rowspan; 
+        get_rowspan = function (c, row, col) {
+            var rs, last, i; rs = 0; last = row + c.rowSpan - 1; 
+            for (i = col - 1; i >= 0; i--) { 
+                if (cl[last + '-' + i] === undefined) 
+                { rs++; } 
+            }
             return rs;
-        }; remove_selection(); tbl = (table === undefined) ? tables : get_table(table); for (t = 0; t < tbl.length; t++) {
-            cl = cell_list(tbl[t]); max = max_cols(tbl[t]); tr = tbl[t].rows; for (i = 0; i < tr.length; i++) {
-                cols = (mode === 'v') ? max : tr[i].cells.length; for (j = 0; j < cols; j++) {
+        }; 
+        remove_selection(); 
+        tbl = (table === undefined) ? tables : get_table(table); 
+        for (t = 0; t < tbl.length; t++) {
+            cl = cell_list(tbl[t]); max = max_cols(tbl[t]); 
+            tr = tbl[t].rows; 
+            
+            for (i = 0; i < tr.length; i++) {
+                cols = (mode === 'v') ? max : tr[i].cells.length; 
+                for (j = 0; j < cols; j++) {
                     if (mode === 'v') {
-                        c = cl[i + '-' + j]; if (c !== undefined) { c.redips = c.redips || {}; }
-                        if (c !== undefined && c.redips.selected === true && c.rowSpan > 1) { rs = get_rowspan(c, i, j); n = tr[i + c.rowSpan - 1].insertCell(j - rs); n.colSpan = c.colSpan; c.rowSpan -= 1; cell_init(n); cl = cell_list(tbl[t]); }
+                        c = cl[i + '-' + j]; 
+                        if (c !== undefined) 
+                        { 
+                            c.redips = c.redips || {}; 
+                        }
+                        if (c !== undefined && c.redips.selected === true && c.rowSpan > 1) { 
+                            rs = get_rowspan(c, i, j); 
+                            n = tr[i + c.rowSpan - 1].insertCell(j - rs); 
+                            n.colSpan = c.colSpan; 
+                            c.rowSpan -= 1; 
+                            cell_init(n); 
+                            cl = cell_list(tbl[t]); 
+                            c.style.width   = c.colSpan * 105;
+                            c.style.height  = c.rowSpan * 60;         
+                        } 
                     }
-                    else { c = tr[i].cells[j]; c.redips = c.redips || {}; if (c.redips.selected === true && c.colSpan > 1) { cols++; n = tr[i].insertCell(j + 1); n.rowSpan = c.rowSpan; c.colSpan -= 1; cell_init(n); } }
+                    else { 
+                        c = tr[i].cells[j]; c.redips = c.redips || {}; 
+                        if (c.redips.selected === true && c.colSpan > 1) { 
+                            cols++; n = tr[i].insertCell(j + 1); 
+                            n.rowSpan = c.rowSpan; 
+                            c.colSpan -= 1; 
+                            c.style.width = c.colSpan * 105;
+                            c.style.height = c.rowSpan * 60;      
+                            cell_init(n); 
+                        } 
+                    }
                     if (c !== undefined) { mark(false, c); }
                 }
             }
