@@ -14,8 +14,8 @@ function sidebar_setup(type){
         if(type === ids[i])
             l.className = 'active'
         l.appendChild(a)
-        l.appendChild(ic)
         $('#sidebar-option').append(l)
+        $('#sidebar-option').append(ic)
     }
     $('#user-name')[0].textContent = localStorage.getItem('user-name') 
     $('#bagi').on('click', () => {

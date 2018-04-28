@@ -17,7 +17,7 @@
               ipcrender.on('reply-post', (event, info) => {
                     localStorage.list_post = JSON.stringify(info)//將傳入list存入local
                     tb_manager.showtable(info,'post')
-                    console.log(localStorage.list_post)
+                    console.log(info)
               })
               ipcrender.on('update-post',(event,content,tag)=>{
                 console.log('refresh')   
@@ -60,6 +60,7 @@
                     <tbody>
                         <tr>
                            <th>發布者ID</th>
+                           <th>標題</th>
                            <th>內容</th>
                            <th>發布時間</th>
                            <th></th>

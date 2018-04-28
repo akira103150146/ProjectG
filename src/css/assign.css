@@ -195,7 +195,14 @@ body {
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
-
+#sidebar .material-icons{
+    max-width: 24px;
+    max-height: 24px;
+    margin: 0;
+}
+#external-events .material-icons{
+    margin-top: 600px;
+}
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */

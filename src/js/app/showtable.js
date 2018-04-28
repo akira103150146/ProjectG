@@ -3,8 +3,8 @@
 function table_manager(){
     this.ipcrender = require('electron').ipcRenderer
     this.current_index = 0
-    this.dict = {
-        "post": 3,
+    this.dict = {   //網頁有幾個儲存格
+        "post": 4,
         "member": 6,
         "device": 4,
         "info": 3
@@ -30,7 +30,7 @@ table_manager.prototype.showtable = function(data, which){
             this.append_cell(content, data[i].id, 'device', false)
         }
         else if(which ==='post'){
-            content = [data[i].publisherId, data[i].content, new Date(data[i].createTime).toISOString()]
+            content = [data[i].publisherId,data[i].title, data[i].content, new Date(data[i].createTime).toISOString()]
             this.append_cell(content, data[i].id, 'post', false)
         }
         else if(which === 'bind_device'){
@@ -264,22 +264,27 @@ table_manager.prototype.save = function(table_name,type){
         let count = max
         let obj 
         let where
-        let arr = new Array(max)
+        let arr = []
         let id = $(this)[0].parentNode.previousSibling.id// get previous td 
         const tag = $(this)[0].parentNode.parentNode.id
         console.log(tag)
-        let i = 0
+    
         $('#target ' + '#' + tag).find('td').each(function(index,e){
-            console.log(e.className)
+           // console.log(e.className)
                 if(id == 'new')
                     e.id = ''
                 if(e.className == 'data-field')
-                    arr[i] = e.textContent
+                {
+                    console.log('add to obj')
+                    arr.push(e.textContent)
+                } 
                 else if (e.className == 'staffID')
-                    arr[i] = $(e).find('select')[0].selectedIndex                
-                i++
+                {
+                    console.log('add to obj')
+                    arr.push($(e).find('select')[0].selectedIndex)  
+                }                                   
         })
-       
+        console.log(arr)
        
         if(type === 'member'){           
             obj = {
@@ -305,6 +310,7 @@ table_manager.prototype.save = function(table_name,type){
         else if(type === 'post'){           
             obj = {
                 'publisherId': localStorage.getItem('user-id'),
+                'title': arr[0],
                 'content': arr[1]
             }
         }
@@ -330,9 +336,6 @@ table_manager.prototype.save = function(table_name,type){
         }       
     })  
 }
-table_manager.prototype.get_device_binded_list = function(){
-
-} 
 ///////////////////////////////////////////////////////更新CEll/////////////////////////////////////////////////
 table_manager.prototype.update_cell = function(which,content,tag){
     let tr = document.getElementById(tag)

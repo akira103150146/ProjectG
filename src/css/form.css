@@ -20,8 +20,8 @@ div#myContainer table {
 	margin: 7px 7px 15px 7px;
 	width: 80%;
 }
-#toolbox input {
-	display: inline;
+#toolbox td{
+    display: inline;
 }
 /* main table */
 #mainTable {
@@ -51,8 +51,9 @@ select{
     height: 40px;
     font-size: 20px;
 }
-input{
+.form_attribute input{
     height: 40px;
+    font-size: 20px;
 }
 button,.button {
 	font-size: 20px;

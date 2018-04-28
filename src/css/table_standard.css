@@ -10,7 +10,8 @@ th,td{
     background-color: rgb(186, 222, 252);  
     font-size: 20px;        
     margin: 8px;
-    height: auto;          
+    height: auto; 
+    max-width: 600px;         
 }
 td button{
     display: inline;

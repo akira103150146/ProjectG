@@ -70,10 +70,10 @@ ul ul a {
     padding-left: 30px !important;
     background: #6d7fcc;
 }
-#sidebar i{
+#sidebar .material-icons{
     max-width: 24px;
     max-height: 24px;
-    align-content: right;
+    margin: 0;
 }
 #close_btn{
     padding: 10px;
