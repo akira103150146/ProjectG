@@ -4,67 +4,52 @@
     <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
-    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- <script src="js/lib/jqueryImporter.js"></script> -->
     <script>
         "use strict"; 
         var QRCode = require('./js/lib/qrcode/qrcode.min.js')
-        let $ = require('jquery')
-        let jQuery = require('jquery')
+        var $ = require('jquery')
+        var jQuery = require('jquery')
     </script>
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
+    <script src="js/lib/api.js"></script>
     <script>
         "use strict";
         let ipcrender = require('electron').ipcRenderer
         let tb_manager = new table_manager()    
         var current_bind_index = 0     
         var bind_list = []
-        ipcrender.on('reply-device', (event, info) => {
-            localStorage.list_device = JSON.stringify(info)
-            console.log(info)
-            info.sort((a, b) => {
-                let x = a.name.toLowerCase()
-                let y = b.name.toLowerCase()
-                return x < y ? -1 : x > y ? 1 : 0
-            })
-            tb_manager.showtable(info,'device')
-        })  
-        ipcrender.on('reply-Cpn', (event, info) => {
-            console.log('reply')
-            localStorage.list_info = JSON.stringify(info)//將傳入list存入local
-            console.log(info)
-            tb_manager.showtable(info, 'bind_Cpn')
-            //tb_manager.ShowByFilter('info')
-        })
-        ipcrender.on('updatecell-device', (event, content, tag) => {
-            ipcrender.send('ready-to-show', 'device')
-        })
-        ipcrender.on('bind_Cpn', function (event, arg) {
-             console.log(arg)
-             let list = JSON.parse(localStorage.list_device)
-             console.log(list)
-             for(let i =0;i<list.length;i++){
-                 if(list[i].id == current_bind_index){
-                    console.log('founded!')
-                    list[i].componentIds = arg
-                    break
-                }
-             }
-             localStorage.list_device = JSON.stringify(list)
-        })
+
         $(document).ready(function () {  
             let qr = new QRCode('qrcode')
             let link = document.createElement('a')
             qr.makeCode('10')   
             $('#back-btn').hide()       
-            //向main process傳送訊息使其和伺服器溝通回傳資料
-            ipcrender.send('ready-to-show', 'device')
-            ipcrender.send('ready-to-show', 'Cpn')
+        
+            bim_app_window.bim.ShowList('device', function(msg){
+                let info = msg['content']
+                localStorage.list_device = JSON.stringify(info)
+                console.log(info)
+                info.sort((a, b) => {
+                    let x = a.name.toLowerCase()
+                    let y = b.name.toLowerCase()
+                    return x < y ? -1 : x > y ? 1 : 0
+                })
+                tb_manager.showtable(info, 'device')
+            })
+            bim_app_window.bim.ShowList('cpn', function(msg){
+                let info = msg['content']
+                localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+                console.log(info)
+                tb_manager.showtable(info, 'bind_Cpn')
+            })
 
             tb_manager.add_cell('#add-btn', 'device')            
             tb_manager.delete_cell('#target','device')
             tb_manager.save('#target', 'device')
+
             sidebar_setup('device')
             $('#target').on('click', 'button#get_qrcode',  function() {
                 let id = $(this)[0].parentNode.parentNode.id  

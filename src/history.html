@@ -5,12 +5,13 @@
     <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />  
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="js/lib/jqueryImporter.js"></script>
     <script type="text/javascript" src="js/lib/header.js"></script>
     <script type="text/javascript" src="js/lib/redips-table-min.js"></script>
     <script type="text/javascript" src="js/lib/script.js"></script>
     <script src="js/app/sidebar.js"></script>
+    <script src="js/lib/api.js"></script>
     <script>
         "use strict";
         var ipcrender = require('electron').ipcRenderer
@@ -19,7 +20,11 @@
             redips.showlist(info)
         })
         $(document).ready(function () {
-            ipcrender.send('ready-to-show', 'history')
+            bim_app_window.bim.ShowList('history', function (msg) {
+                let info = msg['content']
+                localStorage.list_history = JSON.stringify(info)//將傳入list存入local
+                redips.showlist(info)
+            })
             sidebar_setup('history')
             $('#form-list').change(function () {
                 const index = $('#form-list :selected')[0].id

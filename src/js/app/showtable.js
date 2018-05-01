@@ -12,10 +12,12 @@ function table_manager(){
 }
 ///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
 table_manager.prototype.showtable = function(data, which){
-
-    this.ClearTable()
-
+    if (which != 'bind_device' || which != 'bind_Cpn' )
+        this.ClearTable()
+    console.log('Show table')
+    console.log(data) 
     let l = data.length
+    console.log(l)
     this.current_index = l
     let dist_bind_device = []
 
@@ -48,7 +50,7 @@ table_manager.prototype.showtable = function(data, which){
         }
 
     }
-    if (which === 'bind_device')
+    if (which === 'bind_device')    //查詢用的
         localStorage.dist_device = JSON.stringify(dist_bind_device)
 }
 table_manager.prototype.ShowByFilter = function(which){
@@ -106,11 +108,11 @@ table_manager.prototype.ClearTable = function(){
 }
 
 ///////////////////////////////////////////////////////新增表格/////////////////////////////////////////////////
-table_manager.prototype.append_cell = function (content,tr_index,add_type,isnew){
+table_manager.prototype.append_cell = function (content, tr_index, add_type, isnew){
     let l = content.length
     let tr = document.createElement('tr')
     let list = JSON.parse(localStorage.member_list)
-    if(content.length<=0)alert('table content null')
+    if(content.length <= 0)alert('table content null')
    
     for(let i=0;i<l;i++){
         let td = document.createElement('TD')
@@ -200,6 +202,7 @@ table_manager.prototype.append_cell = function (content,tr_index,add_type,isnew)
         td_2.appendChild(btn6)
     }
     tr.appendChild(td_2)
+    
     if (add_type != 'bind_Cpn')
        $('#target')[0].appendChild(tr) 
     else
@@ -244,48 +247,42 @@ table_manager.prototype.add_cell = function(btn_name,type){
     });
 }
 ///////////////////////////////////////////////////////刪除Cell/////////////////////////////////////////////////
-table_manager.prototype.delete_cell = function(table_name,which){
-    const tempipc = this.ipcrender
+table_manager.prototype.delete_cell = function(table_name, which){
     $(table_name).on('click', 'button#delete', function () {
+
         let temp = $(this)[0].parentNode.parentNode // tr
         temp.parentNode.removeChild(temp)       // table 
+
         let isnew = $(this)[0].parentNode.previousSibling.id
         let id = $(this)[0].parentNode.parentNode.id
-        console.log(id)
-        if (isnew!= 'new')//flag = true do request 
-            tempipc.send('remove', which,id)
+       
+        if (isnew != 'new')//flag = true do request 
+            bim_app_window.bim.Remove(which, id)
     })
 }
 ///////////////////////////////////////////////////////儲存表格/////////////////////////////////////////////////
-table_manager.prototype.save = function(table_name,type){
+table_manager.prototype.save = function(table_name, type){
     const tempthis = this
     $(table_name).on('click', 'button#save', function () {
-        let max = tempthis.dict[type]
-        let count = max
-        let obj 
-        let where
-        let arr = []
-        let id = $(this)[0].parentNode.previousSibling.id// get previous td 
-        const tag = $(this)[0].parentNode.parentNode.id
+        let obj         //用來儲存傳送資料
+        let arr = []  
+        let isnew  = $(this)[0].parentNode.previousSibling.id  == 'new' ? true : false      
+        const tag  = $(this)[0].parentNode.parentNode.id     //tag代表著這筆資料的id 
         console.log(tag)
     
-        $('#target ' + '#' + tag).find('td').each(function(index,e){
-           // console.log(e.className)
-                if(id == 'new')
+        $('#target ' + '#' + tag).find('td').each(function(index, e){
+
+                if(isnew)                               //把 id = new 的 td清除，這樣就會從黃色變回去藍色
                     e.id = ''
-                if(e.className == 'data-field')
-                {
-                    console.log('add to obj')
+
+                if(e.className == 'data-field')         //class Name = data field 代表著這格td的資料是要被填入 request  
                     arr.push(e.textContent)
-                } 
-                else if (e.className == 'staffID')
-                {
-                    console.log('add to obj')
+                else if (e.className == 'staffID')      //staffID只用於 巡檢人員帳戶設定 因為儲存格是select才需要這樣做
                     arr.push($(e).find('select')[0].selectedIndex)  
-                }                                   
+
         })
         console.log(arr)
-       
+ ////////////////////////////////////////////填資料/////////////////////////////////////////////////////      
         if(type === 'member'){           
             obj = {
                 'name': arr[0],
@@ -310,8 +307,8 @@ table_manager.prototype.save = function(table_name,type){
         else if(type === 'post'){           
             obj = {
                 'publisherId': localStorage.getItem('user-id'),
-                'title': arr[0],
-                'content': arr[1]
+                'title':    arr[0],
+                'content':  arr[1]
             }
         }
         else if(type === 'info'){
@@ -326,52 +323,61 @@ table_manager.prototype.save = function(table_name,type){
             }
         }       
         console.log(obj)
-        //true =>add false=>update
-        if(id == 'new'){    
+      
+        if (isnew) {     
             console.log('add')
-            tempthis.ipcrender.send('add', type, obj, tag)
+            bim_app_window.bim.Add(type, obj, function(msg){
+                console.log('新增成功 --->更新cell')
+                alert('新增成功')
+                tempthis.update_cell(type, msg['content'], tag)     //如果新增成功 就要更新local的資料
+            })
+
         }else{
             console.log('update')
-            tempthis.ipcrender.send('update', type, tag, obj, tag)
+            bim_app_window.bim.Update(type, tag, obj, function(msg){
+                console.log(msg)
+                alert('更新成功')
+            },function(err){
+                console.log(err)
+                alert('更新失敗')
+            })
+
         }       
     })  
 }
 ///////////////////////////////////////////////////////更新CEll/////////////////////////////////////////////////
-table_manager.prototype.update_cell = function(which,content,tag){
-    let tr = document.getElementById(tag)
-    console.log(tr)
-    if(tr == null)
+table_manager.prototype.update_cell = function(which, content, tag){
+
+ 
+    if($('#' + tag)[0] == null)
         alert('tr is null!')
     
-    let arr = []
+  
     console.log(content)
     if(which === 'member'){
-        arr.push(content.name)
-        arr.push(content.number)
-        arr.push(content.identity)
-        arr.push(content.password)   
-        arr.push(content.emailAddress)
-        arr.push(new Date(content.createDate).toDateString())        
+        $('#' + tag + ' :nth-child(1)')[0].textContent = content.name
+        $('#' + tag + ' :nth-child(2)')[0].textContent = content.number
+        $('#' + tag + ' :nth-child(3)').find('select').selectedIndex = content.identity
+        $('#' + tag + ' :nth-child(4)')[0].textContent = content.password
+        $('#' + tag + ' :nth-child(5)')[0].textContent = content.password
+        $('#' + tag + ' :nth-child(6)')[0].textContent = new Date(content.createDate).toISOString()  
     }
     else if(which === 'device'){
-        arr.push(content.name)
+       /* arr.push(content.name)
         arr.push(content.description)
         arr.push(content.position)
-        arr.push(content.tagName)      
+        arr.push(content.tagName)    */  
     }
     else if (which === 'post'){
-        arr.push(content.publisherId)
-        arr.push(content.content)
-        arr.push(new Date(content.createTime).toDateString())      
+        $('#' + tag + ' :nth-child(2)')[0].textContent  = content.title
+        $('#' + tag + ' :nth-child(3)')[0].textContent  = content.content
+        $('#' + tag + ' :nth-child(4)')[0].textContent  = new Date(content.createTime).toISOString()    
     }
-   
-    let count = 0
-    tr.childNodes.forEach((item)=>{    
-        if (item.nodeName == 'TD' && count < arr.length && item.childNodes[0].nodeName != 'SELECT'){
-            item.textContent = arr[count]  
-        }     
-        count++  
-    })
+    else if(which === 'info'){
+
+    }
+
+    $('#' + tag)[0].id = content.id
 }
 table_manager.prototype.remove_index = function(id){
     const index  = this.table_indexes.findIndex(id)

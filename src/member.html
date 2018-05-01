@@ -6,15 +6,16 @@
     <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="js/lib/jqueryImporter.js"></script>
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
+    <script src="js/lib/api.js"></script>
     <script>
         "use strict";
         var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager() 
-              
+       
         ipcrender.on('reply-member',(event,info)=>{
             console.log(info)
             localStorage.member_list = JSON.stringify(info)
@@ -29,7 +30,20 @@
             ipcrender.send('ready-to-show', 'member')
         })              
         $(document).ready(function (){ 
-            ipcrender.send('ready-to-show','member')
+            bim_app_window.bim.ShowList('member', function (msg) {
+                console.log(msg)
+
+                let info = msg['content']
+                localStorage.member_list = JSON.stringify(info)
+                info.sort((a, b) => {
+                    let x = a.name.toLowerCase()
+                    let y = b.name.toLowerCase()
+                    return x < y ? -1 : x > y ? 1 : 0
+                })
+                tb_manager.showtable(info, 'member')
+
+            })
+            //ipcrender.send('ready-to-show','member')
             tb_manager.add_cell('#add-btn','member')
             tb_manager.delete_cell('#target','member');
             tb_manager.save('#target','member')

@@ -8,14 +8,15 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <link href='css/assign.css' rel='stylesheet' />
-  <script src='../../node_modules/moment/moment.js'></script>
-  <script src='../../node_modules/jquery/dist/jquery.js'></script>
+  <script src='../node_modules/moment/moment.js'></script>
+  <script src='../node_modules/jquery/dist/jquery.js'></script>
   <!-- Insert this line after script imports -->
   <script>if (window.module) module = window.module;</script>
-  <script src='../../node_modules/components-jqueryui/jquery-ui.js'></script>
+  <script src='../node_modules/components-jqueryui/jquery-ui.js'></script>
   <script src='js/lib/full_calendar_lib/fullcalendar.js'></script>
   <script src="js/app/sidebar.js"></script>
   <script src="js/app/assign.js"></script>
+  <script src="js/lib/api.js"></script>
   <script>
     "use strict";
     var ipcrender = require('electron').ipcRenderer
@@ -24,17 +25,6 @@
     var isopenbyeventclick = false
     var event_id
     /////////////////////////////////伺服器回應/////////////////////////////////// 
-    ipcrender.on('reply-Sdl',(event, info)=>{
-      console.log(info)
-      localStorage.setItem('Sdl-list',JSON.stringify(info))
-      //sdlmanager.ShowSdl()
-    })
-    ipcrender.on('reply-member', (event, info) => {
-        console.log(info)
-        localStorage.setItem('staff-assign',JSON.stringify(info))
-        sdlmanager.AddStaff()
-        //sdlmanager.ShowSdl(0, info)
-    })
     ipcrender.on('reply-device', (event, info) => {
         localStorage.list_device = JSON.stringify(info)
         console.log(info)
@@ -57,10 +47,28 @@
     })
     $(document).ready(function () {
     /////////////////////////////////顯示畫面/////////////////////////////////// 
-      ipcrender.send('ready-to-show', 'member')
-      ipcrender.send('ready-to-show', 'Sdl')
-      ipcrender.send('ready-to-show', 'device')
-      ipcrender.send('ready-to-show', 'form')
+      bim_app_window.bim.ShowList('member', function (msg) {
+        let info = msg['content']
+        console.log(info)
+        localStorage.setItem('staff-assign', JSON.stringify(info))
+        sdlmanager.AddStaff()
+      })
+      bim_app_window.bim.ShowList('sdl', function (msg) {
+        let info = msg['content']
+        console.log(info)
+        localStorage.setItem('Sdl-list', JSON.stringify(info))
+      })
+      bim_app_window.bim.ShowList('device', function (msg) {
+        let info = msg['content']
+        localStorage.list_device = JSON.stringify(info)
+        console.log(info)
+        sdlmanager.ShowDevice()
+      })
+      bim_app_window.bim.ShowList('form', function (msg) {
+        let info = msg['content']
+        localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
+        console.log(info)
+      })
       /*for(let i =30;i<=32;i++)
         ipcrender.send('remove', 'notify', i)*/
      

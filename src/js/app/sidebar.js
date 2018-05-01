@@ -3,6 +3,8 @@ function sidebar_setup(type){
     let content_name = ['公佈欄', '巡檢表單編輯', '巡檢設備設定', '巡檢任務派遣', '維修主配件庫存查詢', '運維歷史表單查詢', '巡檢人員帳戶設定']
     let ids          = ['post', 'form', 'setting', 'bagi', 'info', 'histroy', 'member']
     let iname = ['format list bulleted', 'mode edit', 'devices', 'assignment', 'storage', 'history', 'assignment ind']
+    const pagename = ['assign.html', 'setting.html', 'form.html', 'member.html', 'info.html', 'post.html', 'history.html']
+    let a = document.createElement('a')
     for(let i=0;i<7;i++){
         let l   = document.createElement('li')
         let a   = document.createElement('a')
@@ -19,25 +21,32 @@ function sidebar_setup(type){
     }
     $('#user-name')[0].textContent = localStorage.getItem('user-name') 
     $('#bagi').on('click', () => {
-        ipcrender.send('switch_page', 0)
+        a.href = pagename[0]
+        a.click()
     })
     $('#setting').on('click', () => {
-        ipcrender.send('switch_page', 1)
+        a.href = pagename[1]
+        a.click()
     })
     $('#form').on('click', () => {
-        ipcrender.send('switch_page', 2)
+        a.href = pagename[2]
+        a.click()
     })
     $('#member').on('click', () => {
-        ipcrender.send('switch_page', 3)
+        a.href = pagename[3]
+        a.click()
     })
     $('#info').on('click', () => {
-        ipcrender.send('switch_page', 4)
+        a.href = pagename[4]
+        a.click()
     })
     $('#post').on('click', () => {
-        ipcrender.send('switch_page', 5)
+        a.href = pagename[5]
+        a.click()
     })
     $('#histroy').on('click', () => {
-        ipcrender.send('switch_page', 6)
+        a.href = pagename[6]
+        a.click()
     })
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -46,7 +55,7 @@ function sidebar_setup(type){
         $('#sidebar').toggleClass('active');
     })
     $('#logout_btn').click(function () {
-        ipcrender.send('logout')
+        bim_app_window.bim.Logout()
     })
 
 }

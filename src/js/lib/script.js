@@ -171,10 +171,14 @@ redips.saveform = function () {
     let content = redips.get_loc_formdata()
     let ID = document.getElementById('ID')
     if (ID.value.substr(0,3) === 'loc') { // do add
-        ipcrender.send('add','form',content,ID.value)
+        //ipcrender.send('add','form',content,ID.value)
+        bim_app_window.bim.Add('form', content, function(msg){
+            
+        })
     }
     else { // do update
-        ipcrender.send('update', 'form', ID.value, content, ID.value)
+        //ipcrender.send('update', 'form', ID.value, content, ID.value)
+        bim_app_window.bim.Update('form', )
     }  
     $('#mainTable td').each((index, e) => { //取消所有選取
         REDIPS.table.mark(false, e)
@@ -252,7 +256,7 @@ redips.removeform = function(){
     if(ID.value != null){      
         let id = ID.value
         let item = document.getElementById(id)
-        ipcrender.send('remove','form',id)         
+        //ipcrender.send('remove','form',id)         
         item.parentNode.removeChild(item)
         redips.remove_from_json(id)        
         table.innerHTML = ''
