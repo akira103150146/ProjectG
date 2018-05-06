@@ -30,7 +30,7 @@
         
             bim_app_window.bim.ShowList('device', function(msg){
                 let info = msg['content']
-                localStorage.list_device = JSON.stringify(info)
+                sessionStorage.list_device = JSON.stringify(info)
                 console.log(info)
                 info.sort((a, b) => {
                     let x = a.name.toLowerCase()
@@ -41,7 +41,7 @@
             })
             bim_app_window.bim.ShowList('cpn', function(msg){
                 let info = msg['content']
-                localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+                sessionStorage.list_info = JSON.stringify(info)//將傳入list存入local
                 console.log(info)
                 tb_manager.showtable(info, 'bind_Cpn')
             })
@@ -71,7 +71,7 @@
                 $('#search-btn').hide()
             })
             $('#back-btn').click(function () {
-                let info = JSON.parse(localStorage.list_device)
+                let info = JSON.parse(sessionStorage.list_device)
                 tb_manager.showtable(info, 'device')
                 $('#back-btn').hide()
                 $('#search-btn').show()
@@ -107,7 +107,7 @@
             $('#confirm').on('click', () => {
                 $('#myModal')[0].style.display = "none";
                 console.log(bind_list)
-                let list = JSON.parse(localStorage.list_device)
+                let list = JSON.parse(sessionStorage.list_device)
                 console.log(list)
                 for (let i = 0; i < list.length; i++) {
                     if (list[i].id == current_bind_index) {
@@ -116,7 +116,7 @@
                         break
                     }
                 }
-                localStorage.list_device = JSON.stringify(list)
+                sessionStorage.list_device = JSON.stringify(list)
             })
         });
     </script>

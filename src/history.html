@@ -16,13 +16,13 @@
         "use strict";
         var ipcrender = require('electron').ipcRenderer
         ipcrender.on('reply-history', (event, info ) => {
-            localStorage.list_history = JSON.stringify(info)//將傳入list存入local
+            sessionStorage.list_history = JSON.stringify(info)//將傳入list存入local
             redips.showlist(info)
         })
         $(document).ready(function () {
             bim_app_window.bim.ShowList('history', function (msg) {
                 let info = msg['content']
-                localStorage.list_history = JSON.stringify(info)//將傳入list存入local
+                sessionStorage.list_history = JSON.stringify(info)//將傳入list存入local
                 redips.showlist(info)
             })
             sidebar_setup('history')

@@ -19,7 +19,7 @@
             /////////////////////////////////新增類別/////////////////////////////////// 
                 bim_app_window.bim.ShowList('cpn', function (msg) {
                     let info = msg['content']
-                    localStorage.list_info = JSON.stringify(info)//將傳入list存入local
+                    sessionStorage.list_info = JSON.stringify(info)//將傳入list存入local
                     console.log(info)
                     info.sort((a, b) => {
                         let x = a.name.toLowerCase()

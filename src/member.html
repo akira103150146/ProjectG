@@ -18,7 +18,7 @@
        
         ipcrender.on('reply-member',(event,info)=>{
             console.log(info)
-            localStorage.member_list = JSON.stringify(info)
+            sessionStorage.member_list = JSON.stringify(info)
             info.sort((a,b)=>{
                 let x = a.name.toLowerCase()
                 let y = b.name.toLowerCase()
@@ -34,7 +34,7 @@
                 console.log(msg)
 
                 let info = msg['content']
-                localStorage.member_list = JSON.stringify(info)
+                sessionStorage.member_list = JSON.stringify(info)
                 info.sort((a, b) => {
                     let x = a.name.toLowerCase()
                     let y = b.name.toLowerCase()
@@ -43,7 +43,6 @@
                 tb_manager.showtable(info, 'member')
 
             })
-            //ipcrender.send('ready-to-show','member')
             tb_manager.add_cell('#add-btn','member')
             tb_manager.delete_cell('#target','member');
             tb_manager.save('#target','member')
@@ -55,7 +54,7 @@
                  $('#search-btn').hide()
             })
              $('#back-btn').click(function () {
-                let info = JSON.parse(localStorage.member_list)
+                let info = JSON.parse(sessionStorage.member_list)
                 tb_manager.showtable(info, 'member')
                 $('#back-btn').hide()
                  $('#search-btn').show()

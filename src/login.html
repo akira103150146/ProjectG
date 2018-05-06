@@ -35,9 +35,9 @@
          let id     = parseBody['content'].id
          let token  = parseBody['content'].token
          let auth   = id + '_' + token
-         localStorage.setItem('user-id', id)
-         localStorage.setItem('user-name', account)
-         localStorage.setItem('Auth', auth)
+         sessionStorage.setItem('user-id', id)
+         sessionStorage.setItem('user-name', account)
+         sessionStorage.setItem('Auth', auth)
          $('#next')[0].click() 
        })
       }     

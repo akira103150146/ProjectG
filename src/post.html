@@ -21,13 +21,13 @@
                   bim_app_window.bim.ShowList('post', function (parseBody) {
                       console.log(parseBody)
                       let info = parseBody['content']
-                      localStorage.list_post = JSON.stringify(info)//將傳入list存入local
+                      sessionStorage.list_post = JSON.stringify(info)//將傳入list存入local
                       tb_manager.showtable(info, 'post')
                   })
                   bim_app_window.bim.ShowList('member', function (parseBody) {
                       console.log(parseBody)
                       let info = parseBody['content']
-                      localStorage.member_list = JSON.stringify(info)
+                      sessionStorage.member_list = JSON.stringify(info)
                   })
                     tb_manager.add_cell('#add-btn', 'post')
                     tb_manager.delete_cell('#target', 'post')

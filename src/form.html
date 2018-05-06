@@ -16,31 +16,13 @@
     <script src="js/lib/api.js"></script>
     <script>
         "use strict";
-        var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager()   
         var bind_list = [] 
-        ipcrender.on('reply-form', function (event, info){
-            localStorage.list_form = JSON.stringify(info)//將傳入list存入local 
-             info.sort((a, b) => {
-                let x = a.title.toLowerCase()
-                let y = b.title.toLowerCase()
-                return x < y ? -1 : x > y ? 1 : 0
-            })    
-            redips.showlist(info)
-        })
-        ipcrender.on('update-form', function(event, content,tag){
-            ipcrender.send('ready-to-show', 'form')
-        })
-        ipcrender.on('reply-device', (event, info) => {
-            localStorage.list_device = JSON.stringify(info)
-            console.log(info)
-            tb_manager.showtable(info, 'bind_device')
-        })  
-        
+
         $(document).ready(function () {
             bim_app_window.bim.ShowList('form', function (msg) {
                 let info = msg['content']
-                localStorage.list_form = JSON.stringify(info)//將傳入list存入local 
+                sessionStorage.list_form = JSON.stringify(info)//將傳入list存入local 
                 info.sort((a, b) => {
                      let x = a.title.toLowerCase()
                      let y = b.title.toLowerCase()
@@ -51,7 +33,7 @@
             
             bim_app_window.bim.ShowList('device', function (msg) {
                 let info = msg['content']
-                localStorage.list_device = JSON.stringify(info)
+                sessionStorage.list_device = JSON.stringify(info)
                 console.log(info)
                 info.sort((a, b) => {
                     let x = a.name.toLowerCase()
@@ -97,7 +79,7 @@
             })
             $('#confirm').on('click', () => {
                 $('#bind-list')[0].innerHTML = ''
-                let list = JSON.parse(localStorage.dist_device)
+                let list = JSON.parse(sessionStorage.dist_device)
                     for(var i = 0;i<bind_list.length;i++){
                         let op = document.createElement('option')
                         op.textContent = list[bind_list[i]]     //用拿到的值去查字典
@@ -154,9 +136,6 @@
     <style>
         input.button {
             display: inline;
-        }
-        div#myContainer td{
-            width: auto;
         }
     </style>
     <div class="wrapper">

@@ -51,14 +51,14 @@ table_manager.prototype.showtable = function(data, which){
 
     }
     if (which === 'bind_device')    //查詢用的
-        localStorage.dist_device = JSON.stringify(dist_bind_device)
+        sessionStorage.dist_device = JSON.stringify(dist_bind_device)
 }
 table_manager.prototype.ShowByFilter = function(which){
 
     this.ClearTable()
 
     if(which === 'info'){
-        let list = JSON.parse(localStorage.list_info)
+        let list = JSON.parse(sessionStorage.list_info)
         let id = $('#selection :selected')[0].id
         const info = list.filter(x => x.componentTypeId == id || x.componentTypeId == null)
         console.log(info)
@@ -68,7 +68,7 @@ table_manager.prototype.ShowByFilter = function(which){
         })
     }
     else if(which === 'member'){
-        let list = JSON.parse(localStorage.member_list)
+        let list = JSON.parse(sessionStorage.member_list)
         let name = $('#member-name')[0].value
         let num = $('#member-number')[0].value
         let email = $('#member-email')[0].value
@@ -85,7 +85,7 @@ table_manager.prototype.ShowByFilter = function(which){
         })
     }
     else if(which === 'device'){
-        let list = JSON.parse(localStorage.list_device)
+        let list = JSON.parse(sessionStorage.list_device)
         let num = $('#device-num')[0].value
         let pos = $('#device-pos')[0].value
         
@@ -111,7 +111,7 @@ table_manager.prototype.ClearTable = function(){
 table_manager.prototype.append_cell = function (content, tr_index, add_type, isnew){
     let l = content.length
     let tr = document.createElement('tr')
-    let list = JSON.parse(localStorage.member_list)
+    let list = JSON.parse(sessionStorage.member_list)
     if(content.length <= 0)alert('table content null')
    
     for(let i=0;i<l;i++){
@@ -121,7 +121,7 @@ table_manager.prototype.append_cell = function (content, tr_index, add_type, isn
         if(isnew)
             td.setAttribute('id', 'new') 
         else if(add_type === 'Cpn' || add_type === 'info'){
-            let list = JSON.parse(localStorage.list_info)
+            let list = JSON.parse(sessionStorage.list_info)
             list = list.filter(x => x.id == tr_index)
             if(list[0].componentTypeId == null)
                 td.setAttribute('id', 'notype')
@@ -238,7 +238,7 @@ table_manager.prototype.add_cell = function(btn_name,type){
         let content = []
         for(let i =0;i<tempthis.dict[type];i++){
             if(i == 0 && type === 'post')
-                content.push(localStorage.getItem('user-id'))
+                content.push(sessionStorage.getItem('user-id'))
             else 
                 content.push('內容空白')
         }
@@ -293,7 +293,7 @@ table_manager.prototype.save = function(table_name, type){
             }           
         }
         else if(type === 'device'){           
-            let result = JSON.parse(localStorage.list_device).filter(x => x.id == tag)[0]
+            let result = JSON.parse(sessionStorage.list_device).filter(x => x.id == tag)[0]
             
             obj = {
                 'name': arr[0],
@@ -306,13 +306,13 @@ table_manager.prototype.save = function(table_name, type){
         }
         else if(type === 'post'){           
             obj = {
-                'publisherId': localStorage.getItem('user-id'),
+                'publisherId': sessionStorage.getItem('user-id'),
                 'title':    arr[0],
                 'content':  arr[1]
             }
         }
         else if(type === 'info'){
-            let result = JSON.parse(localStorage.list_info).filter(x => x.id == tag)[0]
+            let result = JSON.parse(sessionStorage.list_info).filter(x => x.id == tag)[0]
             console.log(result)
             obj = {
                'name': arr[0],

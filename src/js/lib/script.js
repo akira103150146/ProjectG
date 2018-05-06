@@ -58,7 +58,7 @@ else if (window.attachEvent) {
 redips.showlist = function(info){
     let init_to_show
     let jstring = JSON.stringify(info)
-    localStorage.setItem('list_content',jstring)//將表單資料全部丟進去 local
+    sessionStorage.setItem('list_content',jstring)//將表單資料全部丟進去 local
     $('#form-list')[0].innerHTML = '<option disabled selected value> -- select an option -- </option>'
     const l = info.length
     const ishistory = document.getElementById('bind-list') == null ? true:false;    //歷史表單不會有bind-list
@@ -107,7 +107,7 @@ redips.fillform = function(item){
    
     if(bind_list){
         bind_list.innerHTML = ''
-        let list = JSON.parse(localStorage.dist_device)
+        let list = JSON.parse(sessionStorage.dist_device)
         item.deviceIds.forEach((e)=>{
             let temp = document.createElement('option')
             temp.textContent = list[e]
@@ -129,7 +129,7 @@ redips.fillform = function(item){
 
 redips.findform = function(index){
 
-    const obj = JSON.parse(localStorage.list_content)
+    const obj = JSON.parse(sessionStorage.list_content)
     console.log(obj)
     const result = obj.filter( x=> x.id == index)
 
@@ -171,14 +171,18 @@ redips.saveform = function () {
     let content = redips.get_loc_formdata()
     let ID = document.getElementById('ID')
     if (ID.value.substr(0,3) === 'loc') { // do add
-        //ipcrender.send('add','form',content,ID.value)
         bim_app_window.bim.Add('form', content, function(msg){
-            
+            alert('新增成功')
+            let info = msg['content']
+            ID.value = info.id
+            $('#title')[0].textContent = info.title
+            $('#form-list :selected').text(info.title)
         })
     }
     else { // do update
-        //ipcrender.send('update', 'form', ID.value, content, ID.value)
-        bim_app_window.bim.Update('form', )
+        bim_app_window.bim.Update('form', ID.value, content, function(msg){
+            alert('更新成功')
+        })
     }  
     $('#mainTable td').each((index, e) => { //取消所有選取
         REDIPS.table.mark(false, e)
@@ -219,24 +223,24 @@ redips.updateform = function(content,tag){
 }
 
 redips.add_to_json = function(content){
-    let obj = JSON.parse(localStorage.list_content)
+    let obj = JSON.parse(sessionStorage.list_content)
      obj.push(content)
-     localStorage.list_content = JSON.stringify(obj)
+     sessionStorage.list_content = JSON.stringify(obj)
 }
 
 redips.update_to_json = function(id,content){
-    let obj = JSON.parse(localStorage.list_content)
+    let obj = JSON.parse(sessionStorage.list_content)
     const l = obj.length
     for(let i =0;i<l;i++){
         if(obj[i].id == id){
             obj[i] = content
         }
     }
-    localStorage.list_content = JSON.stringify(obj)
+    sessionStorage.list_content = JSON.stringify(obj)
 }
 
 redips.remove_from_json = function(id){   
-    let obj = JSON.parse(localStorage.list_content)
+    let obj = JSON.parse(sessionStorage.list_content)
     let index = obj.map(x=>x.id.toString()).indexOf(id.toString())
     
     if(index > -1 && index < obj.length){
@@ -256,12 +260,15 @@ redips.removeform = function(){
     if(ID.value != null){      
         let id = ID.value
         let item = document.getElementById(id)
-        //ipcrender.send('remove','form',id)         
+        //ipcrender.send('remove','form',id) 
+        bim_app_window.bim.Remove('form', id)        
         item.parentNode.removeChild(item)
         redips.remove_from_json(id)        
         table.innerHTML = ''
         ID.value = ''
         date.value = ''
+
+        //刪除bind list
         $('#bind-list li').each(
             function (e) {
                this.parentNode.removeChild(this)

@@ -12,7 +12,7 @@ function bim_app_window(){
   this.host = 'http://140.118.127.140:8080'
   this.permission = '/bim/api/'
   this.api  = ''  
-  this.op   = '' //定義執行的操作
+  this.op = '' //定義執行的操作 
   this.how  = '' //定義method
   this.headers   //標頭檔
   this.option
@@ -67,7 +67,7 @@ bim_app_window.prototype.GetOption = function(){
 bim_app_window.prototype.SetAuth = function(value){
   this.auth = value
 }
-bim_app_window.prototype.ShowList = function(which, succes_callback, err_callcack){
+bim_app_window.prototype.ShowList = function(which, succes_callback, err_callcack, info){
   switch(which)
   {
     case 'post':
@@ -88,9 +88,9 @@ bim_app_window.prototype.ShowList = function(which, succes_callback, err_callcac
     case 'sdl':
       this.GetSdlList()
       break
-    case 'info':
-
-      break
+    case 'assign':
+      this.GetAssignList(info);
+      break;
     case 'history':
       this.GetFormList()
       break
@@ -111,20 +111,23 @@ bim_app_window.prototype.Add = function (which, info, succes_callback, err_callc
     case 'form':
       this.AddFormTemplate()
       break;
-    case 'device':
-      this.AddDevice()
-      break;
-    case 'cpn':
-      this.AddCpn()
-      break;
-    case 'cpn-type':
-      this.AddCpnType()
+    case 'sdl':
+      this.AddSdl();
       break;
     case 'assign':
-      this.AddSdl()
+      this.AssignForm();
+      break;
+    case 'device':
+      this.AddDevice();
+      break;
+    case 'cpn':
+      this.AddCpn();
+      break;
+    case 'cpn-type':
+      this.AddCpnType();
       break;
     case 'member':
-      this.AddUser()
+      this.AddUser();
       break;
   }
   this.Send(info, succes_callback, err_callcack)
@@ -137,6 +140,12 @@ bim_app_window.prototype.Update = function (which, id, info, succes_callback, er
     case 'form':
       this.UpdateFormTemplate(id)
       break;
+    case 'sdl':
+      this.UpdateSdl(id)
+      break;
+    case 'assign':
+      this.UpdateAssignForm(id)
+      break;
     case 'device':
       this.UpdateDevice(id)
       break;
@@ -145,9 +154,6 @@ bim_app_window.prototype.Update = function (which, id, info, succes_callback, er
       break;
     case 'cpn-type':
       this.UpdateCpnType(id)
-      break;
-    case 'assign':
-      this.UpdatePost(id)
       break;
     case 'member':
       this.UpdateUser(id)
@@ -163,6 +169,12 @@ bim_app_window.prototype.Remove = function (which, id, succes_callback, err_call
     case 'form':
       this.RemoveFormTemplate(id)
       break;
+    case 'sdl':
+      this.RemoveSdl(id)
+      break;
+    case 'assign':
+      this.RemoveAssignForm(id)
+      break;
     case 'device':
       this.RemoveDevice(id)
       break;
@@ -171,9 +183,6 @@ bim_app_window.prototype.Remove = function (which, id, succes_callback, err_call
       break;
     case 'cpn-type':
       this.RemoveCpnType(id)
-      break;
-    case 'assign':
-      this.RemoveSdl(id)
       break;
     case 'member':
       this.RemoveUser(id)

@@ -6,7 +6,6 @@
   <link href='js/lib/full_calendar_lib/fullcalendar.css' rel='stylesheet' />
   <link href='js/lib/full_calendar_lib/fullcalendar.print.css' rel='stylesheet' media='print' />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
   <link href='css/assign.css' rel='stylesheet' />
   <script src='../node_modules/moment/moment.js'></script>
   <script src='../node_modules/jquery/dist/jquery.js'></script>
@@ -19,59 +18,41 @@
   <script src="js/lib/api.js"></script>
   <script>
     "use strict";
-    var ipcrender = require('electron').ipcRenderer
     var sdlmanager = new SdlManager()
     var current_index = 0
     var isopenbyeventclick = false
     var event_id
-    /////////////////////////////////伺服器回應/////////////////////////////////// 
-    ipcrender.on('reply-device', (event, info) => {
-        localStorage.list_device = JSON.stringify(info)
-        console.log(info)
-        sdlmanager.ShowDevice()
-      })  
-    ipcrender.on('reply-form', function (event, info) {
-        localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
-        console.log(info)
-    })
-    ipcrender.on('reply-notify', function (event, info) {
-        localStorage.list_notify = JSON.stringify(info)//將傳入list存入local     
-        console.log(info)
-    })
-    ipcrender.on('update-Sdl', (event, content, tag)=>{
-       console.log('refresh')
-       console.log(tag)
-       console.log(content)
-       sdlmanager.AssignSdl(tag, content.id)  //在行事曆上面新增但是還要再送一次給server才能真正送到手機 
-      // ipcrender.send('ready-to-show', 'Sdl')
-    })
+
     $(document).ready(function () {
+      $.getJSON("../Language/TCH.json", function(data){
+          console.log(data)
+    });
+
+      
     /////////////////////////////////顯示畫面/////////////////////////////////// 
       bim_app_window.bim.ShowList('member', function (msg) {
         let info = msg['content']
         console.log(info)
-        localStorage.setItem('staff-assign', JSON.stringify(info))
+        sessionStorage.setItem('staff-assign', JSON.stringify(info))
         sdlmanager.AddStaff()
       })
       bim_app_window.bim.ShowList('sdl', function (msg) {
         let info = msg['content']
         console.log(info)
-        localStorage.setItem('Sdl-list', JSON.stringify(info))
+        sessionStorage.setItem('Sdl-list', JSON.stringify(info))
       })
       bim_app_window.bim.ShowList('device', function (msg) {
         let info = msg['content']
-        localStorage.list_device = JSON.stringify(info)
+        sessionStorage.list_device = JSON.stringify(info)
         console.log(info)
         sdlmanager.ShowDevice()
       })
       bim_app_window.bim.ShowList('form', function (msg) {
         let info = msg['content']
-        localStorage.list_form = JSON.stringify(info)//將傳入list存入local     
+        sessionStorage.list_form = JSON.stringify(info)//將傳入list存入local     
         console.log(info)
       })
-      /*for(let i =30;i<=32;i++)
-        ipcrender.send('remove', 'notify', i)*/
-     
+  
     /////////////////////////////////設定sidebar/////////////////////////////////// 
       sidebar_setup('bagi')
     /////////////////////////////////fullcalendar setup/////////////////////////////////// 
@@ -101,6 +82,7 @@
         timezone: 'local', 
         drop: function () {    
             $(this).remove()    //刪除事件
+            console.log('drop')
         },
         eventDragStop: function (event, jsEvent) {
           console.log('drag')
@@ -121,12 +103,15 @@
         },
         eventClick: function (event) {
           console.log('click event id:' + event.id)
+          let e = $('#calendar').fullCalendar('clientEvents', event.id)[0]
+          console.log(e)
           let obj 
           isopenbyeventclick = true
           event_id = event.id
           if(event.id.toString().substr(0,3) === 'loc'){//local
             let tempsdl = sdlmanager.GetTempSdl()
             tempsdl = tempsdl.filter(x => x.scheduleId = event.id)[0]
+            console.log(tempsdl)
             obj = {
               'devicename': tempsdl.bindedDeviceId,
               'formname':   tempsdl.formTemplateId,
@@ -134,7 +119,7 @@
             }
           }
           else{//已經加入的行程
-             let list = JSON.parse(localStorage.list_notify)
+             let list = JSON.parse(sessionStorage.list_notify)
              list = list.filter(x=> x.scheduleId == event.id)[0]
              console.log(list)
              obj = {
@@ -178,7 +163,7 @@
 
             if($.isNumeric(event_id)){  //代表他是已經存在的event
                 console.log('update event exist! ' + event_id)
-                let list = JSON.parse(localStorage.list_notify)
+                let list = JSON.parse(sessionStorage.list_notify)
       
                 for(let i = 0;i<list.length;i++){
                   if(list[i].scheduleId == event_id){
@@ -188,7 +173,7 @@
                       break
                   }
                 }
-                localStorage.list_notify = JSON.stringify(list)
+                sessionStorage.list_notify = JSON.stringify(list)
             }
             else{
                 console.log('update event local! ' + event_id)
@@ -240,6 +225,7 @@
         if (event.target == $('#myModal')[0]) {
           $('#myModal')[0].style.display = "none";
           $('#calendar')[0].style.display = "block";
+          isopenbyeventclick = false
         }
       }
  /////////////////////////////////UI/////////////////////////////////// 
