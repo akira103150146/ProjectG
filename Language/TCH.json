@@ -1,9 +1,29 @@
 {
-    "post"   : "公佈欄",
-    "form"   : "巡檢表單編輯",
-    "device" : "巡檢設備設定",
-    "assign" : "巡檢任務派遣",
-    "cpn"    : "維修主配件庫存查詢",
-    "history" : "運維歷史表單查詢",
-    "member"  : "巡檢人員帳戶設定"
+    "Lauguage" : 0,
+    "LauguageOption":
+    [
+       { 
+            "login_head": "智能巡檢系統編輯平台",
+            "login_btn" : "登入",
+            "save":  "儲存",
+            "delete": "刪除",
+            "addpost": "新增貼文",
+            "post"   : "公佈欄",
+            "form"   : "巡檢表單編輯",
+            "device" : "巡檢設備設定",
+            "assign" : "巡檢任務派遣",
+            "cpn"    : "維修主配件庫存查詢",
+            "history" : "運維歷史表單查詢",
+            "member"  : "巡檢人員帳戶設定"
+       },
+       {
+            "post": "公布栏",
+            "form": "巡检表单编辑",
+            "device": "巡检设备设定",
+            "assign": "巡检任务派遣",
+            "cpn": "维修主配件库存查询",
+            "history": "运维历史表单查询",
+            "member": "巡检人员帐户设定"
+       }
+    ]
 }

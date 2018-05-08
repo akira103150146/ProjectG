@@ -28,7 +28,6 @@ div#myContainer table {
 	color: #777;
 	background-color: #eee;
 	margin: 7px;
-	width: 80%;	
 }
 /* table cells */
 div#myContainer td {
@@ -44,6 +43,11 @@ div#myContainer td {
 	width: 100%;
 	height: 100%;
 }
+#mainTable input[type=checkbox]{
+    width: 25px;
+    height: 25px;
+}
+
 
 select{
     width: auto;

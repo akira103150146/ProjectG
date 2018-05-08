@@ -260,7 +260,6 @@ redips.removeform = function(){
     if(ID.value != null){      
         let id = ID.value
         let item = document.getElementById(id)
-        //ipcrender.send('remove','form',id) 
         bim_app_window.bim.Remove('form', id)        
         item.parentNode.removeChild(item)
         redips.remove_from_json(id)        

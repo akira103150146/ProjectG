@@ -24,7 +24,7 @@ bim_app_window.prototype.Send = function(obj, succes_callback, err_callcack){
   succes_callback =  succes_callback == null ?  function(msg){ console.log(msg) } : succes_callback
   err_callcack    =  err_callcack    == null ? function (err) { alert('伺服器錯誤'); console.log(err) } : err_callcack
 
-  this.op != 'login' ? this.headers = { 'authorization': localStorage.getItem('Auth') }  : this.headers = {}
+  this.op != 'login' ? this.headers = { 'authorization': sessionStorage.getItem('Auth') }  : this.headers = {}
  
   if(obj)   
     this.option = new bim_serveroption(this.host + this.permission + this.api + this.op, this.how, this.headers, true, obj)    
@@ -194,12 +194,11 @@ bim_app_window.prototype.Remove = function (which, id, succes_callback, err_call
   this.Send(null, succes_callback, err_callcack)
 }
 //////////////////////////////////////登入///////////////////////////////////////////
-bim_app_window.prototype.Login = function(account, password, callback){
-  let obj   = {'number': account,'password': password}
+bim_app_window.prototype.Login = function(info, succes_callback, err_callcack){
   this.api  = 'staff/'  
   this.op   = 'login'
   this.how  = 'POST'   
-  this.Send(obj, callback) 
+  this.Send(info, succes_callback, err_callcack)
 }
 bim_app_window.prototype.Logout = function(){
   this.api  = 'staff/'

@@ -1,7 +1,6 @@
 "use strict";
 
 function table_manager(){
-    this.ipcrender = require('electron').ipcRenderer
     this.current_index = 0
     this.dict = {   //網頁有幾個儲存格
         "post": 4,
@@ -12,7 +11,7 @@ function table_manager(){
 }
 ///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
 table_manager.prototype.showtable = function(data, which){
-    if (which != 'bind_device' || which != 'bind_Cpn' )
+    if (which != 'bind_device' && which != 'bind_Cpn' )
         this.ClearTable()
     console.log('Show table')
     console.log(data) 
@@ -48,7 +47,6 @@ table_manager.prototype.showtable = function(data, which){
             content = [data[i].name, data[i].number, data[i].quantity, data[i].componentTypeId]
             this.append_cell(content, data[i].id, 'Cpn', false)
         }
-
     }
     if (which === 'bind_device')    //查詢用的
         sessionStorage.dist_device = JSON.stringify(dist_bind_device)
