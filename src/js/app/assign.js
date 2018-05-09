@@ -5,7 +5,7 @@ function SdlManager(){
 }
 ///////////////////////////////////////////////////////顯示行程/////////////////////////////////////////////////
 SdlManager.prototype.ShowSdl = function(){
-    let list = JSON.parse(sessionStorage.getItem('Sdl-list'));
+    let list = sessionStorage.getItem('Sdl-list') == null ? [] : JSON.parse(sessionStorage.getItem('Sdl-list'));
     let staff_list = JSON.parse(sessionStorage.getItem('staff-assign'));
     let staffname = $('#staff-list :selected').text()
     let staffid = staff_list.filter(x => x.name == staffname)[0].id
@@ -15,6 +15,9 @@ SdlManager.prototype.ShowSdl = function(){
         sessionStorage.list_notify = JSON.stringify(msg['content'])
     },function(err){
         console.log(err)
+        if(err.status == 404){
+            sessionStorage.list_notify = []
+        }
     }, staffid)
     const info = list.filter(x => x.staffId == staffid)
     this.ClearAllEvent()
@@ -66,7 +69,11 @@ SdlManager.prototype.SaveSdl = function(){
         alert('沒有選擇到員工')
         return;
     }
-    let notify_list = JSON.parse(sessionStorage.list_notify)
+    let notify_list
+    if(notify_list)
+        notify_list = JSON.parse(sessionStorage.list_notify)
+    else
+        notify_list = []
     console.log(list)
     list.forEach((e)=>{
         let start 

@@ -40,6 +40,8 @@
         let info = msg['content']
         console.log(info)
         sessionStorage.setItem('Sdl-list', JSON.stringify(info))
+      },function(err){
+        console.log(err)
       })
       bim_app_window.bim.ShowList('device', function (msg) {
         let info = msg['content']
@@ -117,38 +119,47 @@
               'formname':   tempsdl.formTemplateId,
               'offset':     tempsdl.notificationOffset
             }
+             show_modal(obj);
           }
           else{//已經加入的行程
-             let list = JSON.parse(sessionStorage.list_notify)
-             list = list.filter(x=> x.scheduleId == event.id)[0]
-             console.log(list)
-             obj = {
-                'devicename': list.bindedDeviceId,
-                'formname': list.formTemplateId,
-                'offset': list.notificationOffset
+             if(sessionStorage.list_notify)
+             {
+               let list = JSON.parse(sessionStorage.list_notify)
+               list = list.filter(x => x.scheduleId == event.id)[0]
+               console.log(list)
+               obj = {
+                 'devicename': list.bindedDeviceId,
+                 'formname': list.formTemplateId,
+                 'offset': list.notificationOffset
+               }
+               show_modal(obj);
              }
-          }
-          console.log(obj)
-          $('#select-device option').filter(function(){
-            return $(this)[0].id == obj.devicename
-          }).prop('selected', true)
-
-          sdlmanager.ShowForm()
-
-          $('#select-form option').filter(function () {
-            return $(this)[0].id == obj.formname
-          }).prop('selected', true)
-
-          $('#select-offset option').filter(function () {
-            return $(this).text() == obj.offset
-          }).prop('selected', true)
-
-          $('#add-event-btn').click()
+             else
+               alert('notify list is null 新增了行程 但是在伺服器並沒有派遣任務成功')
+            
+          }  
         }
 
       });
 
  /////////////////////////////////Modal/////////////////////////////////// 
+       var show_modal = function(obj){
+         $('#select-device option').filter(function () {
+           return $(this)[0].id == obj.devicename
+         }).prop('selected', true)
+
+         sdlmanager.ShowForm()
+
+         $('#select-form option').filter(function () {
+           return $(this)[0].id == obj.formname
+         }).prop('selected', true)
+
+         $('#select-offset option').filter(function () {
+           return $(this).text() == obj.offset
+         }).prop('selected', true)
+
+         $('#add-event-btn').click()
+       }
         $('#add-event-btn').on('click',()=>{
           $('#myModal')[0].style.display = "block"
           $('#calendar')[0].style.display = "none";

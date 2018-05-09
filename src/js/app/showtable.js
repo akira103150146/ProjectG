@@ -315,9 +315,9 @@ table_manager.prototype.save = function(table_name, type){
             obj = {
                'name': arr[0],
                'number' : arr[1],
-               'quantity' : arr[2],
-               'componentTypeId': $('#selection :selected')[0].id == null ? alert('沒有選取到類別') : $('#selection :selected')[0].id,
-               'bindedDeviceId': result == null ? [] : result.bindedDeviceId
+               'quantity' : parseInt(arr[2]),
+               'componentTypeId': $('#selection :selected')[0].id == null ? alert('沒有選取到類別') : parseInt($('#selection :selected')[0].id),
+               'bindedDeviceId': 2
             }
         }       
         console.log(obj)

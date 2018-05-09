@@ -9,7 +9,7 @@ function bim_serveroption(url, method, headers, json, body) {
 }
 
 function bim_app_window(){    
-  this.host = 'http://140.118.127.140:8080'
+  this.host = 'http://114.34.236.121:8081'
   this.permission = '/bim/api/'
   this.api  = ''  
   this.op = '' //定義執行的操作 
@@ -29,7 +29,7 @@ bim_app_window.prototype.Send = function(obj, succes_callback, err_callcack){
   if(obj)   
     this.option = new bim_serveroption(this.host + this.permission + this.api + this.op, this.how, this.headers, true, obj)    
   else
-    this.option =new bim_serveroption(this.host + this.permission + this.api + this.op, this.how, this.headers, true, null)  
+    this.option = new bim_serveroption(this.host + this.permission + this.api + this.op, this.how, this.headers, true, null)  
 
     console.log(this.option)
 
@@ -38,9 +38,9 @@ bim_app_window.prototype.Send = function(obj, succes_callback, err_callcack){
   $.ajax({
     beforeSend: function (request) {
       if (tempthis.op != 'login')  
-        request.setRequestHeader("authorization", localStorage.getItem('Auth'))
+        request.setRequestHeader("authorization", sessionStorage.getItem('Auth'))
     },
-    err: err_callcack,
+    error: err_callcack,
     success: succes_callback,
     contentType: "application/json",
     method: tempthis.option.method,
@@ -120,7 +120,7 @@ bim_app_window.prototype.Add = function (which, info, succes_callback, err_callc
     case 'device':
       this.AddDevice();
       break;
-    case 'cpn':
+    case 'info':
       this.AddCpn();
       break;
     case 'cpn-type':
@@ -149,7 +149,7 @@ bim_app_window.prototype.Update = function (which, id, info, succes_callback, er
     case 'device':
       this.UpdateDevice(id)
       break;
-    case 'cpn':
+    case 'info':
       this.UpdateCpn(id)
       break;
     case 'cpn-type':
@@ -178,7 +178,7 @@ bim_app_window.prototype.Remove = function (which, id, succes_callback, err_call
     case 'device':
       this.RemoveDevice(id)
       break;
-    case 'cpn':
+    case 'info':
       this.RemoveCpn(id)
       break;
     case 'cpn-type':
