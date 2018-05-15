@@ -11,28 +11,14 @@
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script src="js/lib/api.js"></script>
+    <script src="js/app/languageSetup.js"></script>
     <script>
         "use strict";
-        var ipcrender = require('electron').ipcRenderer
         var tb_manager = new table_manager() 
-       
-        ipcrender.on('reply-member',(event,info)=>{
-            console.log(info)
-            sessionStorage.member_list = JSON.stringify(info)
-            info.sort((a,b)=>{
-                let x = a.name.toLowerCase()
-                let y = b.name.toLowerCase()
-                return x < y ? -1 : x > y ? 1 : 0
-            })
-            tb_manager.showtable(info,'member')
-        })
-        ipcrender.on('updatecell-member',(event,content,tag)=>{
-            ipcrender.send('ready-to-show', 'member')
-        })              
+             
         $(document).ready(function (){ 
             bim_app_window.bim.ShowList('member', function (msg) {
                 console.log(msg)
-
                 let info = msg['content']
                 sessionStorage.member_list = JSON.stringify(info)
                 info.sort((a, b) => {
@@ -43,27 +29,61 @@
                 tb_manager.showtable(info, 'member')
 
             })
-            tb_manager.add_cell('#add-btn','member')
+            tb_manager.add_cell('#add-btn','member');
             tb_manager.delete_cell('#target','member');
-            tb_manager.save('#target','member')
-            sidebar_setup('member')
-            $('#back-btn').hide()
+            tb_manager.save('#target','member');
+            sidebar_setup('member');
+            SetUpMemberLanguage();
+            $('#back-btn').hide();
             $('#search-btn').click(function(){              
                 tb_manager.ShowByFilter('member')
                  $('#back-btn').show()
                  $('#search-btn').hide()
-            })
+            });
              $('#back-btn').click(function () {
                 let info = JSON.parse(sessionStorage.member_list)
                 tb_manager.showtable(info, 'member')
                 $('#back-btn').hide()
                  $('#search-btn').show()
-            })
+            });
                             
         })          
     </script>   
 </head>
 <body>
+    <style>
+        td:nth-child(1){
+            min-width: 100px;
+            max-width: 100px;
+        }
+        td:nth-child(2){
+            min-width: 100px;
+            max-width: 100px;
+        } 
+        td:nth-child(3){
+            min-width: 150px;
+            max-width: 150px;
+        } 
+        td:nth-child(4){
+            min-width: 130px;
+            max-width: 130px;
+        } 
+        td:nth-child(5){
+            min-width: 150px;
+            max-width: 150px;
+        } 
+        td:nth-child(6){
+            min-width: 150px;
+            max-width: 150px;
+        }
+         td:nth-child(6){
+            min-width: 250px;
+            max-width: 250px;
+        }      
+        .search p{
+            display:inline;
+        } 
+    </style>
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -81,18 +101,14 @@
                 ☰
             </button>
             <div class="search">
-                人員姓名
+                <p id="p_staffname">人員姓名</p>
                 <input type="text" name="人員姓名" id="member-name"> 
-                人員編號
+                <p id="p_staffid">人員編號</p>
                 <input type="text" name="人員編號" id="member-number"> 
-                電子郵件
+                <p id="p_email">電子郵件</p>
                 <input type="text" name="電子郵件" id="member-email">
-                <button id="search-btn">
-                    查詢 
-                </button>
-                <button id="back-btn">
-                    Back
-                </button>
+                <button id="search-btn">查詢 </button>
+                <button id="back-btn">返回</button>
             </div>
             <div>
                 <button id="add-btn" style="float:right;">新增人員</button>
@@ -101,12 +117,12 @@
                 <table id="target">
                     <tbody>
                         <tr>
-                            <th>人員姓名</th>
-                            <th>人員編號</th>
-                            <th>身分</th>
-                            <th>密碼</th>
-                            <th>電子郵件</th>
-                            <th>創建日期</th>
+                            <th id="p_staffname">人員姓名</th>
+                            <th id="p_staffid">人員編號</th>
+                            <th id="t_id">身分</th>
+                            <th id="t_pw">密碼</th>
+                            <th id="p_email">電子郵件</th>
+                            <th id="t_date">創建日期</th>
                             <th></th>
                         </tr>
                     </tbody>

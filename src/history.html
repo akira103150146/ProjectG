@@ -12,20 +12,17 @@
     <script type="text/javascript" src="js/lib/script.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script src="js/lib/api.js"></script>
+    <script src="js/app/languageSetup.js"></script>
     <script>
         "use strict";
-        var ipcrender = require('electron').ipcRenderer
-        ipcrender.on('reply-history', (event, info ) => {
-            sessionStorage.list_history = JSON.stringify(info)//將傳入list存入local
-            redips.showlist(info)
-        })
         $(document).ready(function () {
             bim_app_window.bim.ShowList('history', function (msg) {
                 let info = msg['content']
                 sessionStorage.list_history = JSON.stringify(info)//將傳入list存入local
                 redips.showlist(info)
-            })
-            sidebar_setup('history')
+            });
+            sidebar_setup('history');
+            SetUpHistoryLanguage();
             $('#form-list').change(function () {
                 const index = $('#form-list :selected')[0].id
                 redips.showform(index)
@@ -36,6 +33,11 @@
 </head>
 
 <body>
+    <style>
+    .form_attribute p{
+        display: inline;
+    }
+    </style>
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -56,11 +58,11 @@
             </select>
            
             <div class="form_attribute">
-                ID
+                <p>ID</p> 
                 <input type="text" id="ID" value="" disabled /> 
-                標題
+                <p id="p_title">標題</p>
                 <input type="text" id="title" value="" disabled/> 
-                回報日期
+                <p id="p_reportdate">回報日期</p>
                 <input type="text" id="date" value="" disabled />
             </div>
             <table id="mainTable">

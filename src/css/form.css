@@ -21,16 +21,17 @@ div#myContainer table {
 	width: 80%;
 }
 #toolbox td{
-    display: inline;
+    background-color: rgb(186, 222, 252); 
+    border: 1px solid black; 
 }
 /* main table */
 #mainTable {
 	color: #777;
-	background-color: #eee;
+    background-color: #eee;
 	margin: 7px;
 }
 /* table cells */
-div#myContainer td {
+#mainTable td {
 	font-size: 20px;
 	width: 105px;
 	height: 60px;
@@ -47,8 +48,6 @@ div#myContainer td {
     width: 25px;
     height: 25px;
 }
-
-
 select{
     width: auto;
     padding: 4px;

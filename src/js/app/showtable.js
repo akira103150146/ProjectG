@@ -1,5 +1,9 @@
 "use strict";
 
+var obj = JSON.parse(localStorage.Language);
+const which = obj.Language
+const language = obj.LanguageOption[which]
+
 function table_manager(){
     this.current_index = 0
     this.dict = {   //網頁有幾個儲存格
@@ -8,13 +12,14 @@ function table_manager(){
         "device": 4,
         "info": 3
     }
+    
 }
 ///////////////////////////////////////////////////////顯示表格/////////////////////////////////////////////////
 table_manager.prototype.showtable = function(data, which){
     if (which != 'bind_device' && which != 'bind_Cpn' )
         this.ClearTable()
     console.log('Show table')
-    console.log(data) 
+    //console.log(data) 
     let l = data.length
     console.log(l)
     this.current_index = l
@@ -164,9 +169,10 @@ table_manager.prototype.append_cell = function (content, tr_index, add_type, isn
     let td_2 = document.createElement('TD')
     let btn = document.createElement('BUTTON')
     let btn2 = document.createElement('BUTTON')
-    btn.textContent = '刪除'
+
+    btn.textContent = language.delete
     btn.id = 'delete'
-    btn2.textContent = '儲存'
+    btn2.textContent = language.save
     btn2.id = 'save'
     
     if(add_type === 'device' || add_type === 'member' ||add_type === 'post'||add_type === 'info' ||add_type ==='Cpn'){
@@ -174,11 +180,11 @@ table_manager.prototype.append_cell = function (content, tr_index, add_type, isn
         td_2.appendChild(btn2)
         if (add_type === 'device') {
             let btn3 = document.createElement('BUTTON')
-            btn3.textContent = '產生QRCODE'
+            btn3.textContent = language.generateqr
             btn3.id = 'get_qrcode'
             td_2.appendChild(btn3)
             let btn7 = document.createElement('BUTTON')
-            btn7.textContent = '綁定零件'
+            btn7.textContent = language.binddevice
             btn7.className = 'binded-Cpn'
             td_2.appendChild(btn7)
         } 

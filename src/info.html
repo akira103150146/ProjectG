@@ -10,6 +10,7 @@
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script src="js/lib/api.js"></script>
+    <script src="js/app/languageSetup.js"></script>
     <script>
         "use strict";
         var type_count = 0
@@ -44,7 +45,7 @@
                 tb_manager.delete_cell('#target', 'info');
                 tb_manager.save('#target', 'info')
                 sidebar_setup('info')
-
+                SetUpCpnLanguage()
             /////////////////////////////////新增類別///////////////////////////////////
                 $('#add-classfication').click(function(){
                     if($('#class-input')[0].value != ''){
@@ -88,6 +89,20 @@
     </script>
 </head>
 <body>
+    <style>
+        td:nth-child(1){
+            min-width: 300px;
+            max-width: 300px;
+        }
+        td:nth-child(2){
+            min-width: 150px;
+            max-width: 150px;
+        }  
+        td:nth-child(3){
+            min-width: 150px;
+            max-width: 150px;
+        }  
+    </style>
        <div class="wrapper">
             <nav id="sidebar">
                 <div class="sidebar-header">
@@ -116,9 +131,9 @@
                 <table id="target">
                     <tbody>
                         <tr>
-                            <th>零件名稱</th>
-                            <th>零件料號</th>
-                            <th>數量</th>                                                       
+                            <th id="t_cpnname">零件名稱</th>
+                            <th id="t_cpnid">零件料號</th>
+                            <th id="t_cpnnum">數量</th>                                                       
                             <th></th>
                         </tr>                        
                     </tbody>

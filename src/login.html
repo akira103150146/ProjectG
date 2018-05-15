@@ -7,26 +7,35 @@
 
   <body>
     <div class ="title">
-    <h1>智能巡檢系統編輯平台</h1>
+    <h1 id="login_head">智能巡檢系統編輯平台</h1>
     </div>
 
     <div class="form">
         <form>
           <input type="text" placeholder="Username" id="account" value="123414"/>
           <input type="password" placeholder="Password" id="password" value="123434"/>
-          <input type="button" class="loginbutton" value="登入" onclick="login() ">
+          <input type="button" class="loginbutton" id="login_btn" value="登入" onclick="login() ">
         </form>      
     </div>   
     <a id = "next" href="post.html" style="display: none;">link text</a>
+    <script src="js/app/languageSetup.js"></script>
     <script>
       var $ = require('jquery')
       var jQuery = require('jquery')      
+        $(document).ready(function () {  
+          $.ajax({
+            url: "../Language/TCH.json"
+          }).done(function(msg){       
+            localStorage.Language = msg;      
+          })
+          SetUpLoginLanguage();
+        })
     </script>
     <script src="js/lib/api.js"></script>
-  
+    
     <script>     
        "use strict";
-     
+    
       var login = function () {
         let account = document.getElementById("account").value.toString()
         let password = document.getElementById("password").value.toString()  

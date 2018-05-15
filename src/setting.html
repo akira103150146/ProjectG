@@ -15,6 +15,7 @@
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script src="js/lib/api.js"></script>
+    <script src="js/app/languageSetup.js"></script>
     <script>
         "use strict";
         let tb_manager = new table_manager()    
@@ -50,6 +51,7 @@
             tb_manager.save('#target', 'device')
 
             sidebar_setup('device')
+            SetUpDeviceLanguage()
             $('#target').on('click', 'button#get_qrcode',  function() {
                 let id = $(this)[0].parentNode.parentNode.id  
                 qr.makeCode(id)      
@@ -121,6 +123,28 @@
     </script>
 </head>
 <body>
+    <style>
+        td:nth-child(1){
+            max-width: 150px;
+            min-width: 150px;
+        }
+        td:nth-child(2){
+            max-width: 300px;
+            min-width: 300px;
+        } 
+        td:nth-child(3){
+            max-width: 150px;
+            min-width: 150px;
+        } 
+        td:nth-child(4){
+            max-width: 150px;
+            min-width: 150px;
+        } 
+        td:nth-child(5){
+            max-width: 450px;
+            min-width: 450px;
+        }     
+    </style>
     <div class="wrapper">
         <!-- Modal content -->
         <div id="myModal" class="modal">
@@ -131,9 +155,9 @@
                 <table id="target2">
                     <tbody>
                         <tr>
-                            <th>零件名稱</th>
-                            <th>零件料號</th>
-                            <th>數量</th>
+                            <th id="t_cpnname">零件名稱</th>
+                            <th id="t_cpnid">零件料號</th>
+                            <th id="t_cpnnum">數量</th>
                             <th></th>
                         </tr>
                     </tbody>
@@ -176,10 +200,10 @@
                 <table id="target">
                     <tbody>
                         <tr>
-                            <th>設備編號</th>
-                            <th>設備說明</th>
-                            <th>設備位置</th>
-                            <th>監控點說明</th>                   
+                            <th id="device_id">設備編號</th>
+                            <th id="device_des">設備說明</th>
+                            <th id="device_pos">設備位置</th>
+                            <th id="device_spot">監控點說明</th>
                             <th></th>
                         </tr>
                     </tbody>

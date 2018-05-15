@@ -12,6 +12,7 @@
         <script src="js/app/showtable.js"></script>
         <script src="js/app/sidebar.js"></script>
         <script src="js/lib/api.js"></script>
+        <script src="js/app/languageSetup.js"></script>
         <script>
               "use strict";
               var tb_manager = new table_manager() 
@@ -19,23 +20,51 @@
               $(document).ready(function () {  
                   bim_app_window.bim.ShowList('post', function (parseBody) {
                       console.log(parseBody)
-                      let info = parseBody['content']
-                      sessionStorage.list_post = JSON.stringify(info)//將傳入list存入local
-                      tb_manager.showtable(info, 'post')
+                      let postinfo = parseBody['content']
+                      sessionStorage.list_post = JSON.stringify(postinfo)//將傳入list存入local
+                        bim_app_window.bim.ShowList('member', function (parseBody) {
+                             console.log(parseBody)
+                            let info = parseBody['content']
+                            sessionStorage.member_list = JSON.stringify(info)
+                            tb_manager.showtable(postinfo, 'post')
+                        })
                   })
-                  bim_app_window.bim.ShowList('member', function (parseBody) {
-                      console.log(parseBody)
-                      let info = parseBody['content']
-                      sessionStorage.member_list = JSON.stringify(info)
-                  })
-                    tb_manager.add_cell('#add-btn', 'post')
-                    tb_manager.delete_cell('#target', 'post')
-                    tb_manager.save('#target', 'post')                
-                    sidebar_setup('post')
+                  
+                    tb_manager.add_cell('#add-btn', 'post');
+                    tb_manager.delete_cell('#target', 'post');
+                    tb_manager.save('#target', 'post');                
+                    sidebar_setup('post');
+                    SetUpPostLanguage();
                 });
         </script>
     </head>
     <body>
+        <style>
+            td:nth-child(1){
+                min-width: 100px;
+                height: auto;
+            }
+            td:nth-child(2){
+                min-width: 100px;
+                max-width: 100px;
+                height: auto;
+            }   
+            td:nth-child(3){
+                min-width: 600px;
+                max-width: 600px;
+                height: auto;
+            }   
+            td:nth-child(4){
+                min-width: 300px;
+                max-width: 300px;
+                height: auto;
+            }
+            td:nth-child(5){
+                min-width: 200px;
+                max-width: 200px;
+                height: auto;
+            }       
+        </style>
         <div class="wrapper">
             <nav id="sidebar">
                 <div class="sidebar-header">
@@ -56,10 +85,10 @@
                 <table  id="target">
                     <tbody>
                         <tr>
-                           <th>發布者ID</th>
-                           <th>標題</th>
-                           <th>內容</th>
-                           <th>發布時間</th>
+                           <th id="pb_staff">發布者</th>
+                           <th id="post_title">標題</th>
+                           <th id="post_content">內容</th>
+                           <th id="post_date">發布時間</th>
                            <th></th>
                         </tr>
                     </tbody>
