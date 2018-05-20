@@ -17,12 +17,15 @@ div#myContainer table {
 /* toolbox table */
 #toolbox {
 	background-color: rgb(204, 204, 204);
-	margin: 7px 7px 15px 7px;
-	width: 80%;
+    margin: 7px 7px 15px 7px;
+    height: 90px;
 }
 #toolbox td{
     background-color: rgb(186, 222, 252); 
     border: 1px solid black; 
+}
+#toolbox input{
+    display: inline;
 }
 /* main table */
 #mainTable {

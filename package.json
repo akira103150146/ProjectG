@@ -29,6 +29,7 @@
     "minimist": "^1.2.0",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
-    "simpler-sidebar": "^2.2.4"
+    "simpler-sidebar": "^2.2.4",
+    "tableexport": "^5.0.0"
   }
 }

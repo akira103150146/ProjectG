@@ -14,6 +14,7 @@
     <script src="js/app/showtable.js"></script>
     <script src="js/app/sidebar.js"></script>
     <script src="js/lib/api.js"></script>
+    <script src="../bower_components/jquery-table2excel/dist/jquery.table2excel.min.js"></script>
     <script src="js/app/languageSetup.js"></script>
     <script>
         "use strict";
@@ -27,6 +28,12 @@
                 bim_app_window.bim.ShowList('device', function (msg) {
                     let info = msg['content']
                     sessionStorage.list_device = JSON.stringify(info)
+                    let dist_device = [];
+                    info.forEach(function(e){
+                        dist_device[e.id] = e.name;
+                    })
+                    console.log(dist_device);
+                    sessionStorage.dist_device = JSON.stringify(dist_device);
                     console.log(info)
                     info.sort((a, b) => {
                         let x = a.name.toLowerCase()
@@ -92,6 +99,14 @@
                 $('#myModal')[0].style.display = "none";
            
              })
+             $('#exportexcel').click(function(){
+               
+               $("#mainTable").table2excel({
+                     exclude: ".excludeThisClass",
+                     name: "Worksheet Name",
+                     filename: $('#title')[0].value //do not include extension
+                 });
+             })
         });
       
         $(function () {
@@ -137,9 +152,6 @@
 
 <body>
     <style>
-        input.button {
-            display: inline;
-        }
         #form_attribute p{
             display: inline;
         }
@@ -213,6 +225,7 @@
                         </td>
                         <td>
                             <input id="bindtable" type="button" value="綁定表單" class="button" onclick="redips.bind_device()" title="Remove Form" />
+                            <input id="exportexcel" type="button" value="輸出Excel" class="button"  title="Remove Form" />
                         </td>
                     </tr>
                 </tbody>

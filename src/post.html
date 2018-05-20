@@ -18,6 +18,37 @@
               var tb_manager = new table_manager() 
            
               $(document).ready(function () {  
+                //   var data = {
+                //       datapoints:
+                //           [{ dataChnId: "2", values: { value: 1 } }]
+                //   };
+                //   console.log(data)
+                //   $.ajax({
+                //       type: "POST",
+                //       url: "https://api.mediatek.com/mcs/v2/devices/Dsaqiizj/datapoints",
+                //       headers: { deviceKey: "I7kHh3w0vcS8n3qM" },
+                //       contentType: "application/json",
+                //       data: JSON.stringify(data)
+                //   })
+                //       .done(function (data) {
+                //           console.log(data)
+                //       })
+                //   var data = {
+                //       datapoints:
+                //           [{ dataChnId: "1", values: { value: 250 } }]
+                //   };
+
+                //   $.ajax({
+                //       type: "POST",
+                //       url: "https://api.mediatek.com/mcs/v2/devices/Dsaqiizj/datapoints",
+                //       headers: { deviceKey: "I7kHh3w0vcS8n3qM" },
+                //       contentType: "application/json",
+                //       data: JSON.stringify(data)
+                //   })
+                //       .done(function (data) {
+                //           // your content
+                //       })
+
                   bim_app_window.bim.ShowList('post', function (parseBody) {
                       console.log(parseBody)
                       let postinfo = parseBody['content']

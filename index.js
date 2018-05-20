@@ -38,7 +38,7 @@ app.on('activate', () => {
 app.on('ready', () => {
   //buildMenu();
   win = new BrowserWindow({ width: 1920, height: 1080 })
-  //win.setMenu(menu);
+  //win.setMenu(null);
   win.loadURL(`file://${__dirname}/src/login.html`)
   win.on('closed', () => { win = null })
 
