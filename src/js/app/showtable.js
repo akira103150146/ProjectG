@@ -28,7 +28,7 @@ table_manager.prototype.showtable = function(data, which){
     for(let i =0;i<l;i++){
         let content
         if(which === 'member'){
-            content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toISOString()]
+            content = [data[i].name, data[i].number, data[i].identity, data[i].password, data[i].emailAddress, new Date(data[i].createDate).toLocaleDateString()]
             this.append_cell(content, data[i].id, 'member', false)
         }
         else if(which === 'device'){
@@ -36,7 +36,7 @@ table_manager.prototype.showtable = function(data, which){
             this.append_cell(content, data[i].id, 'device', false)
         }
         else if(which ==='post'){
-            content = [data[i].publisherId,data[i].title, data[i].content, new Date(data[i].createTime).toISOString()]
+            content = [data[i].publisherId,data[i].title, data[i].content, new Date(data[i].createTime).toLocaleDateString()]
             this.append_cell(content, data[i].id, 'post', false)
         }
         else if(which === 'bind_device'){
@@ -364,7 +364,7 @@ table_manager.prototype.update_cell = function(which, content, tag){
         $('#' + tag + ' :nth-child(3)').find('select').selectedIndex = content.identity
         $('#' + tag + ' :nth-child(4)')[0].textContent = content.password
         $('#' + tag + ' :nth-child(5)')[0].textContent = content.password
-        $('#' + tag + ' :nth-child(6)')[0].textContent = new Date(content.createDate).toISOString()  
+        $('#' + tag + ' :nth-child(6)')[0].textContent = new Date(content.createDate).toLocaleDateString()  
     }
     else if(which === 'device'){
        /* arr.push(content.name)
@@ -375,7 +375,7 @@ table_manager.prototype.update_cell = function(which, content, tag){
     else if (which === 'post'){
         $('#' + tag + ' :nth-child(2)')[0].textContent  = content.title
         $('#' + tag + ' :nth-child(3)')[0].textContent  = content.content
-        $('#' + tag + ' :nth-child(4)')[0].textContent  = new Date(content.createTime).toISOString()    
+        $('#' + tag + ' :nth-child(4)')[0].textContent  = new Date(content.createTime).toLocaleDateString()    
     }
     else if(which === 'info'){
 

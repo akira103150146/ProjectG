@@ -48,6 +48,16 @@
          sessionStorage.setItem('user-id', id)
          sessionStorage.setItem('user-name', account)
          sessionStorage.setItem('Auth', auth)
+          if (localStorage.LoginLog) {
+           let obj = JSON.parse(localStorage.LoginLog)
+           obj.push(sessionStorage.getItem('user-name') + " Login At " + new Date().toLocaleDateString())
+           localStorage.LoginLog = JSON.stringify(obj)
+         }
+         else {
+           let obj = []
+           obj.push(sessionStorage.getItem('user-name') + " Login At " + new Date().toLocaleDateString())
+           localStorage.LoginLog = JSON.stringify(obj)
+         }
          $('#next')[0].click() 
        }, function(err){
          alert('登入失敗')

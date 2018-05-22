@@ -9,7 +9,8 @@ function bim_serveroption(url, method, headers, json, body) {
 }
 
 function bim_app_window(){    
-  this.host = 'http://114.34.236.121:8081'
+  //this.host = 'http://114.34.236.121:8081'
+  this.host = 'http://140.118.127.145:8080'
   this.permission = '/bim/api/'
   this.api  = ''  
   this.op = '' //定義執行的操作 

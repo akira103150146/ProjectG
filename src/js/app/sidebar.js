@@ -4,12 +4,12 @@ function sidebar_setup(type){
     const which = obj.Language
     const content = obj.LanguageOption[which]
 
-    let content_name = [content.post, content.form, content.device, content.assign, content.cpn, content.history, content.member]
-    let ids          = ['post', 'form', 'setting', 'bagi', 'info', 'histroy', 'member']
-    let iname = ['format list bulleted', 'mode edit', 'devices', 'assignment', 'storage', 'history', 'assignment ind']
-    const pagename = ['assign.html', 'setting.html', 'form.html', 'member.html', 'info.html', 'post.html', 'history.html']
+    let content_name = [content.post, content.form, content.device, content.assign, content.cpn, content.history, content.member, content.loginlog]
+    let ids          = ['post', 'form', 'setting', 'bagi', 'info', 'histroy', 'member', 'loginlog']
+    let iname = ['format list bulleted', 'mode edit', 'devices', 'assignment', 'storage', 'history', 'assignment ind', 'assignment ind']
+    const pagename = ['assign.html', 'setting.html', 'form.html', 'member.html', 'info.html', 'post.html', 'history.html', 'loginlog.html']
     let a = document.createElement('a')
-    for(let i=0;i<7;i++){
+    for(let i=0;i<8;i++){
         let l   = document.createElement('li')
         let a   = document.createElement('a')
      
@@ -21,7 +21,7 @@ function sidebar_setup(type){
         l.appendChild(a)
         $('#sidebar-option').append(l)
     }
-    $('#user-name')[0].textContent = localStorage.getItem('user-name') 
+    $('#user-name')[0].textContent = sessionStorage.getItem('user-name') 
     $('#bagi').on('click', () => {
         a.href = pagename[0]
         a.click()
@@ -50,6 +50,10 @@ function sidebar_setup(type){
         a.href = pagename[6]
         a.click()
     })
+    $('#loginlog').on('click', ()=>{
+        a.href = pagename[7]
+        a.click()
+    })
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
     });
@@ -57,6 +61,19 @@ function sidebar_setup(type){
         $('#sidebar').toggleClass('active');
     })
     $('#logout_btn').click(function () {
+     
+        if(localStorage.LoginLog)
+        {
+            let obj = JSON.parse(localStorage.LoginLog)
+            obj.push(sessionStorage.getItem('user-name') + " Logout At " + new Date().toLocaleDateString())
+            localStorage.LoginLog = JSON.stringify(obj)
+        }
+        else
+        {
+            let obj = []
+            obj.push(sessionStorage.getItem('user-name')  + " Logout At " + new Date().toLocaleDateString())
+            localStorage.LoginLog = JSON.stringify(obj)
+        }
         bim_app_window.bim.Logout()
     })
 

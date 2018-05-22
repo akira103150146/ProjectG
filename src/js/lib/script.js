@@ -66,7 +66,7 @@ redips.showlist = function(info){
         const index = info[i].id
         let title = info[i].title
         if(ishistory)
-            title = title + "---" + new Date(info[i].submitTime).toISOString()
+            title = title + "---" + new Date(info[i].submitTime).toLocaleDateString()
         
         if(i === 0){
             init_to_show = index
@@ -121,9 +121,9 @@ redips.fillform = function(item){
         })
     }
     if(item.createTime)
-        date.value = new Date(item.createTime).toISOString()
+        date.value = new Date(item.createTime).toLocaleDateString()
     else
-        date.value = new Date(item.submitTime).toISOString()
+        date.value = new Date(item.submitTime).toLocaleDateString()
     redips.init()
 }
 

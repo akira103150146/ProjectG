@@ -1,0 +1,68 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/table_standard.css" type="text/css" media="screen" />
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+          "use strict";
+        var $ = require('jquery')
+        var jQuery = require('jquery')      
+    </script>
+    <script>
+          "use strict";
+        $(document).ready(function () {
+               sidebar_setup('loginlog');
+              
+               let obj = JSON.parse(localStorage.LoginLog)
+               if(obj)
+               {
+                    obj.forEach((e) => {
+                       let td = document.createElement('td')
+                       td.textContent = e
+                       let tr = document.createElement('tr')
+                       tr.appendChild(td)
+                       $('#target').append(tr)
+                   })
+               }
+              
+              
+        })
+    </script>
+    <script src="js/app/sidebar.js"></script>
+    <script src="js/lib/api.js"></script>
+</head>
+<body>
+  
+
+        <div class="wrapper">
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3 id="close_btn">Close &times;</h3>
+                    <h3 id="user-name"></h3>
+                    <button id="logout_btn">登出</button>
+                </div>
+                <ul id="sidebar-option">
+                </ul>
+            </nav>
+            <div style="display:block;" class="content">
+                <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                    <i class="glyphicon glyphicon-align-left"></i>
+                    ☰
+                </button>
+           
+        
+                <table id="target">
+                    <tbody>
+                        <tr>
+                            <th>登入歷史紀錄列表</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+        </div>
+</body>
+
+
+</html>

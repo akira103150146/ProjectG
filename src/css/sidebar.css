@@ -66,6 +66,9 @@ a, a:hover, a:focus {
 #sidebar li:nth-child(7){
     list-style-image: url("../picture/2x/baseline_assignment_ind_white_18dp.png");
 }
+#sidebar li:nth-child(8){
+    list-style-image: url("../picture/2x/baseline_event_note_white_18dp.png");
+}
 #sidebar ul.components {
     padding: 20px 0;
     border-bottom: 1px solid #47748b;
