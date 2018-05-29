@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />
     <link href="../node_modules/jquery-contextmenu/dist/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="js/lib/jqueryImporter.js"></script>
     <script type="text/javascript" src="js/lib/header.js"></script>
@@ -24,7 +23,7 @@
         $(document).ready(function () {
             bim_app_window.bim.ShowList('form', function (msg) {
                 let forminfo = msg['content']
-                sessionStorage.list_form = JSON.stringify(info)//將傳入list存入local 
+            
                 bim_app_window.bim.ShowList('device', function (msg) {
                     let info = msg['content']
                     sessionStorage.list_device = JSON.stringify(info)
@@ -32,9 +31,9 @@
                     info.forEach(function(e){
                         dist_device[e.id] = e.name;
                     })
-                    console.log(dist_device);
+                   
                     sessionStorage.dist_device = JSON.stringify(dist_device);
-                    console.log(info)
+                  
                     info.sort((a, b) => {
                         let x = a.name.toLowerCase()
                         let y = b.name.toLowerCase()
@@ -45,17 +44,17 @@
                         let y = b.title.toLowerCase()
                         return x < y ? -1 : x > y ? 1 : 0
                     })
+                    
                     redips.showlist(forminfo)
                     tb_manager.showtable(info, 'bind_device')
                 })
-            })
-            
+            });
           
             sidebar_setup('form');
             SetUpFormLanguage();
             $('#form-list').change(function () {
-                console.log($('#form-list :selected'))
                 const index = $('#form-list :selected')[0].id
+                console.log("change to " + index);
                 redips.update_to_json(redips.current_select_form_index, redips.get_loc_formdata())//將local編輯的結果儲存下來 
                 redips.showform(index)
                 redips.current_select_form_index = index
@@ -99,7 +98,7 @@
                 $('#myModal')[0].style.display = "none";
            
              })
-             $('#exportexcel').click(function(){
+            $('#exportexcel').click(function(){
                
                $("#mainTable").table2excel({
                      exclude: ".excludeThisClass",

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/form.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="css/sidebar.css" type="text/css" media="screen" />  
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="js/lib/jqueryImporter.js"></script>
     <script type="text/javascript" src="js/lib/header.js"></script>
@@ -19,6 +18,7 @@
             bim_app_window.bim.ShowList('history', function (msg) {
                 let info = msg['content']
                 sessionStorage.list_history = JSON.stringify(info)//將傳入list存入local
+                console.log(info)
                 redips.showlist(info)
             });
             sidebar_setup('history');
@@ -28,6 +28,27 @@
                 redips.showform(index)
                 redips.current_select_form_index = index
             });
+            $('#downloadPictures').on('click', function(){
+                               
+                let obj = JSON.parse(sessionStorage.list_history)
+                let id = $('#form-list :selected')[0].id
+                for(let i = 0;i<obj.length;i++)
+                {
+                    if(obj[i].id == id)
+                    {
+                        let images = obj[i].imageNames
+                        images.forEach((name)=>{
+                             let url = "http://114.34.236.121:8081/bim/api/form/" + id +"/images/" + name + "?authorization=" + sessionStorage.getItem('Auth')
+                              $("<img>")
+                                .attr("src", url)
+                                .appendTo("#images")
+                        })
+                      
+                        break;
+                    }
+                }
+              
+            })
         });      
     </script>
 </head>
@@ -56,7 +77,16 @@
 
             <select id="form-list">
             </select>
-           
+            <div class="search">
+                <p id="year">年</p>
+                <input type="text" id="member-name">
+                <p id="month">月</p>
+                <input type="text"  id="member-number">
+                <p id="day">日</p>
+                <input type="text"  id="member-email">
+                <button id="search-btn">查詢 </button>
+                <button id="back-btn">返回</button>
+            </div>
             <div class="form_attribute">
                 <p>ID</p> 
                 <input type="text" id="ID" value="" disabled /> 
@@ -64,6 +94,7 @@
                 <input type="text" id="title" value="" disabled/> 
                 <p id="p_reportdate">回報日期</p>
                 <input type="text" id="date" value="" disabled />
+                <input type="button" id="downloadPictures" value="下載圖片" >
             </div>
             <table id="mainTable">
                 <tbody>
@@ -77,6 +108,9 @@
                     </tr>
                 </tbody>
             </table>
+            <div id="images">
+
+            </div>
         </div>
     </div>
 </body>

@@ -1,12 +1,13 @@
 {
-  "name": "electron-webpack-multi-target-example",
+  "name": "bim_backend",
   "version": "0.0.1",
-  "description": "A simple example using webpack and to build an application to both electron and web targets",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "electron": "electron ."
+    "electron": "electron .",
+    "lint": "eslint src/**"
   },
-  "author": "",
+  "author": "AKIRA",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.3.26",
@@ -14,12 +15,18 @@
     "components-jqueryui": "github:components/jqueryui",
     "electron-prebuilt": "^0.36.2",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^2.1.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0",
     "webpack-target-electron-renderer": "^0.3.0"
   },
   "dependencies": {
+    "electron-builder": "^20.15.1",
+    "electron-packager": "^12.1.0",
     "fullcalendar": "^3.9.0",
     "fullcalendar-scheduler": "^1.9.4",
     "is-electron-renderer": "^2.0.0",

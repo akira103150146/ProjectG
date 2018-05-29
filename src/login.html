@@ -21,7 +21,8 @@
     <script src="js/app/languageSetup.js"></script>
     <script>
       var $ = require('jquery')
-      var jQuery = require('jquery')      
+      var jQuery = require('jquery') 
+//#region 讀取語言模組
         $(document).ready(function () {  
           $.ajax({
             url: "../Language/TCH.json"
@@ -30,6 +31,7 @@
           })
           SetUpLoginLanguage();
         })
+//#endregion  讀取語言模組     
     </script>
     <script src="js/lib/api.js"></script>
     
