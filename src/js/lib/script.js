@@ -62,7 +62,8 @@ redips.showlist = function(info){
     for(let i=0;i<l;i++){      
         const index = info[i].id
         let title = info[i].title
-        if($('#bind-list')) //用來判斷是否是歷史表單
+       
+        if($('#bind-list').length == 0) //用來判斷是否是歷史表單
             title = title + "---" + new Date(info[i].submitTime).toLocaleDateString()
         
         if(i == 0){
@@ -117,7 +118,6 @@ redips.fillform = function(item){
         })
         $('#date').val(new Date(item.submitTime).toLocaleDateString());
         $('#images')[0].innerHTML = ''
-        console.log($('#images'))
     }
    
     redips.init();
@@ -126,7 +126,7 @@ redips.fillform = function(item){
 redips.findform = function(index){
     let obj 
   
-    $('#bind-list') ? obj = JSON.parse(sessionStorage.list_content) : obj = JSON.parse(sessionStorage.list_history)
+    $('#bind-list').length != 0 ? obj = JSON.parse(sessionStorage.list_content) : obj = JSON.parse(sessionStorage.list_history)
 
     const result = obj.filter( x=> x.id == index)
 

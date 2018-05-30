@@ -37,6 +37,9 @@
                     if(obj[i].id == id)
                     {
                         let images = obj[i].imageNames
+                        if(images.length <= 0)
+                            alert("沒有圖片資源上傳")
+                            
                         images.forEach((name)=>{
                              let url = "http://114.34.236.121:8081/bim/api/form/" + id +"/images/" + name + "?authorization=" + sessionStorage.getItem('Auth')
                               $("<img>")
