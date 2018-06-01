@@ -10,6 +10,8 @@ SdlManager.prototype.ShowSdl = function(){
     let staffname = $('#staff-list :selected').text()
     let staffid = staff_list.filter(x => x.name == staffname)[0].id
     console.log(staffid)
+    let paras = []
+    paras.push({"para_name": "staff_id", "value": staffid})
     bim_app_window.bim.ShowList('assign', function(msg){
         console.log(msg['content'])
         sessionStorage.list_notify = JSON.stringify(msg['content'])
@@ -18,7 +20,7 @@ SdlManager.prototype.ShowSdl = function(){
         if(err.status == 404){
             sessionStorage.list_notify = []
         }
-    }, staffid)
+    }, paras)
     const info = list.filter(x => x.staffId == staffid)
     this.ClearAllEvent()
     for(let i= 0;i<info.length;i++){

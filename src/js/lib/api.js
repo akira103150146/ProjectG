@@ -17,7 +17,6 @@ function bim_app_window(){
   this.how  = '' //定義method
   this.headers   //標頭檔
   this.option
-  this.auth
 }
 
 bim_app_window.prototype.Send = function(obj, succes_callback, err_callcack){  
@@ -65,38 +64,45 @@ bim_app_window.prototype.GetOption = function(){
   console.log(this.option)
   return this.option
 }
-bim_app_window.prototype.SetAuth = function(value){
-  this.auth = value
+bim_app_window.prototype.GenerateOpByPara = function(info)
+{
+  let str = "?"
+  info.forEach((e)=>{
+    str+= e.para_name;
+    str+="=";
+    str+= e.value;
+  })
+  return str;
 }
 bim_app_window.prototype.ShowList = function(which, succes_callback, err_callcack, info){
   switch(which)
   {
     case 'post':
-      this.GetPostList()
+      this.GetPostList(info)
       break
     case 'form':
-      this.GetFormTemplateList()
+      this.GetFormTemplateList(info)
       break
     case 'device':
-      this.GetDeviceList()
+      this.GetDeviceList(info)
       break
     case 'cpn':
-      this.GetCpnList()
+      this.GetCpnList(info)
       break
     case 'cpn-type':
-      this.GetCpnTypeList()
+      this.GetCpnTypeList(info)
       break
     case 'sdl':
-      this.GetSdlList()
+      this.GetSdlList(info)
       break
     case 'assign':
       this.GetAssignList(info);
       break;
     case 'history':
-      this.GetFormList()
+      this.GetFormList(info)
       break
     case 'member':
-      this.GetStaffList()
+      this.GetStaffList(info)
       break
     default:
       alert("輸入參數錯誤 Check At api.js script Line: 99 ")
@@ -254,10 +260,10 @@ bim_app_window.prototype.RemoveFormTemplate = function(id){
   this.op   = 'remove?id=' + id
   this.how  = 'DELETE'
 }
-bim_app_window.prototype.GetFormList = function(){
-  this.api  = 'form/'
-  this.op   = 'list'
-  this.how  = 'GET'
+bim_app_window.prototype.GetFormList = function(info){
+  this.api  = 'form/';
+  this.op   = 'list' + this.GenerateOpByPara(info);
+  this.how  = 'GET';
 }
 bim_app_window.prototype.AssignForm = function(){
   this.api  = 'admin/form/'
@@ -274,9 +280,9 @@ bim_app_window.prototype.RemoveAssignForm = function (id) {
   this.op   = 'remove?id=' + id
   this.how  = 'DELETE'
 }
-bim_app_window.prototype.GetAssignList = function(id){
+bim_app_window.prototype.GetAssignList = function(info){
   this.api  = 'form/notification/'
-  this.op   = 'list?staff_id=' + id
+  this.op   = 'list' + this.GenerateOpByPara(info)
   this.how  = 'GET'
 }
 bim_app_window.prototype.RemoveNotification = function(id){

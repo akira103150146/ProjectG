@@ -20,7 +20,10 @@
                 sessionStorage.list_history = JSON.stringify(info)//將傳入list存入local
                 console.log(info)
                 redips.showlist(info)
-            });
+            }, null, 
+            [
+                { "para_name": "day", "value": 25 }
+            ]);
             sidebar_setup('history');
             SetUpHistoryLanguage();
             $('#form-list').change(function () {
