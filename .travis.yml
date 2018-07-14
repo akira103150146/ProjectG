@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "8"
+script:
+  - electron-packager . --platform win32 --arch ia32
+sudo: required
+install:
+  - npm install
